@@ -1,183 +1,16 @@
 ﻿{
     "ТБ-11": {
-        "14/03/22": {
+        "21/03/22": {
             "1": {
-                "f_subject": "Основы православной культуры",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "сем.",
-                "f_theme": "3.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "История России",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Химия",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лек.",
-                "f_theme": "11.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "15/03/22": {
-            "1": {
-                "f_subject": "Иностранный язык (1-я подгруппа)",
+                "f_subject": "Иностранный язык ",
                 "f_teacher": "кпн Михайлова Г.А.",
                 "f_type": "пр.з.",
-                "f_theme": "14.1.1",
-                "f_auditory": "204",
-                "s_subject": "2-я подгруппа (самоподготовка)",
-                "s_auditory": "208(ДВ)"
-            },
-            "2": {
-                "f_subject": "Иностранный язык (2-я подгруппа)",
-                "f_teacher": "кпн Михайлова Г.А.",
-                "f_type": "пр.з.",
-                "f_theme": "14.1.1",
-                "f_auditory": "204",
-                "s_subject": "1-я подгруппа (самоподготовка)",
-                "s_auditory": "208(ДВ)"
-            },
-            "3": {
-                "f_subject": "Основы правоведения",
-                "f_teacher": "кюн Антонченко В.В.",
-                "f_type": "пр.з.",
-                "f_theme": "6.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Прикладная механика",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "1.3.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Прикладная механика",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "1.3.3",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Психология и педагогика",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "сем.",
-                "f_theme": "4.2",
-                "f_auditory": "208",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Основы правоведения",
-                "f_teacher": "кюн Антонченко В.В.",
-                "f_type": "лек.",
-                "f_theme": "7.1",
-                "f_auditory": "212",
-                "s_subject": "                                             ",
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Физика ",
-                "f_teacher": "кфмн Терлецкий И.А.",
-                "f_type": "пр.з.",
-                "f_theme": "3.4",
+                "f_theme": "14.2.1",
                 "f_auditory": "208",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "3": {
-                "f_subject": "Первоначальная подготовка спасателей",
-                "f_teacher": "кмн Бабич М.Е.",
-                "f_type": "пр.з.",
-                "f_theme": "5.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Философия",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
             "2": {
-                "f_subject": "Философия",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "лек.",
-                "f_theme": "4.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Психология и педагогика",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "лек.",
-                "f_theme": "5.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Информационные технологии (2-я подгруппа)",
-                "f_teacher": "дпн Кречетников К.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "6.3",
-                "f_auditory": "110б",
-                "s_subject": "1-я подгруппа (самоподготовка)",
-                "s_auditory": "110а(ДВ)"
-            },
-            "2": {
-                "f_subject": "Высшая математика",
-                "f_teacher": "кфмн Беспалова Т.В.",
-                "f_type": "пр.з.",
-                "f_theme": "10.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Высшая математика",
-                "f_teacher": "кфмн Беспалова Т.В.",
-                "f_type": "лек.",
-                "f_theme": "11.1",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        }
-    },
-    "ТБ-12": {
-        "14/03/22": {
-            "1": {
                 "f_subject": "Первоначальная подготовка спасателей",
                 "f_teacher": "кмн Бабич М.Е.",
                 "f_type": "пр.з.",
@@ -186,89 +19,89 @@
                 "s_subject": null,
                 "s_auditory": null
             },
-            "2": {
-                "f_subject": "История России",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "212",
+            "3": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "110в",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "3": {
-                "f_subject": "Химия",
-                "f_teacher": "кхн Семенчук О.В.",
+            "4": {
+                "f_subject": "Первоначальная подготовка спасателей",
+                "f_teacher": "кмн Бабич М.Е.",
                 "f_type": "лек.",
-                "f_theme": "11.1",
+                "f_theme": "6.1",
                 "f_auditory": "212",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "22/03/22": {
             "1": {
-                "f_subject": "История России",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "сем.",
-                "f_theme": "4.2",
-                "f_auditory": "212",
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "501с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Основы правоведения",
-                "f_teacher": "кюн Антонченко В.В.",
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "501с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "501с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В.",
                 "f_type": "пр.з.",
                 "f_theme": "6.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Профессионально-прикладная физ. подготовка",
-                "f_teacher": "командир взвода",
-                "f_type": "пр.з.",
-                "f_theme": "5.2",
-                "f_auditory": "спортзал",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Психология и педагогика",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "сем.",
-                "f_theme": "4.2",
-                "f_auditory": "208",
+                "f_auditory": "501с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Профессионально-прикладная физ. подготовка",
-                "f_teacher": "командир взвода",
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В.",
                 "f_type": "пр.з.",
-                "f_theme": "3.1",
-                "f_auditory": "спортзал",
+                "f_theme": "6.2",
+                "f_auditory": "501с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Прикладная механика",
-                "f_teacher": "ктн Белов А.С.",
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В.",
                 "f_type": "пр.з.",
-                "f_theme": "1.3.3",
-                "f_auditory": "212",
+                "f_theme": "6.2",
+                "f_auditory": "501с",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "17/03/22": {
+        "24/03/22": {
             "1": {
                 "f_subject": "Основы правоведения",
                 "f_teacher": "кюн Антонченко В.В.",
                 "f_type": "лек.",
-                "f_theme": "7.1",
+                "f_theme": "8.1",
                 "f_auditory": "212",
                 "s_subject": null,
                 "s_auditory": null
@@ -285,51 +118,31 @@
             "3": {
                 "f_subject": "Физика ",
                 "f_teacher": "кфмн Терлецкий И.А.",
-                "f_type": "пр.з.",
-                "f_theme": "3.3",
-                "f_auditory": "208",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Философия",
-                "f_teacher": "кин Виноградов П.В.",
                 "f_type": "лек.",
                 "f_theme": "4.1",
                 "f_auditory": "212",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "2": {
-                "f_subject": "Философия",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "лек.",
-                "f_theme": "4.2",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Психология и педагогика",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "лек.",
-                "f_theme": "5.1",
+            "4": {
+                "f_subject": "Прикладная механика",
+                "f_teacher": "ктн Белов А.С.",
+                "f_type": "пр.з.",
+                "f_theme": "1.3.4",
                 "f_auditory": "212",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "19/03/22": {
+        "25/03/22": {
             "1": {
-                "f_subject": "Философия",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "сем.",
-                "f_theme": "4.3",
-                "f_auditory": "212",
-                "s_subject": null,
-                "s_auditory": null
+                "f_subject": "Информационные технологии (1-я подгруппа)",
+                "f_teacher": "дпн Кречетников К.Г.",
+                "f_type": "пр.з.",
+                "f_theme": "6.3",
+                "f_auditory": "110б",
+                "s_subject": "2-я подгруппа (самоподготовка)",
+                "s_auditory": "110а(ДВ)"
             },
             "2": {
                 "f_subject": "Информационные технологии (2-я подгруппа)",
@@ -341,10 +154,233 @@
                 "s_auditory": "110а(ДВ)"
             },
             "3": {
+                "f_subject": "Профессионально-прикладная физ. подготовка",
+                "f_teacher": "командир взвода",
+                "f_type": "пр.з.",
+                "f_theme": "3.1",
+                "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
                 "f_subject": "Высшая математика",
                 "f_teacher": "кфмн Беспалова Т.В.",
                 "f_type": "лек.",
-                "f_theme": "11.1",
+                "f_theme": "11.2",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Высшая математика",
+                "f_teacher": "кфмн Беспалова Т.В.",
+                "f_type": "пр.з.",
+                "f_theme": "11.3",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "История России",
+                "f_teacher": "кин Виноградов П.В.",
+                "f_type": "сем.",
+                "f_theme": "4.2",
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        }
+    },
+    "ТБ-12": {
+        "21/03/22": {
+            "1": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В.",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В.",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В. ",
+                "f_type": "пр.з.",
+                "f_theme": "6.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": "Первоначальная подготовка спасателей",
+                "f_teacher": "кмн Бабич М.Е.",
+                "f_type": "лек.",
+                "f_theme": "6.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "501с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "501с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарно-строевая подготовка",
+                "f_teacher": "Квашнин А.В., Кошкаров Р.В",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "501с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Прикладная механика",
+                "f_teacher": "ктн Белов А.С.",
+                "f_type": "пр.з.",
+                "f_theme": "1.3.4",
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Прикладная механика",
+                "f_teacher": "ктн Белов А.С.",
+                "f_type": "пр.з.",
+                "f_theme": "1.3.5",
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Профессионально-прикладная физ. подготовка",
+                "f_teacher": "командир взвода",
+                "f_type": "пр.з.",
+                "f_theme": "3.2",
+                "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Основы правоведения",
+                "f_teacher": "кюн Антонченко В.В.",
+                "f_type": "лек.",
+                "f_theme": "8.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Физика ",
+                "f_teacher": "кфмн Терлецкий И.А.",
+                "f_type": "пр.з.",
+                "f_theme": "3.4",
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Физика ",
+                "f_teacher": "кфмн Терлецкий И.А.",
+                "f_type": "лек.",
+                "f_theme": "4.1",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": "Химия",
+                "f_teacher": "кхн Семенчук О.В.",
+                "f_type": "пр.з.",
+                "f_theme": "11.2",
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Иностранный язык (2-я подгруппа)",
+                "f_teacher": "кфн Спицына Н.А.",
+                "f_type": "пр.з.",
+                "f_theme": "12.1.1",
+                "f_auditory": "204",
+                "s_subject": "1-я подгруппа (самоподготовка)",
+                "s_auditory": "208(ДВ)"
+            },
+            "2": {
+                "f_subject": "Иностранный язык (1-я подгруппа)",
+                "f_teacher": "кфн Спицына Н.А.",
+                "f_type": "пр.з.",
+                "f_theme": "12.2.1",
+                "f_auditory": "204",
+                "s_subject": "2-я подгруппа (самоподготовка)",
+                "s_auditory": "208(ДВ)"
+            },
+            "3": {
+                "f_subject": "Информационные технологии (1-я подгруппа)",
+                "f_teacher": "дпн Кречетников К.Г.",
+                "f_type": "пр.з.",
+                "f_theme": "6.3",
+                "f_auditory": "110б",
+                "s_subject": "2-я подгруппа (самоподготовка)",
+                "s_auditory": "110а(ДВ)"
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Высшая математика",
+                "f_teacher": "кфмн Беспалова Т.В.",
+                "f_type": "лек.",
+                "f_theme": "11.2",
+                "f_auditory": "212",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "208",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Высшая математика",
+                "f_teacher": "кфмн Беспалова Т.В.",
+                "f_type": "пр.з.",
+                "f_theme": "11.3",
                 "f_auditory": "212",
                 "s_subject": null,
                 "s_auditory": null
@@ -352,7 +388,45 @@
         }
     },
     "ПБ-21": {
-        "14/03/22": {
+        "21/03/22": {
+            "1": {
+                "f_subject": "Практика",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
             "1": {
                 "f_subject": "Практика",
                 "f_teacher": null,
@@ -381,316 +455,120 @@
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "23/03/22": {
             "1": {
-                "f_subject": "Практика",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Практика",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Практика",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Практика",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Практика",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": null,
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": null,
-                "s_subject": null,
-                "s_auditory": null
-            }
-        }
-    },
-    "ТБ-21": {
-        "14/03/22": {
-            "1": {
-                "f_subject": "Теоретич. основы процессов горения и тушения",
-                "f_teacher": "кхн Семенчук О.В.",
+                "f_subject": "Правовое регулирование в области ПБ",
+                "f_teacher": "Кулага Н.В.",
                 "f_type": "пр.з.",
-                "f_theme": "8.2",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Организация службы и подготовки",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Организация службы и подготовки",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "15/03/22": {
-            "1": {
-                "f_subject": "Теоретич. основы процессов горения и тушения",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лаб.з.",
-                "f_theme": "8.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Основы научных исследований",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "сем.",
-                "f_theme": "5.1",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Основы научных исследований",
-                "f_teacher": "кин Виноградов П.В.",
-                "f_type": "сем.",
-                "f_theme": "6.2",
+                "f_theme": "3.3",
                 "f_auditory": "110г",
                 "s_subject": null,
                 "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
             },
             "2": {
-                "f_subject": "Теоретич. основы процессов горения и тушения",
+                "f_subject": "Теория горения и взрыва",
                 "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лаб.з.",
-                "f_theme": "8.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Теоретич. основы процессов горения и тушения",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лаб.з.",
-                "f_theme": "8.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Детали машин",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "4.3",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Детали машин",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "лек.",
-                "f_theme": "5.1",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Организация деятельности ПО",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "лек.",
-                "f_theme": "8.1",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Первоначальная подготовка спасателей",
-                "f_teacher": "Кошкаров Р.В.",
-                "f_type": "пр.з.",
-                "f_theme": "2.4",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Пожарно-строевая подготовка",
-                "f_teacher": "Квашнин А.В.",
-                "f_type": "пр.з.",
-                "f_theme": "4.2",
-                "f_auditory": "110в",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Физика (1-я подгруппа)",
-                "f_teacher": "Лобова Т.Ж.",
                 "f_type": "лаб.з.",
                 "f_theme": "5.2",
-                "f_auditory": "204",
-                "s_subject": "2-я подгруппа (самоподготовка)",
-                "s_auditory": "208(ДВ)"
+                "f_auditory": "110г",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Гидравлика и противопожарное водоснабж-е",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "лек.",
+                "f_theme": "13.1",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Пожарная тактика",
+                "f_teacher": "Волик А.С.",
+                "f_type": "лек.",
+                "f_theme": "4.1",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
             },
             "2": {
+                "f_subject": "Пожарная тактика",
+                "f_teacher": "Волик А.С.",
+                "f_type": "лек.",
+                "f_theme": "4.1",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Теория горения и взрыва",
+                "f_teacher": "кхн Семенчук О.В.",
+                "f_type": "лаб.з.",
+                "f_theme": "5.2",
+                "f_auditory": "110г",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "сем.",
+                "f_theme": "4.1",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "сем.",
+                "f_theme": "4.1",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "сем.",
+                "f_theme": "4.1",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
                 "f_subject": "Физика (2-я подгруппа)",
                 "f_teacher": "Лобова Т.Ж.",
                 "f_type": "лаб.з.",
                 "f_theme": "5.2",
-                "f_auditory": "204",
+                "f_auditory": "110б",
                 "s_subject": "1-я подгруппа (самоподготовка)",
-                "s_auditory": "208(ДВ)"
+                "s_auditory": "110г(ДВ)"
+            },
+            "2": {
+                "f_subject": "Физика (1-я подгруппа)",
+                "f_teacher": "Лобова Т.Ж.",
+                "f_type": "лаб.з.",
+                "f_theme": "5.2",
+                "f_auditory": "110б",
+                "s_subject": "2-я подгруппа (самоподготовка)",
+                "s_auditory": "110г(ДВ)"
             },
             "3": {
                 "f_subject": "Физика (1-я подгруппа)",
@@ -703,130 +581,177 @@
             }
         }
     },
-    "ПБ-31": {
-        "14/03/22": {
+    "ТБ-21": {
+        "21/03/22": {
             "1": {
-                "f_subject": "ЗСиУстойчивость при пожаре",
-                "f_teacher": "Савченко С.А.",
+                "f_subject": "Теоретич. основы процессов горения и тушения",
+                "f_teacher": "кхн Семенчук О.В.",
                 "f_type": "пр.з.",
-                "f_theme": "11.2",
-                "f_auditory": "103с",
+                "f_theme": "8.4",
+                "f_auditory": "110в",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Производственная и пожарная автоматика",
-                "f_teacher": "Савченко С.А.",
+                "f_subject": "Теоретич. основы процессов горения и тушения",
+                "f_teacher": "кхн Семенчук О.В.",
                 "f_type": "пр.з.",
-                "f_theme": "4.2",
-                "f_auditory": "103с",
+                "f_theme": "8.5",
+                "f_auditory": "110г",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Электротехника и ПБ электроустановок (1-я подгруппа)",
-                "f_teacher": "к.т.н. Гаранина И.А.",
-                "f_type": "пр.з.",
-                "f_theme": "7.2",
-                "f_auditory": "311с",
-                "s_subject": "2-я подгруппа (самоподготовка)",
-                "s_auditory": "314с(ДВ)"
-            }
-        },
-        "15/03/22": {
-            "1": {
-                "f_subject": "Правоведение",
-                "f_teacher": "кюн Антонченко В.В.",
-                "f_type": "пр.з.",
-                "f_theme": "6.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "ФХОР и тушения пожаров",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "пр.з.",
-                "f_theme": "3.2",
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "ФХОР и тушения пожаров",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лаб.з.",
-                "f_theme": "3.3",
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "ФХОР и тушения пожаров",
-                "f_teacher": "кхн Семенчук О.В.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Теплотехника ",
-                "f_teacher": "кфмн Терлецкий И.А.",
-                "f_type": "лек.",
-                "f_theme": "11.2",
-                "f_auditory": "312с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
                 "f_subject": "Профессионально-прикладная физ. подготовка",
-                "f_teacher": "командир взвода",
+                "f_teacher": "командир возвода",
                 "f_type": "пр.з.",
                 "f_theme": "3.1",
                 "f_auditory": "спортзал",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "3": {
-                "f_subject": "Правоведение",
-                "f_teacher": "кюн Антонченко В.В.",
-                "f_type": "лек.",
-                "f_theme": "7.1",
-                "f_auditory": "311с",
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "18/03/22": {
+        "22/03/22": {
+            "1": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "пр.з.",
+                "f_theme": "6.2",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Пожарная тактика",
+                "f_teacher": "Волик А.С.",
+                "f_type": "д.и.",
+                "f_theme": "8.4",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная тактика",
+                "f_teacher": "Волик А.С.",
+                "f_type": "д.и.",
+                "f_theme": "8.4",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Гидравлика и противопожарное водоснабж-е",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "лек.",
+                "f_theme": "13.1",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "2.2",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "2.2",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "2.2",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Гидравлика и противопожарное водоснабж-е",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "сем.",
+                "f_theme": "13.2",
+                "f_auditory": "110г",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Гидравлика и противопожарное водоснабж-е",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "лек.",
+                "f_theme": "14.1",
+                "f_auditory": "110г",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Организация службы и подготовки",
+                "f_teacher": "Естехин В.Г.",
+                "f_type": "пр.з.",
+                "f_theme": "2.4",
+                "f_auditory": "110в",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
             "1": {
                 "f_subject": "Пожарно-строевая подготовка",
                 "f_teacher": "Квашнин А.В.",
                 "f_type": "пр.з.",
-                "f_theme": "14.2",
-                "f_auditory": "501с",
+                "f_theme": "11.1",
+                "f_auditory": "110в",
                 "s_subject": null,
                 "s_auditory": null
             },
@@ -834,8 +759,8 @@
                 "f_subject": "Пожарно-строевая подготовка",
                 "f_teacher": "Квашнин А.В.",
                 "f_type": "пр.з.",
-                "f_theme": "14.2",
-                "f_auditory": "501с",
+                "f_theme": "11.1",
+                "f_auditory": "110в",
                 "s_subject": null,
                 "s_auditory": null
             },
@@ -844,49 +769,214 @@
                 "f_teacher": null,
                 "f_type": null,
                 "f_theme": null,
-                "f_auditory": "314с",
+                "f_auditory": "110в",
                 "s_subject": null,
                 "s_auditory": null
             }
-        },
-        "19/03/22": {
+        }
+    },
+    "ПБ-31": {
+        "21/03/22": {
             "1": {
-                "f_subject": "Пожарно-строевая подготовка",
-                "f_teacher": "Квашнин А.В.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
                 "f_type": "пр.з.",
-                "f_theme": "14.3",
-                "f_auditory": "312с",
+                "f_theme": "10.1",
+                "f_auditory": "102с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарно-строевая подготовка",
-                "f_teacher": "Квашнин А.В.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
                 "f_type": "пр.з.",
-                "f_theme": "14.3",
-                "f_auditory": "312с",
+                "f_theme": "10.1",
+                "f_auditory": "102с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Производственная и пожарная автоматика",
-                "f_teacher": "Савченко С.А.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
                 "f_type": "пр.з.",
-                "f_theme": "5.1",
-                "f_auditory": "103с",
+                "f_theme": "10.1",
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "9.6",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "9.6",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "ктн Аникеев А.А.",
+                "f_type": "пр.з.",
+                "f_theme": "9.6",
+                "f_auditory": "кпо",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Практика",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Практика",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Практика",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Практика",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
                 "s_subject": null,
                 "s_auditory": null
             }
         }
     },
     "ТБ-31": {
-        "14/03/22": {
+        "21/03/22": {
             "1": {
                 "f_subject": "Электротехника и ПБ электроустановок (1-я подгруппа)",
                 "f_teacher": "к.т.н. Гаранина И.А.",
                 "f_type": "пр.з.",
-                "f_theme": "7.2",
-                "f_auditory": "311с",
+                "f_theme": "7.3",
+                "f_auditory": "209с",
                 "s_subject": "2-я подгруппа (самоподготовка)",
                 "s_auditory": "314с(ДВ)"
             },
@@ -894,184 +984,336 @@
                 "f_subject": "Электротехника и ПБ электроустановок (2-я подгруппа)",
                 "f_teacher": "к.т.н. Гаранина И.А.",
                 "f_type": "пр.з.",
-                "f_theme": "7.2",
-                "f_auditory": "311с",
+                "f_theme": "7.3",
+                "f_auditory": "209с",
                 "s_subject": "1-я подгруппа (самоподготовка)",
                 "s_auditory": "314с(ДВ)"
             },
             "3": {
-                "f_subject": "Экономика",
-                "f_teacher": "кмн Бабич М.Е.",
-                "f_type": "сем.",
-                "f_theme": "5.2",
-                "f_auditory": "312с",
+                "f_subject": "Профессионально-прикладная физ. подготовка",
+                "f_teacher": "командир взвода",
+                "f_type": "пр.з.",
+                "f_theme": "1.1",
+                "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "22/03/22": {
             "1": {
-                "f_subject": "Пожарная тактика",
-                "f_teacher": "Волик А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "17.2",
-                "f_auditory": "312с",
+                "f_subject": "Производственная и пожарная автоматика",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "лаб.з.",
+                "f_theme": "4.2",
+                "f_auditory": "103с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарная тактика",
-                "f_teacher": "Волик А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "17.2",
-                "f_auditory": "312с",
+                "f_subject": "Производственная и пожарная автоматика",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "лаб.з.",
+                "f_theme": "4.2",
+                "f_auditory": "103с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "501с",
+                "f_subject": "Производственная и пожарная автоматика",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "лаб.з.",
+                "f_theme": "4.2",
+                "f_auditory": "103с",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "16/03/22": {
+        "23/03/22": {
             "1": {
-                "f_subject": "Производственная и пожарная автоматика",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "103с",
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "пр.з.",
+                "f_theme": "4.2",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
-                "f_auditory": "103с",
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "пр.з.",
+                "f_theme": "4.2",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
                 "f_subject": "Государственный пожарный надзор",
                 "f_teacher": "Мальцев С.В.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
-                "f_auditory": "312с",
+                "f_type": "пр.з.",
+                "f_theme": "4.2",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "17/03/22": {
+        "24/03/22": {
             "1": {
-                "f_subject": "Экономика",
-                "f_teacher": "кмн Бабич М.Е.",
-                "f_type": "сем.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
+                "f_type": "пр.з.",
                 "f_theme": "6.1",
-                "f_auditory": "501с",
+                "f_auditory": "102с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
                 "f_type": "пр.з.",
-                "f_theme": "3.4",
-                "f_auditory": "312с",
+                "f_theme": "6.1",
+                "f_auditory": "102с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
+                "f_subject": "Подготовка  газодымозащитника",
+                "f_teacher": "Хабиров Т.Р.",
                 "f_type": "пр.з.",
-                "f_theme": "3.4",
-                "f_auditory": "312с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Автоматизированные системы управления и связь",
-                "f_teacher": "Мельников С.М.",
-                "f_type": "сем.",
-                "f_theme": "5.3",
-                "f_auditory": "312с",
+                "f_theme": "6.1",
+                "f_auditory": "102с",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "2": {
-                "f_subject": "Профессионально-прикладная физ. подготовка",
-                "f_teacher": "командир взвода",
-                "f_type": "пр.з.",
-                "f_theme": "3.3",
-                "f_auditory": "спортзал",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Автоматизированные системы управления и связь",
-                "f_teacher": "Мельников С.М.",
-                "f_type": "лек.",
-                "f_theme": "5.4",
-                "f_auditory": "312с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "3.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "3.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Самоподготовка",
+            "4": {
+                "f_subject": null,
                 "f_teacher": null,
                 "f_type": null,
                 "f_theme": null,
-                "f_auditory": "312с",
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "3.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "3.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "3.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "Кошкаров Р.В.",
+                "f_type": "пр.з.",
+                "f_theme": "19.2",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "Кошкаров Р.В.",
+                "f_type": "пр.з.",
+                "f_theme": "19.2",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "Кошкаров Р.В.",
+                "f_type": "пр.з.",
+                "f_theme": "19.2",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             }
         }
     },
     "ПБ-41": {
-        "14/03/22": {
+        "21/03/22": {
             "1": {
-                "f_subject": "Пожарная безопасность в строительстве",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "9.3",
-                "f_auditory": "204с",
+                "f_subject": "Основы православной культуры",
+                "f_teacher": "кин Виноградов П.В.",
+                "f_type": "лек.",
+                "f_theme": "6.2",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарная безопасность в строительстве",
+                "f_subject": "Управление в системе МЧС",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "пр.з.",
+                "f_theme": "5.2",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Экономическая теория",
+                "f_teacher": "кмн Бабич М.Е.",
+                "f_type": "пр.з.",
+                "f_theme": "5.2",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Организация работы с кадрами МЧС России",
+                "f_teacher": "кпн Земскова А.А.",
+                "f_type": "лек.",
+                "f_theme": "6.1",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Государственный пожарный надзор",
                 "f_teacher": "Мальцев С.В.",
                 "f_type": "пр.з.",
-                "f_theme": "9.3",
+                "f_theme": "3.8",
                 "f_auditory": "204с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "пр.з.",
+                "f_theme": "3.8",
+                "f_auditory": "204с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Управление в системе МЧС",
+                "f_teacher": "Мельников С.М.",
+                "f_type": "лек.",
+                "f_theme": "6.1",
+                "f_auditory": "312с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Элективный курс по ФК и спорту № 1",
+                "f_teacher": "командир взвода",
+                "f_type": "пр.з.",
+                "f_theme": "3.2",
+                "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Организация защиты населения и территории от ЧС",
+                "f_teacher": "Естехин В.Г.",
+                "f_type": "лек.",
+                "f_theme": "3.1",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "11.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "11.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Пожарная безопасность технологических процессов",
+                "f_teacher": "Савченко С.А.",
+                "f_type": "пр.з.",
+                "f_theme": "11.3",
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Пожарная безопасность в строительстве",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "лек.",
+                "f_theme": "10.1",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "лек.",
+                "f_theme": "4.1",
+                "f_auditory": "201с",
                 "s_subject": null,
                 "s_auditory": null
             },
@@ -1079,56 +1321,27 @@
                 "f_subject": "Автоматизированные системы управления и связь",
                 "f_teacher": "Мельников С.М.",
                 "f_type": "лаб.з.",
-                "f_theme": "5.4",
-                "f_auditory": "201с",
+                "f_theme": "5.5",
+                "f_auditory": "312с",
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "26/03/22": {
             "1": {
-                "f_subject": "Организация защиты населения и территории от ЧС",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": "501с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Организация защиты населения и территории от ЧС",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": "501с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Экономическая теория",
-                "f_teacher": "кмн Бабич М.Е.",
-                "f_type": "лек.",
-                "f_theme": "5.1",
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Пожарная тактика",
-                "f_teacher": "Волик А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "21.2",
+                "f_subject": "Основы православной культуры",
+                "f_teacher": "кин Виноградов П.В.",
+                "f_type": "сем.",
+                "f_theme": "6.3",
                 "f_auditory": "312с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Пожарная тактика",
-                "f_teacher": "Волик А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "21.2",
+                "f_subject": "Основы православной культуры",
+                "f_teacher": "кин Виноградов П.В.",
+                "f_type": "лек.",
+                "f_theme": "7.1",
                 "f_auditory": "312с",
                 "s_subject": null,
                 "s_auditory": null
@@ -1139,221 +1352,18 @@
                 "f_type": null,
                 "f_theme": null,
                 "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Основы организации и ведения АСР",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "сем.",
-                "f_theme": "2.2",
-                "f_auditory": null,
-                "s_subject": "(выездное занятие)",
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Основы организации и ведения АСР",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": null,
-                "s_subject": "(выездное занятие)",
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Основы организации и ведения АСР",
-                "f_teacher": "Естехин В.Г.",
-                "f_type": "пр.з.",
-                "f_theme": "2.3",
-                "f_auditory": null,
-                "s_subject": "(выездное занятие)",
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "11.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "11.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Элективный курс по ФК и спорту № 1",
-                "f_teacher": "командир взвода",
-                "f_type": "пр.з.",
-                "f_theme": "3.1",
-                "f_auditory": "спортзал",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Пожарная техника",
-                "f_teacher": "Кошкаров Р.В.",
-                "f_type": "пр.з.",
-                "f_theme": "20.4",
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Пожарная техника",
-                "f_teacher": "Кошкаров Р.В.",
-                "f_type": "пр.з.",
-                "f_theme": "20.4",
-                "f_auditory": "311с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Пожарная техника",
-                "f_teacher": "Кошкаров Р.В.",
-                "f_type": "пр.з.",
-                "f_theme": "20.4",
-                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             }
         }
     },
     "ТБ-41": {
-        "14/03/22": {
+        "21/03/22": {
             "1": {
-                "f_subject": "Экстемальная психология",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "пр.з.",
-                "f_theme": "4.2",
-                "f_auditory": "312с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Физическая культура и спорт",
-                "f_teacher": "командир взвода",
-                "f_type": "пр.з.",
-                "f_theme": "3.1",
-                "f_auditory": "спортзал",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "лек.",
-                "f_theme": "13.1",
-                "f_auditory": "501с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "15/03/22": {
-            "1": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "12.3",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "12.3",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "12.3",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Расследование и экспертиза пожаров",
-                "f_teacher": "Кулага Н.В.",
-                "f_type": "лек.",
-                "f_theme": "14.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Расследование и экспертиза пожаров",
-                "f_teacher": "Кулага Н.В.",
-                "f_type": "лек.",
-                "f_theme": "14.2",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
                 "f_subject": "Самоподготовка",
                 "f_teacher": null,
                 "f_type": null,
                 "f_theme": null,
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "13.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Пожарная безопасность технологических процессов",
-                "f_teacher": "Савченко С.А.",
-                "f_type": "пр.з.",
-                "f_theme": "13.2",
-                "f_auditory": "103с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "13.2",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Пожарная техника",
-                "f_teacher": "Кошкаров Р.В.",
-                "f_type": "лек.",
-                "f_theme": "24.1",
                 "f_auditory": "101с",
                 "s_subject": null,
                 "s_auditory": null
@@ -1363,6 +1373,102 @@
                 "f_teacher": null,
                 "f_type": null,
                 "f_theme": null,
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "лек.",
+                "f_theme": "14.1",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Экстемальная психология",
+                "f_teacher": "кпн Земскова А.А.",
+                "f_type": "лек.",
+                "f_theme": "5.1",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Физическая культура и спорт",
+                "f_teacher": "командир взвода",
+                "f_type": "пр.з.",
+                "f_theme": "3.3",
+                "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "23/03/22": {
+            "1": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Савченко С.А.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Расследование и экспертиза пожаров",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "пр.з.",
+                "f_theme": "14.3",
+                "f_auditory": "312с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Расследование и экспертиза пожаров",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "пр.з.",
+                "f_theme": "14.3",
+                "f_auditory": "312с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "Кошкаров Р.В.",
+                "f_type": "лек.",
+                "f_theme": "25.1",
+                "f_auditory": "312с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарная техника",
+                "f_teacher": "Кошкаров Р.В.",
+                "f_type": "лек.",
+                "f_theme": "26.1",
                 "f_auditory": "312с",
                 "s_subject": null,
                 "s_auditory": null
@@ -1371,28 +1477,66 @@
                 "f_subject": "Физическая культура и спорт",
                 "f_teacher": "командир взвода",
                 "f_type": "пр.з.",
-                "f_theme": "3.2",
+                "f_theme": "3.4",
                 "f_auditory": "спортзал",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
                 "s_subject": null,
                 "s_auditory": null
             }
         },
-        "19/03/22": {
+        "25/03/22": {
             "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "314с",
+                "f_subject": "Расследование и экспертиза пожаров",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "лек.",
+                "f_theme": "15.1",
+                "f_auditory": "311с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "314с",
+                "f_subject": "Расследование и экспертиза пожаров",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "лек.",
+                "f_theme": "15.2",
+                "f_auditory": "311с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "лек.",
+                "f_theme": "14.2",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "пр.з.",
+                "f_theme": "14.3",
+                "f_auditory": "204с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Государственный пожарный надзор",
+                "f_teacher": "Мальцев С.В.",
+                "f_type": "пр.з.",
+                "f_theme": "14.3",
+                "f_auditory": "204с",
                 "s_subject": null,
                 "s_auditory": null
             },
@@ -1408,7 +1552,7 @@
         }
     },
     "ПБ-51": {
-        "14/03/22": {
+        "21/03/22": {
             "1": {
                 "f_subject": "Самоподготовка",
                 "f_teacher": null,
@@ -1419,17 +1563,55 @@
                 "s_auditory": null
             },
             "2": {
-                "f_subject": "Психологические аспекты принятия упр. реш. в экстр. ситуац.",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
                 "f_auditory": "101с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Психологические аспекты принятия упр. реш. в экстр. ситуац.",
-                "f_teacher": "кпн Земскова А.А.",
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Волик А.С.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
+                "f_type": "лек.",
+                "f_theme": "3.1",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
                 "f_type": "лек.",
                 "f_theme": "4.1",
                 "f_auditory": "101с",
@@ -1437,36 +1619,134 @@
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "23/03/22": {
+            "1": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Хабиров Т.Р., Кошкаров Р.В.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Хабиров Т.Р., Кошкаров Р.В.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Хабиров Т.Р., Кошкаров Р.В.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "102с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
             "1": {
                 "f_subject": "Основы сервиса безопасности",
                 "f_teacher": "ктн Белов А.С.",
                 "f_type": "пр.з.",
-                "f_theme": "2.4",
-                "f_auditory": "311с",
+                "f_theme": "3.3",
+                "f_auditory": "101с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "2": {
                 "f_subject": "Основы сервиса безопасности",
                 "f_teacher": "ктн Белов А.С.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
+                "f_type": "пр.з.",
+                "f_theme": "3.4",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Прогнозирование опасных факторов пожара",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "пр.з.",
+                "f_theme": "3.2",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
+                "f_type": "сем.",
+                "f_theme": "2.2",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Пожарно-техническая экспертиза",
+                "f_teacher": "Лубягина С.В.",
+                "f_type": "лаб.з.",
+                "f_theme": "12.2",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Пожарно-техническая экспертиза",
+                "f_teacher": "Лубягина С.В.",
+                "f_type": "лаб.з.",
+                "f_theme": "12.2",
                 "f_auditory": "201с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "312с",
+                "f_subject": "Пожарно-техническая экспертиза",
+                "f_teacher": "Лубягина С.В.",
+                "f_type": "лаб.з.",
+                "f_theme": "12.2",
+                "f_auditory": "201с",
                 "s_subject": null,
                 "s_auditory": null
             }
-        },
-        "16/03/22": {
+        }
+    },
+    "ПБ-52": {
+        "21/03/22": {
             "1": {
                 "f_subject": "Технологии поисково-спасательных работ",
                 "f_teacher": "Естехин В.Г.",
@@ -1493,119 +1773,39 @@
                 "f_auditory": null,
                 "s_subject": "(выездное занятие)",
                 "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Основы сервиса безопасности",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "3.2",
-                "f_auditory": "311с",
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
                 "s_subject": null,
                 "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Прогнозирование опасных факторов пожара",
-                "f_teacher": "Кулага Н.В.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
+            }
+        },
+        "22/03/22": {
+            "1": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Волик А.С.",
+                "f_type": null,
+                "f_theme": null,
                 "f_auditory": "314с",
                 "s_subject": null,
                 "s_auditory": null
             },
-            "3": {
-                "f_subject": "Прогнозирование опасных факторов пожара",
-                "f_teacher": "Кулага Н.В.",
+            "2": {
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
                 "f_type": "лек.",
                 "f_theme": "3.1",
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "лек.",
-                "f_theme": "15.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "101с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "11.2",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
-                "f_type": "лек.",
-                "f_theme": "12.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        }
-    },
-    "ПБ-52": {
-        "14/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "101с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Психологические аспекты принятия упр. реш. в экстр. ситуац.",
-                "f_teacher": "кпн Земскова А.А.",
-                "f_type": "лек.",
-                "f_theme": "4.1",
                 "f_auditory": "101с",
                 "s_subject": null,
                 "s_auditory": null
             },
             "3": {
-                "f_subject": "Психологические аспекты принятия упр. реш. в экстр. ситуац.",
-                "f_teacher": "кпн Земскова А.А.",
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
                 "f_type": "лек.",
                 "f_theme": "4.1",
                 "f_auditory": "101с",
@@ -1613,133 +1813,8 @@
                 "s_auditory": null
             }
         },
-        "15/03/22": {
+        "23/03/22": {
             "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Основы сервиса безопасности",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Основы сервиса безопасности",
-                "f_teacher": "ктн Белов А.С.",
-                "f_type": "пр.з.",
-                "f_theme": "3.2",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "16/03/22": {
-            "1": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "13.2",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "13.2",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "501с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "17/03/22": {
-            "1": {
-                "f_subject": "Самоподготовка",
-                "f_teacher": null,
-                "f_type": null,
-                "f_theme": null,
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Прогнозирование опасных факторов пожара",
-                "f_teacher": "Кулага Н.В.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Прогнозирование опасных факторов пожара",
-                "f_teacher": "Кулага Н.В.",
-                "f_type": "лек.",
-                "f_theme": "3.1",
-                "f_auditory": "314с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "18/03/22": {
-            "1": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "14.1",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "14.1",
-                "f_auditory": "204с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "3": {
-                "f_subject": "Государственный пожарный надзор",
-                "f_teacher": "Мальцев С.В.",
-                "f_type": "лек.",
-                "f_theme": "15.1",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            }
-        },
-        "19/03/22": {
-            "1": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
-                "f_type": "пр.з.",
-                "f_theme": "11.2",
-                "f_auditory": "201с",
-                "s_subject": null,
-                "s_auditory": null
-            },
-            "2": {
                 "f_subject": "Самоподготовка",
                 "f_teacher": null,
                 "f_type": null,
@@ -1748,12 +1823,117 @@
                 "s_subject": null,
                 "s_auditory": null
             },
+            "2": {
+                "f_subject": "Подготовка к ГИА",
+                "f_teacher": "Савченко С.А.",
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "103с",
+                "s_subject": null,
+                "s_auditory": null
+            },
             "3": {
-                "f_subject": "Пожарно-техническая экспертиза",
-                "f_teacher": "Лубягина С.В.",
-                "f_type": "лек.",
-                "f_theme": "12.1",
+                "f_subject": "Основы сервиса безопасности",
+                "f_teacher": "ктн Белов А.С.",
+                "f_type": "пр.з.",
+                "f_theme": "3.3",
                 "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "24/03/22": {
+            "1": {
+                "f_subject": "Прогнозирование опасных факторов пожара",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "пр.з.",
+                "f_theme": "3.2",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Прогнозирование опасных факторов пожара",
+                "f_teacher": "Кулага Н.В.",
+                "f_type": "пр.з.",
+                "f_theme": "3.2",
+                "f_auditory": "201с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Основы сервиса безопасности",
+                "f_teacher": "ктн Белов А.С.",
+                "f_type": "пр.з.",
+                "f_theme": "3.4",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "4": {
+                "f_subject": null,
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": null,
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "25/03/22": {
+            "1": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Государственный надзор в области ГО и ЗНиТ от ЧС",
+                "f_teacher": "Естехин В.Г.",
+                "f_type": "сем.",
+                "f_theme": "2.2",
+                "f_auditory": "101с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            }
+        },
+        "26/03/22": {
+            "1": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "2": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
+                "s_subject": null,
+                "s_auditory": null
+            },
+            "3": {
+                "f_subject": "Самоподготовка",
+                "f_teacher": null,
+                "f_type": null,
+                "f_theme": null,
+                "f_auditory": "314с",
                 "s_subject": null,
                 "s_auditory": null
             }

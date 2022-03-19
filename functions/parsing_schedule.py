@@ -6,7 +6,7 @@ import pandas as pd
 
 def n_nan(obj):
     if repr(obj).lower() in ("nan", "nat"):
-        return
+        return None
     return obj
 
 
@@ -16,7 +16,7 @@ def parse_to_days(loc: pd.DataFrame, days_and_pairs_block: pd.DataFrame):
     loc_days = {}
     start_day_index = 0
     for index, date, _ in days_and_pairs_block.itertuples():
-        if repr(date) != "NaT":
+        if n_nan(date):
             if index == 0:
                 continue
             else:
@@ -42,7 +42,7 @@ def parse_to_pairs(loc: pd.DataFrame):
     loc_pairs = {}
     start_pair_index = 0
     for index, pair, _, _, _ in reset_loc.itertuples():
-        if not n_nan(pair):
+        if n_nan(pair):
             if index == 0:
                 continue
             else:
@@ -121,10 +121,10 @@ def parser_by_teacher(data_by_group: dict):
             for pair, old_pair_data in data_in_pair.items():
                 try:
                     teacher = old_pair_data["f_teacher"]
-                    if teacher == "командир взвода":
-                        continue
-
                     if teacher:
+                        if ~teacher.find("командир"):
+                            continue
+
                         teacher = " ".join(teacher.split()[-2:])
 
                         teacher_data = data_by_teachers.setdefault(teacher, {})
@@ -143,7 +143,7 @@ def parser_by_teacher(data_by_group: dict):
                 try:
                     teacher = old_pair_data["s_teacher"]
                     if teacher:
-                        if teacher == "командир взвода":
+                        if ~teacher.find("командир"):
                             continue
 
                         teacher = " ".join(teacher.split()[-2:])
