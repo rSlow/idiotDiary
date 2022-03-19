@@ -1,0 +1,35 @@
+from bot import dispatcher, bot
+from aiogram import types
+from aiogram.dispatcher import FSMContext
+from keyboards import get_study_keyboard
+from keyboards import get_main_keyboard
+from database import add_new_user
+
+
+@dispatcher.message_handler(commands=["start", "help"], state="*")
+async def start(message: types.Message, state: FSMContext):
+    user_data = message.from_user
+    users = bot.users
+    if user_data.id not in users:
+        add_new_user(user_data)
+        users.append(user_data.id)
+        print(f"[NEW USER] {message.from_user.username}:{message.from_user.id}")
+
+    if await state.get_state():
+        await state.finish()
+
+    await message.bot.send_message(chat_id=user_data.id,
+                                   text="Добро пожаловать. Выберите действие:",
+                                   reply_markup=get_main_keyboard(message.from_user.id)
+                                   )
+
+
+@dispatcher.message_handler(lambda message: message.text == "Учёба 📚")
+async def study_menu(message: types.Message):
+    await message.answer(text="Доступны следующие функции:",
+                         reply_markup=get_study_keyboard())
+
+
+@dispatcher.message_handler(lambda message: message.text == "Интернет 🌍")
+async def internet_menu(message: types.Message):
+    await message.answer(text="В разработке.")
