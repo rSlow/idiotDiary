@@ -31,6 +31,9 @@ async def send_schedule_messages(user_id, group, dt_obj=None, limit_changing=Non
 
     try:  # for dates which don't have data (sunday) - for notifications
         data = get_schedule_data_from_dt(dt_obj=dt_obj, group=group)
+        if not data:
+            return
+
     except (KeyError, ValueError, IndexError):
         return
 

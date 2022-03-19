@@ -8,6 +8,7 @@ import os
 import pandas
 import re
 import json
+import asyncio
 
 from functions import parsing_schedule
 
@@ -80,7 +81,7 @@ async def main():
                 raw_email: bytearray = lines[1]
                 raw_email_string = raw_email.decode(encoding="UTF-8", errors="ignore")
                 msg = email.message_from_string(raw_email_string)
-                msg_subj: str = decode_msg_field(msg["Subject"] or "".strip())
+                msg_subj: str = decode_msg_field(msg["Subject"] or "").strip()
                 date_msg: str = msg["Date"]
                 datetime_obj = datetime.strptime(
                     date_msg[date_msg.find(",") + 2:],
@@ -90,7 +91,6 @@ async def main():
                 delta = now - datetime_obj
                 if delta.days > 0:
                     break
-
                 if ~msg_subj.find("Расписание МЧС"):
 
                     msg_ts = int(datetime_obj.timestamp())
@@ -136,7 +136,7 @@ async def main():
     now = datetime.now().astimezone(pytz.timezone("Asia/Vladivostok"))
 
     if not os.path.exists(temp):
-        os.mkdir(temp)
+        os.makedirs(temp, exist_ok=True)
 
     await async_main()
 
@@ -166,3 +166,7 @@ async def checking_schedule():
 
     with open(f"data/schedules/schedule_data_teacher.json", "w", encoding='utf-8-sig') as j_file:
         json.dump(data_by_teachers, j_file, indent=4, ensure_ascii=False)
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

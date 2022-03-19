@@ -6,7 +6,7 @@ import pandas as pd
 
 def n_nan(obj):
     if repr(obj).lower() in ("nan", "nat"):
-        return
+        return None
     return obj
 
 
@@ -16,7 +16,7 @@ def parse_to_days(loc: pd.DataFrame, days_and_pairs_block: pd.DataFrame):
     loc_days = {}
     start_day_index = 0
     for index, date, _ in days_and_pairs_block.itertuples():
-        if repr(date) != "NaT":
+        if n_nan(date):
             if index == 0:
                 continue
             else:
@@ -42,7 +42,7 @@ def parse_to_pairs(loc: pd.DataFrame):
     loc_pairs = {}
     start_pair_index = 0
     for index, pair, _, _, _ in reset_loc.itertuples():
-        if not n_nan(pair):
+        if n_nan(pair):
             if index == 0:
                 continue
             else:
@@ -120,43 +120,46 @@ def parser_by_teacher(data_by_group: dict):
         for date, data_in_pair in data_in_date.items():
             for pair, old_pair_data in data_in_pair.items():
                 try:
-                    teacher = old_pair_data["f_teacher"]
-                    if teacher == "командир взвода":
-                        continue
+                    teachers_block = old_pair_data["f_teacher"]
+                    if teachers_block:
+                        for teacher in teachers_block.split(","):
 
-                    if teacher:
-                        teacher = " ".join(teacher.split()[-2:])
+                            if ~teacher.find("командир"):
+                                continue
 
-                        teacher_data = data_by_teachers.setdefault(teacher, {})
-                        date_data = teacher_data.setdefault(date, {})
-                        pair_data = date_data.setdefault(pair, {})
+                            teacher = " ".join(teacher.split()[-2:]).strip()
 
-                        pair_data["group"] = group
-                        pair_data["subject"] = old_pair_data["f_subject"]
-                        pair_data["subject_type"] = old_pair_data["f_type"]
-                        pair_data["theme"] = old_pair_data["f_theme"]
-                        pair_data["auditory"] = old_pair_data["f_auditory"]
+                            teacher_data = data_by_teachers.setdefault(teacher, {})
+                            date_data = teacher_data.setdefault(date, {})
+                            pair_data = date_data.setdefault(pair, {})
+
+                            pair_data["group"] = group
+                            pair_data["subject"] = old_pair_data["f_subject"]
+                            pair_data["subject_type"] = old_pair_data["f_type"] or "отсутствует"
+                            pair_data["theme"] = old_pair_data["f_theme"] or "отсутствует"
+                            pair_data["auditory"] = old_pair_data["f_auditory"]
 
                 except (IndexError, KeyError):
                     pass
 
                 try:
-                    teacher = old_pair_data["s_teacher"]
-                    if teacher:
-                        if teacher == "командир взвода":
-                            continue
+                    teachers_block = old_pair_data["s_teacher"]
+                    if teachers_block:
+                        for teacher in teachers_block.split(","):
+                            if ~teacher.find("командир"):
+                                continue
 
-                        teacher = " ".join(teacher.split()[-2:])
+                            teacher = " ".join(teacher.split()[-2:]).strip()
 
-                        teacher_data = data_by_teachers.setdefault(teacher, {})
-                        date_data = teacher_data.setdefault(date, {})
-                        pair_data = date_data.setdefault(pair, {})
+                            teacher_data = data_by_teachers.setdefault(teacher, {})
+                            date_data = teacher_data.setdefault(date, {})
+                            pair_data = date_data.setdefault(pair, {})
 
-                        pair_data["group"] = group
-                        pair_data["subject"] = old_pair_data["s_subject"]
-                        pair_data["subject_type"] = old_pair_data["s_type"]
-                        pair_data["theme"] = old_pair_data["s_theme"]
-                        pair_data["auditory"] = old_pair_data["s_auditory"]
+                            pair_data["group"] = group
+                            pair_data["subject"] = old_pair_data["s_subject"]
+                            pair_data["subject_type"] = old_pair_data["s_type"] or "отсутствует"
+                            pair_data["theme"] = old_pair_data["s_theme"] or "отсутствует"
+                            pair_data["auditory"] = old_pair_data["s_auditory"]
 
                 except (IndexError, KeyError):
                     pass
