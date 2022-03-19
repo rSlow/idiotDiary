@@ -23,6 +23,7 @@ class ScheduleSettings(StatesGroup):
 
 
 class FSMAdmin(StatesGroup):
+    ## something
     start = State()
     stop = State()
     mailing = State()
