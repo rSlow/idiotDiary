@@ -110,7 +110,7 @@ def parser_by_group(filename):
                     data[group_name][day][pair]["s_type"] = s_type
                     data[group_name][day][pair]["s_theme"] = s_theme
                     data[group_name][day][pair]["s_auditory"] = s_auditory. \
-                        replace("(ДВ)", "") if f_auditory is not None else f_auditory
+                        replace("(ДВ)", "") if s_auditory is not None else s_auditory
     return data
 
 
