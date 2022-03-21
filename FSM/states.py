@@ -15,6 +15,11 @@ class Schedule(StatesGroup):
     date_for_teacher = State()
 
 
+class DownloadLibrary(StatesGroup):
+    library = State()
+    downloading_book = State()
+
+
 class ScheduleSettings(StatesGroup):
     group = State()
     group_settings = State()
