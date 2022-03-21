@@ -99,7 +99,6 @@ async def main():
 
                     payload = msg.get_payload()[1]
                     filename_obj = payload["Content-Disposition"]
-
                     encoded_filename = filename_obj[filename_obj.find("=?UTF-8?"):-1]
                     decoded_filename = str(msg_ts) + "-" + decode_msg_field(encoded_filename)
 

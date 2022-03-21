@@ -1,6 +1,5 @@
-# 🌐 Python Telegram bot by redSlow
----
-### 🔥 [Telegram](https://t.me/redslowBot)
+## 🌐 Python Telegram bot by redSlow
+#### 🔥 [Telegram](https://t.me/redslowBot)
 - Automatic update schedule
 - Automatic notifications
 - Useful functions
