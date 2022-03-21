@@ -20,6 +20,14 @@ def get_study_keyboard():
     return study_keyboard
 
 
+def get_internet_keyboard():
+    internet_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    internet_buttons = ["Скачать с библиотеки 📚", ]
+    internet_keyboard.add(*internet_buttons)
+    internet_keyboard.add("↪ На главную")
+    return internet_keyboard
+
+
 def get_schedule_keyboard():
     schedule_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     schedule_buttons = [
