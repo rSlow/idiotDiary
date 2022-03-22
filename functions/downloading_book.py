@@ -8,13 +8,15 @@ import img2pdf
 import glob
 import shutil
 from aiogram import types
+from datetime import datetime
 
 
-async def download_book(msg: types.Message, link:str):
+async def download_book(msg: types.Message, link: str):
     login = "79146996046"
     password = "rS1owmax"
+    ts = datetime.now().timestamp()
 
-    temp = f"data\\temp\\{msg.from_user.id}"
+    temp = f"data\\temp\\{msg.from_user.id}-{ts}"
     domain = "http://elib.igps.ru/"
     archive_server = domain + "ArchiveServer"
     headers = {"User-Agent": UserAgent().random,
@@ -49,7 +51,6 @@ async def download_book(msg: types.Message, link:str):
     async def authorize(session):
         await session.get(url=domain)
         await session.post(url=post_url, data=data, headers=headers)
-        await msg.edit_text(text="Авторизация пройдена.")
 
     async def get_full_url_and_filename(session):
         async with session.get(url=link, headers=headers) as response:
@@ -83,7 +84,6 @@ async def download_book(msg: types.Message, link:str):
             page_data = await response.read()
             page_soup = BeautifulSoup(page_data, "lxml")
             pages = page_soup.find("div", {"class": "last-page-number-textfield"}).text
-            await msg.edit_text(text=f"Началась загрузка. Всего {pages} страниц")
             return pages
 
     async def download_page(session, page, params_img):
@@ -96,10 +96,13 @@ async def download_book(msg: types.Message, link:str):
     async def main():
         async with aiohttp.ClientSession() as session:
             await authorize(session)
+            await msg.edit_text(text="Авторизация пройдена.")
+
             full_url, filename = await get_full_url_and_filename(session)
             app_block_url = await get_url_to_app_block(session, full_url)
             params_page = await get_params_from_app_url(session, app_block_url)
             pages = await get_pages(session, params_page)
+            await msg.edit_text(text=f"Началась загрузка. Всего {pages} страниц")
 
             tasks = list()
             for page in range(1, int(pages) + 1):
@@ -112,13 +115,13 @@ async def download_book(msg: types.Message, link:str):
                 }
                 tasks.append(asyncio.create_task(download_page(session, page, params_img)))
             await asyncio.gather(*tasks)
+            await msg.edit_text(text="Загрузка завершена, формируем PDF...")
 
             way = os.path.join(temp, "*.png")
-            print(way)
-            print(glob.glob(way))
-            temp_filename = f"data\\temp\\{msg.from_user.id}\\book.pdf"
+            temp_filename = os.path.join(temp, "book.pdf")
             with open(temp_filename, "wb") as file:
                 file.write(img2pdf.convert(glob.glob(way)))
+            await msg.edit_text(text="Отправляем файл...")
 
             doc = types.InputFile(path_or_bytesio=temp_filename,
                                   filename=f"{filename}.pdf")

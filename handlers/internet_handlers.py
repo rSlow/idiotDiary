@@ -1,7 +1,7 @@
 from bot import dispatcher
 from aiogram import types
 from functions import n_text
-from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup
 from FSM import DownloadLibrary
 from functions import downloading_book
 
@@ -19,8 +19,9 @@ async def download_library(message: types.Message):
                          reply_markup=kb)
 
 
-@dispatcher.message_handler(state=DownloadLibrary.library)
+@dispatcher.message_handler(regexp=r"\bhttp://elib.igps.ru/[\S]+", state=DownloadLibrary.library)
 async def await_link_library(message: types.Message):
     await DownloadLibrary.downloading_book.set()
     msg = await message.answer(text="Начинаю загрузку...")
     await downloading_book.download_book(msg=msg, link=message.text)
+    await download_library(message)
