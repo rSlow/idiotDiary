@@ -4,6 +4,7 @@ from functions import n_text
 from aiogram.types import ReplyKeyboardMarkup
 from FSM import DownloadLibrary
 from functions import downloading_book
+from aiogram.utils.exceptions import NetworkError
 
 
 @dispatcher.message_handler(lambda message: n_text(message.text) == "Скачать с библиотеки")
@@ -23,5 +24,9 @@ async def download_library(message: types.Message):
 async def await_link_library(message: types.Message):
     await DownloadLibrary.downloading_book.set()
     msg = await message.answer(text="Начинаю загрузку...")
-    await downloading_book.download_book(msg=msg, link=message.text)
-    await message.answer(text="Загрузка завершена.")
+    try:
+        await downloading_book.download_book(msg=msg, link=message.text)
+        await message.answer(text="Загрузка завершена.")
+    except NetworkError:
+        await msg.answer(text="Размер файла превышает 50 МБ - ограничение Telegram. "
+                              "Способы загрузки пока в разработке.")

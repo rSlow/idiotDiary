@@ -9,6 +9,7 @@ import glob
 import shutil
 from aiogram import types
 from datetime import datetime
+from aiogram.utils.exceptions import NetworkError
 
 
 async def download_book(msg: types.Message, link: str):
@@ -94,6 +95,14 @@ async def download_book(msg: types.Message, link: str):
             with open(path, "wb") as img_file:
                 img_file.write(image_data)
 
+    def get_created_pdf_filename():
+        way = os.path.join(temp, "*.png")
+        temp_filename = os.path.join(temp, "book.pdf")
+        with open(temp_filename, "wb") as file:
+            file.write(
+                img2pdf.convert(sorted(glob.glob(way), key=lambda x: int(os.path.split(x)[-1].split(".")[0]))))
+        return temp_filename
+
     async def main():
         async with aiohttp.ClientSession() as session:
             await authorize(session)
@@ -117,14 +126,9 @@ async def download_book(msg: types.Message, link: str):
                 tasks.append(asyncio.create_task(download_page(session, page, params_img)))
             await asyncio.gather(*tasks)
             await msg.edit_text(text="Загрузка завершена, формируем PDF...")
+            temp_filename = get_created_pdf_filename()
 
-            way = os.path.join(temp, "*.png")
-            temp_filename = os.path.join(temp, "book.pdf")
-            with open(temp_filename, "wb") as file:
-                file.write(
-                    img2pdf.convert(sorted(glob.glob(way), key=lambda x: int(os.path.split(x)[-1].split(".")[0]))))
             await msg.edit_text(text="Отправляем файл...")
-
             doc = types.InputFile(path_or_bytesio=temp_filename,
                                   filename=f"{filename}.pdf")
             print(f"[BOOK] Downloaded book for {msg.chat.username}:{msg.chat.id}")
@@ -134,9 +138,10 @@ async def download_book(msg: types.Message, link: str):
         if not os.path.exists(temp):
             os.makedirs(temp, exist_ok=True)
         await main()
+    except NetworkError as NE:
+        raise NE
     except Exception as ex:
         print(ex)
     finally:
         shutil.rmtree(temp, ignore_errors=True)
-
-    await msg.delete()
+        await msg.delete()
