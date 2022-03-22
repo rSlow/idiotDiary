@@ -19,6 +19,7 @@ async def main_admin(message: types.Message):
         await message.delete()
     else:
         await FSMAdmin.start.set()
+        print(1)
         await message.answer(text="Панель ~идиота~ администратора\:",
                              reply_markup=get_main_admin_keyboard(),
                              parse_mode="MarkdownV2")
@@ -57,7 +58,8 @@ async def mailing(message: types.Message):
 
 @dispatcher.message_handler(state=FSMAdmin.mailing)
 async def schedule_options(message: types.Message):
-    users = bot.users
+
+    users = bot.users.copy()
     users.remove(message.from_user.id)
     count = 0
     for user_id in users:

@@ -1,6 +1,6 @@
 from bot import scheduler, bot
 from functions import aioimap, append_job_in_scheduler
-from database import get_all_notifications, get_all_users
+from database import get_all_notifications, get_all_users, db
 import json
 import datetime as dt
 from functions.schedule_functions import send_schedule_messages
@@ -8,8 +8,6 @@ from functions.schedule_functions import send_schedule_messages
 
 async def on_startup(_):
     bot.users.extend(get_all_users())
-    # await aioimap.checking_schedule()
-
     for user_id, _, group, time_str in get_all_notifications():
         time_settings = json.loads(time_str)
         for time in time_settings:
@@ -29,3 +27,9 @@ async def on_startup(_):
     scheduler.add_job(func=aioimap.checking_schedule,
                       trigger="interval",
                       seconds=60 * 60 * 6)
+
+
+async def on_shutdown(_):
+    print("[DB COMMIT] Database is closed.")
+    db.commit()
+    db.close()
