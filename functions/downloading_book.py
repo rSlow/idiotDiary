@@ -121,7 +121,8 @@ async def download_book(msg: types.Message, link: str):
             way = os.path.join(temp, "*.png")
             temp_filename = os.path.join(temp, "book.pdf")
             with open(temp_filename, "wb") as file:
-                file.write(img2pdf.convert(glob.glob(way)))
+                file.write(
+                    img2pdf.convert(sorted(glob.glob(way), key=lambda x: int(os.path.split(x)[-1].split(".")[0]))))
             await msg.edit_text(text="Отправляем файл...")
 
             doc = types.InputFile(path_or_bytesio=temp_filename,
