@@ -24,4 +24,4 @@ async def await_link_library(message: types.Message):
     await DownloadLibrary.downloading_book.set()
     msg = await message.answer(text="Начинаю загрузку...")
     await downloading_book.download_book(msg=msg, link=message.text)
-    await download_library(message)
+    await message.answer(text="Загрузка завершена.")
