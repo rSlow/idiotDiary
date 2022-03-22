@@ -14,9 +14,9 @@ from datetime import datetime
 async def download_book(msg: types.Message, link: str):
     login = "79146996046"
     password = "rS1owmax"
-    ts = datetime.now().timestamp()
+    ts = int(datetime.now().timestamp())
 
-    temp = f"data\\temp\\{msg.from_user.id}-{ts}"
+    temp = os.path.join("data", "temp", f"{msg.from_user.id}-{ts}")
     domain = "http://elib.igps.ru/"
     archive_server = domain + "ArchiveServer"
     headers = {"User-Agent": UserAgent().random,
@@ -132,7 +132,7 @@ async def download_book(msg: types.Message, link: str):
 
     try:
         if not os.path.exists(temp):
-            os.mkdir(temp)
+            os.makedirs(temp, exist_ok=True)
         await main()
     except Exception as ex:
         print(ex)
