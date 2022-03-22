@@ -90,7 +90,8 @@ async def download_book(msg: types.Message, link: str):
         image_url = archive_server + "/vwr/imgres"
         async with session.get(url=image_url, headers=headers, params=params_img) as response:
             image_data = await response.read()
-            with open(f"{temp}\\{page}.png", "wb") as img_file:
+            path = os.path.join(temp, f"{page}.png")
+            with open(path, "wb") as img_file:
                 img_file.write(image_data)
 
     async def main():
@@ -125,6 +126,7 @@ async def download_book(msg: types.Message, link: str):
 
             doc = types.InputFile(path_or_bytesio=temp_filename,
                                   filename=f"{filename}.pdf")
+            print(f"[BOOK] Downloaded book for {msg.chat.username}:{msg.chat.id}")
             await msg.answer_document(doc)
 
     try:
