@@ -140,8 +140,6 @@ async def download_book(msg: types.Message, link: str):
         await main()
     except NetworkError as NE:
         raise NE
-    except Exception as ex:
-        print(ex)
     finally:
         shutil.rmtree(temp, ignore_errors=True)
         await msg.delete()

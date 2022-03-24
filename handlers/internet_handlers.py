@@ -30,3 +30,5 @@ async def await_link_library(message: types.Message):
     except NetworkError:
         await msg.answer(text="Размер файла превышает 50 МБ - ограничение Telegram. "
                               "Способы загрузки пока в разработке.")
+    except Exception as ex:
+        print(ex)
