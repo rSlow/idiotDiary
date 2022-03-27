@@ -1,20 +1,20 @@
 from bot import dispatcher
 from aiogram import types
-from functions import n_text
 from aiogram.types import ReplyKeyboardMarkup
 from FSM import DownloadLibrary
 from functions import downloading_book
 from aiogram.utils.exceptions import NetworkError
+from aiogram.dispatcher.filters import Text
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Скачать с библиотеки")
+@dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
 async def download_library(message: types.Message):
     await DownloadLibrary.library.set()
     await message.answer(text="Для скачивания необходимо вставить ссылку с страницы книги.\n"
                               "Например:\n"
                               "http://elib.igps.ru/?14&type=card&"
                               "cid=ALSFR-cc6b6829-29df-4697-870c-c1520879daf9&remote=false")
-    kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Ссылка:")
     kb.add("↪ На главную")
     await message.answer(text="Введите ссылку:",
                          reply_markup=kb)

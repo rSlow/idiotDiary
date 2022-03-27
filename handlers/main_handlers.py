@@ -2,13 +2,14 @@ from string import punctuation
 from bot import dispatcher, bot
 from cenz import cenz
 from aiogram import types
+from aiogram.dispatcher.filters import Text
 from functions import n_text
 from aiogram.dispatcher import FSMContext
 from keyboards import get_main_keyboard
 from database import add_new_user
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "На главную", state="*")
+@dispatcher.message_handler(Text(equals="↪ На главную"), state="*")
 async def to_main_menu(message: types.Message, state: FSMContext):
     user_data = message.from_user
     users = bot.users

@@ -2,54 +2,50 @@ from bot import dispatcher, bot
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.utils.exceptions import BotBlocked
+from aiogram.dispatcher.filters import Text
 
 import os
 import json
 
-from functions import parsing_schedule, aioimap, n_text, get_file
+from functions import parsing_schedule, aioimap, get_file
 from FSM import FSMAdmin
 from keyboards import get_main_admin_keyboard, get_schedule_admin_keyboard
 from database import deactivate_user, db
 
 
-@dispatcher.message_handler(lambda message: message.text == "Панель администратора")
+@dispatcher.message_handler(Text(contains="Панель администратора"))
 @dispatcher.message_handler(commands=["admin"])
 async def main_admin(message: types.Message):
     if message.from_user.id not in bot.admins:
         await message.delete()
     else:
         await FSMAdmin.start.set()
-        print(1)
         await message.answer(text="Панель ~идиота~ администратора\:",
                              reply_markup=get_main_admin_keyboard(),
                              parse_mode="MarkdownV2")
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Остановить бота",
-                            state=FSMAdmin.start)
+@dispatcher.message_handler(Text(contains="Остановить бота"), state=FSMAdmin.start)
 async def stop_bot(message: types.Message):
     await FSMAdmin.stop.set()
     await message.answer("Остановить бота?")
 
 
-@dispatcher.message_handler(lambda message: message.text == "да",
-                            state=FSMAdmin.stop)
+@dispatcher.message_handler(Text(equals="да"), state=FSMAdmin.stop)
 async def stop_bot(_):
     db.commit()
     db.close()
     dispatcher.stop_polling()
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Расписание",
-                            state=FSMAdmin.start)
+@dispatcher.message_handler(Text(contains="Расписание"), state=FSMAdmin.start)
 async def schedule_options(message: types.Message):
     await FSMAdmin.schedule.set()
     await message.answer(text="Опции:",
                          reply_markup=get_schedule_admin_keyboard())
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Рассылка",
-                            state=FSMAdmin.start)
+@dispatcher.message_handler(Text(contains="Рассылка"), state=FSMAdmin.start)
 async def mailing(message: types.Message):
     await FSMAdmin.mailing.set()
     await message.answer(f"Предварительно рассылка возможна на {len(bot.users)} пользователей.")
@@ -58,7 +54,6 @@ async def mailing(message: types.Message):
 
 @dispatcher.message_handler(state=FSMAdmin.mailing)
 async def schedule_options(message: types.Message):
-
     users = bot.users.copy()
     users.remove(message.from_user.id)
     count = 0
@@ -78,8 +73,7 @@ async def schedule_options(message: types.Message):
     await main_admin(message)
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Обновить с почты",
-                            state=FSMAdmin.schedule)
+@dispatcher.message_handler(Text(equals="Обновить с почты"), state=FSMAdmin.schedule)
 async def imap_update(message: types.Message):
     start_message = await message.answer(text="Начинаю обновление...")
     try:
@@ -92,16 +86,14 @@ async def imap_update(message: types.Message):
     await start_message.delete()
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Загрузить",
-                            state=FSMAdmin.schedule)
+@dispatcher.message_handler(Text(equals="Загрузить"), state=FSMAdmin.schedule)
 async def download_schedule_file(message: types.Message):
     await FSMAdmin.download_schedule.set()
     await message.answer(text="Выбери файл для загрузки:",
                          reply_markup=ReplyKeyboardRemove())
 
 
-@dispatcher.message_handler(content_types=['document'],
-                            state=FSMAdmin.download_schedule)
+@dispatcher.message_handler(content_types=['document'], state=FSMAdmin.download_schedule)
 async def wait_document(message: types.Message):
     await FSMAdmin.start.set()
     if os.path.splitext(message.document.file_name)[1] != ".xlsx":

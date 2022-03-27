@@ -1,5 +1,6 @@
 from bot import dispatcher, bot
 from aiogram import types
+from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from keyboards import get_main_keyboard, get_internet_keyboard, get_study_keyboard
 from database import add_new_user
@@ -23,13 +24,13 @@ async def start(message: types.Message, state: FSMContext):
                                    )
 
 
-@dispatcher.message_handler(lambda message: message.text == "Учёба 📚")
+@dispatcher.message_handler(Text(equals="Учёба 📚"))
 async def study_menu(message: types.Message):
     await message.answer(text="Доступны следующие функции:",
                          reply_markup=get_study_keyboard())
 
 
-@dispatcher.message_handler(lambda message: message.text == "Интернет 🌍")
+@dispatcher.message_handler(Text(equals="Интернет 🌍"))
 async def internet_menu(message: types.Message):
     await message.answer(text="Доступны следующие функции:",
                          reply_markup=get_internet_keyboard())

@@ -2,6 +2,7 @@ import json
 
 from bot import dispatcher, scheduler, bot
 from aiogram import types
+from aiogram.dispatcher.filters import Text
 import datetime as dt
 from functions import n_text, send_schedule_messages, disable_jobs, append_job_in_scheduler, delete_job_from_scheduler
 from FSM import Schedule, ScheduleSettings
@@ -14,8 +15,7 @@ from random import randrange
 from asyncio import sleep
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Оповещение",
-                            state=Schedule.start)
+@dispatcher.message_handler(Text(contains="Оповещение"), state=Schedule.start)
 async def schedule_menu(message: types.Message):
     user_id = message.from_user.id
 
@@ -47,8 +47,7 @@ async def schedule_menu(message: types.Message):
                              parse_mode="HTML")
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Включить",
-                            state=Schedule.notifications_ready)
+@dispatcher.message_handler(Text(contains="Включить"), state=Schedule.notifications_ready)
 async def schedule_notifications_enable(message: types.Message):
     user_id = message.from_user.id
 
@@ -72,8 +71,7 @@ async def schedule_notifications_enable(message: types.Message):
     print(f"[NOTIFICATION ON] {message.from_user.username}:{message.from_user.id}")
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Выключить",
-                            state=Schedule.notifications_ready)
+@dispatcher.message_handler(Text(contains="Выключить"), state=Schedule.notifications_ready)
 async def schedule_main_notifications_disable(message: types.Message):
     user_id = message.from_user.id
     disable_notifications(user_id)
@@ -83,8 +81,7 @@ async def schedule_main_notifications_disable(message: types.Message):
     print(f"[NOTIFICATION OFF] {message.from_user.username}:{message.from_user.id}")
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Группа",
-                            state=[Schedule.notifications, Schedule.notifications_ready])
+@dispatcher.message_handler(Text(contains="Группа"), state=[Schedule.notifications, Schedule.notifications_ready])
 async def schedule_group_settings(message: types.Message):
     await ScheduleSettings.group.set()
     user_notify_data = get_user_data(message.from_user.id)
@@ -118,8 +115,7 @@ async def schedule_choice_group_settings(message: types.Message):
     await schedule_menu(message)
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Удалить группу",
-                            state=ScheduleSettings.group)
+@dispatcher.message_handler(Text(contains="Удалить группу"), state=ScheduleSettings.group)
 async def schedule_del_group_settings(message: types.Message):
     user_id = message.from_user.id
     set_group_to_user(group="", user_id=user_id)
@@ -130,8 +126,7 @@ async def schedule_del_group_settings(message: types.Message):
     await schedule_menu(message)
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Время",
-                            state=[Schedule.notifications, Schedule.notifications_ready])
+@dispatcher.message_handler(Text(contains="Время"), state=[Schedule.notifications, Schedule.notifications_ready])
 async def schedule_time_settings(message: types.Message):
     await ScheduleSettings.time.set()
     user_id = message.from_user.id
@@ -150,8 +145,7 @@ async def schedule_time_settings(message: types.Message):
                          reply_markup=get_main_time_keyboard(time_settings))
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Удалить все метки",
-                            state=ScheduleSettings.time)
+@dispatcher.message_handler(Text(contains="Удалить все метки"), state=ScheduleSettings.time)
 async def schedule_set_time_settings(message: types.Message):
     user_id = message.from_user.id
     set_time_to_user("[]", user_id)
@@ -183,11 +177,10 @@ async def schedule_set_time_settings(message: types.Message):
         msg = await message.answer("Не лезь!")
         await message.delete()
         await sleep(5)
-        await message.bot.delete_message(msg.chat.id, msg.message_id)
+        await msg.delete()
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Добавить время оповещения",
-                            state=ScheduleSettings.time)
+@dispatcher.message_handler(Text(contains="Добавить время оповещения"), state=ScheduleSettings.time)
 async def schedule_wait_time_settings(message: types.Message):
     await ScheduleSettings.time_set.set()
     times_for_example = '\n'.join([f"{randrange(1, 24):02}:{randrange(0, 60):02}" for _ in range(3)])

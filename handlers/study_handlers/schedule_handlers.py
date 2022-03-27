@@ -2,6 +2,7 @@ from bot import dispatcher
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup
+from aiogram.dispatcher.filters import Text
 import datetime as dt
 import pytz
 
@@ -12,7 +13,7 @@ from functions import n_text, send_schedule_messages, send_schedule_messages_to_
 import json
 
 
-@dispatcher.message_handler(lambda message: message.text == "Расписание 📝")
+@dispatcher.message_handler(Text(contains="Расписание"))
 async def schedule_menu(message: types.Message):
     await Schedule.start.set()
     await message.answer(text="Доступны следующие функции:",
@@ -20,8 +21,7 @@ async def schedule_menu(message: types.Message):
 
 
 @dispatcher.message_handler(commands=["rasp"], state="*")
-@dispatcher.message_handler(lambda message: message.text == "Узнать расписание 📝",
-                            state=Schedule.start)
+@dispatcher.message_handler(Text(contains="Узнать расписание"), state=Schedule.start)
 async def schedule_menu_check(message: types.Message):
     await Schedule.category.set()
 
@@ -33,8 +33,7 @@ async def schedule_menu_check(message: types.Message):
                          reply_markup=category_schedule_kb)
 
 
-@dispatcher.message_handler(lambda message: message.text == "Актуальный файл 🧾",
-                            state=Schedule.start)
+@dispatcher.message_handler(Text(contains="Актуальный файл"), state=Schedule.start)
 async def release_schedule_file(message: types.Message):
     with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
         schedule_data = json.load(j_file)
@@ -52,8 +51,7 @@ async def release_schedule_file(message: types.Message):
     await message.answer_document(doc)
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Для курсантов",
-                            state=Schedule.category)
+@dispatcher.message_handler(Text(contains="Для курсантов"), state=Schedule.category)
 async def schedule_group_menu(message: types.Message):
     await Schedule.group.set()
     with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
@@ -107,8 +105,7 @@ async def schedule_date(message: types.Message, state: FSMContext):
                                  dt_obj=dt_obj)
 
 
-@dispatcher.message_handler(lambda message: n_text(message.text) == "Для преподавателей",
-                            state=Schedule.category)
+@dispatcher.message_handler(Text(contains="Для преподавателей"), state=Schedule.category)
 async def schedule_teacher_menu(message: types.Message):
     await Schedule.teacher.set()
 
@@ -119,7 +116,7 @@ async def schedule_teacher_menu(message: types.Message):
                          reply_markup=get_teachers_keyboard(teachers))
 
 
-@dispatcher.message_handler(state=Schedule.teacher)
+@dispatcher.message_handler(regexp=r"(\w&\D)+\s+(\w&\D)[.](\w&\D)[.]", state=Schedule.teacher)
 async def schedule_teacher_menu(message: types.Message, state: FSMContext):
     with open("data/schedules/schedule_data_teacher.json", "r", encoding="utf-8-sig") as j_file:
         teachers_data = json.load(j_file)
