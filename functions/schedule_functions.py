@@ -3,10 +3,10 @@ from bot import token, bot
 import aiogram.utils.markdown as md
 from aiogram import types
 from aiogram.utils.exceptions import BotBlocked
-from database import disable_notifications
 import datetime as dt
 import pytz
 import json
+from database import User
 
 __all__ = (
     "get_file",
@@ -101,7 +101,7 @@ async def send_schedule_messages(user_id, group, dt_obj=None, limit_changing=Non
                                        text=md.text(*answers_md),
                                        parse_mode=types.ParseMode.HTML)
     except BotBlocked:  # checking if user blocks bot
-        disable_notifications(user_id)
+        User.deactivate(user_id)
         for job in bot.notification_data[user_id]:
             if user_id in bot.notification_data:
                 job.remove()

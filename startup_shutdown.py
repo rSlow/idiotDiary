@@ -1,35 +1,30 @@
 from bot import scheduler, bot
-from functions import aioimap, append_job_in_scheduler
-from database import get_all_notifications, get_all_users, db
-import json
-import datetime as dt
+from functions import aioimap
 from functions.schedule_functions import send_schedule_messages
+from database import Session, User
 
 
 async def on_startup(_):
-    bot.users.extend(get_all_users())
-    for user_id, _, group, time_str in get_all_notifications():
-        time_settings = json.loads(time_str)
-        for time in time_settings:
-            user_dt_obj = dt.datetime.strptime(time, "%H:%M")
-
-            job = scheduler.add_job(func=send_schedule_messages,
-                                    trigger="cron",
-                                    hour=user_dt_obj.hour,
-                                    minute=user_dt_obj.minute,
-                                    kwargs={
-                                        "user_id": user_id,
-                                        "group": group,
-                                        "limit_changing": 9
-                                    })
-            append_job_in_scheduler(user_id=user_id, time_str=time, job=job)
-
+    with Session() as session:
+        all_users = [userdata[0] for userdata in session.query(User.user_id).all()]
+        bot.users.extend(all_users)
+        all_notifications_data: list[User] = session.query(User).filter(User.notify_status == 1).all()
+        for user in all_notifications_data:
+            for notification in user.notify_times:
+                job = scheduler.add_job(func=send_schedule_messages,
+                                        trigger="cron",
+                                        hour=notification.time.hour,
+                                        minute=notification.time.minute,
+                                        kwargs={
+                                            "user_id": user.user_id,
+                                            "group": user.notify_group,
+                                            "limit_changing": 9
+                                        })
+                bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
     scheduler.add_job(func=aioimap.checking_schedule,
                       trigger="interval",
                       seconds=60 * 60 * 6)
 
 
 async def on_shutdown(_):
-    print("[DB COMMIT] Database is closed.")
-    db.commit()
-    db.close()
+    print("[BOT STOP] Bot has been closed.")

@@ -3,6 +3,7 @@ from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters import Text
+from database import User
 
 import os
 import json
@@ -10,7 +11,6 @@ import json
 from functions import parsing_schedule, aioimap, get_file
 from FSM import FSMAdmin
 from keyboards import get_main_admin_keyboard, get_schedule_admin_keyboard
-from database import deactivate_user, db
 
 
 @dispatcher.message_handler(Text(contains="Панель администратора"))
@@ -33,8 +33,6 @@ async def stop_bot(message: types.Message):
 
 @dispatcher.message_handler(Text(equals="да"), state=FSMAdmin.stop)
 async def stop_bot(_):
-    db.commit()
-    db.close()
     dispatcher.stop_polling()
 
 
@@ -64,7 +62,7 @@ async def schedule_options(message: types.Message):
                                    parse_mode="HTML")
             count += 1
         except BotBlocked:
-            deactivate_user(user_id)
+            User.deactivate(user_id)
 
     await message.answer(text=f"Рассылка осуществлена на {count} пользователей.")
     if len(users) - count:
@@ -73,7 +71,7 @@ async def schedule_options(message: types.Message):
     await main_admin(message)
 
 
-@dispatcher.message_handler(Text(equals="Обновить с почты"), state=FSMAdmin.schedule)
+@dispatcher.message_handler(Text(contains="Обновить с почты"), state=FSMAdmin.schedule)
 async def imap_update(message: types.Message):
     start_message = await message.answer(text="Начинаю обновление...")
     try:
@@ -83,10 +81,12 @@ async def imap_update(message: types.Message):
         await message.answer(
             text=f"*[ERROR]* {ex}",
             parse_mode="MarkdownV2")
+        raise ex
+
     await start_message.delete()
 
 
-@dispatcher.message_handler(Text(equals="Загрузить"), state=FSMAdmin.schedule)
+@dispatcher.message_handler(Text(contains="Загрузить"), state=FSMAdmin.schedule)
 async def download_schedule_file(message: types.Message):
     await FSMAdmin.download_schedule.set()
     await message.answer(text="Выбери файл для загрузки:",

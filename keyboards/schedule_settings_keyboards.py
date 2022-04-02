@@ -1,12 +1,12 @@
 from aiogram.types import ReplyKeyboardMarkup
 
 
-def get_notifications_settings_keyboard(status, ready):
+def get_notifications_settings_keyboard(user):
     notifications_settings_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     notifications_settings_keyboard.add("Группа 👨‍👧‍👧")
     notifications_settings_keyboard.insert("Время ⏳")
-    if ready:
-        if not status:
+    if user.notify_group and user.notify_times:
+        if not user.notify_status:
             notifications_settings_keyboard.add("Включить ☑")
         else:
             notifications_settings_keyboard.add("Выключить 🚫")
@@ -28,11 +28,11 @@ def get_notifications_group_keyboard(group):
     return notifications_group_keyboard
 
 
-def get_main_time_keyboard(time_settings):
+def get_main_time_keyboard(times_map_obj):
     main_time_keyboard = ReplyKeyboardMarkup(resize_keyboard=True,
                                              one_time_keyboard=True)
     main_time_keyboard.row_width = 4
-    times = list(map(lambda x: x + " ❌", time_settings))
+    times = list(map(lambda x: x + " ❌", times_map_obj))
     main_time_keyboard.add(*times)
     main_time_keyboard.add("Добавить время оповещения 🕞")
     if times:

@@ -3,10 +3,8 @@ from bot import dispatcher, bot
 from cenz import cenz
 from aiogram import types
 from aiogram.dispatcher.filters import Text
-from functions import n_text
 from aiogram.dispatcher import FSMContext
 from keyboards import get_main_keyboard
-from database import add_new_user
 
 
 @dispatcher.message_handler(Text(equals="↪ На главную"), state="*")
@@ -14,9 +12,8 @@ async def to_main_menu(message: types.Message, state: FSMContext):
     user_data = message.from_user
     users = bot.users
     if user_data.id not in users:
-        add_new_user(user_data)
         users.append(user_data.id)
-        print(f"[NEW USER] {message.from_user.username}:{message.from_user.id}")
+        print(f"[NEW USER] {user_data.username}:{user_data.id}")
 
     if await state.get_state():
         await state.finish()
