@@ -26,6 +26,7 @@ async def schedule_menu(message: types.Message):
                 user_id=user_data.id,
                 fullname=user_data.full_name,
                 username_mention=user_data.mention))
+            session.commit()
 
         await Schedule.notifications.set()
         if user.notify_group and user.notify_times:
