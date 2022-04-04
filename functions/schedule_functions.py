@@ -44,7 +44,7 @@ async def send_schedule_messages(user_id, group, dt_obj=None, limit_changing=Non
         if not any(pair_data.values()):
             continue
 
-        answers.append(f"\n<b><u>{int(pair)} пара:</u></b>")
+        answers.append(f"\n\n<b><u>{int(pair)} пара:</u></b>")
 
         f_subject = pair_data.get("f_subject", None)
         if f_subject:

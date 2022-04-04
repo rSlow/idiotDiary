@@ -189,6 +189,8 @@ async def schedule_set_time_settings(message: types.Message):
 
             if user_id in bot.notification_data:
                 bot.notification_data[user_id][n_text(message.text)].remove()
+                del bot.notification_data[user_id][n_text(message.text)]
+
             await message.answer(text=f"Время {n_text(message.text)} удалено.",
                                  reply_markup=get_main_time_keyboard(times_map_obj))
 
