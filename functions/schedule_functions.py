@@ -7,7 +7,7 @@ import datetime as dt
 import pytz
 import json
 from database import User
-from functions import disable_jobs
+from functions.db_schedule_functions import disable_jobs
 
 __all__ = (
     "get_file",
