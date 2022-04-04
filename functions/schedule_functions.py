@@ -7,6 +7,7 @@ import datetime as dt
 import pytz
 import json
 from database import User
+from functions import disable_jobs
 
 __all__ = (
     "get_file",
@@ -39,72 +40,65 @@ async def send_schedule_messages(user_id, group, dt_obj=None, limit_changing=Non
 
     answers = []  # collecting message blocks
     for pair, pair_data in data.items():
-        answer = []
 
         if not any(pair_data.values()):
             continue
 
-        answer.append(f"<b><u>{int(pair)} пара:</u></b>")
+        answers.append(f"\n<b><u>{int(pair)} пара:</u></b>")
 
         f_subject = pair_data.get("f_subject", None)
         if f_subject:
-            answer.append(f"<b>{f_subject}</b>")
+            answers.append(f"<b>{f_subject}</b>")
 
         f_auditory = pair_data.get("f_auditory", None)
         if f_auditory:
-            answer.append(f"- аудитория {f_auditory}")
+            answers.append(f"- аудитория {f_auditory}")
 
         f_theme = pair_data.get("f_theme", None)
         if f_theme:
-            answer.append(md.text(f"\nтема № {f_theme}"))
+            answers.append(md.text(f"\nтема № {f_theme}"))
 
         f_type = pair_data.get("f_type", None)
         if f_type:
-            answer.append(f"({f_type})")
+            answers.append(f"({f_type})")
 
         f_teacher = pair_data.get("f_teacher", None)
         if f_teacher:
-            answer.append(f"\nпреподаватель: {f_teacher}")
+            answers.append(f"\nпреподаватель: {f_teacher}")
 
         s_subject = pair_data.get("s_subject", None)
         if s_subject:
-            answer.append(f"\n<b>{s_subject}</b>")
+            answers.append(f"\n<b>{s_subject}</b>")
 
         s_auditory = pair_data.get("s_auditory", None)
         if s_auditory:
-            answer.append(f"- аудитория {s_auditory}")
+            answers.append(f"- аудитория {s_auditory}")
 
         s_theme = pair_data.get("s_theme", None)
         if s_theme:
-            answer.append(md.text(f"\nтема № {s_theme}"))
+            answers.append(md.text(f"\nтема № {s_theme}"))
 
         s_type = pair_data.get("s_type", None)
         if s_type:
-            answer.append(f"({s_type})")
+            answers.append(f"({s_type})")
 
         s_teacher = pair_data.get("s_teacher", None)
         if s_teacher:
-            answer.append(f"\nпреподаватель: {s_teacher}")
-
-        answers.append(answer)
+            answers.append(f"\nпреподаватель: {s_teacher}")
 
     try:
         if not answers:
             await bot.send_message(chat_id=user_id,
                                    text='Открывай бутылочку пивка, пар нет 🍺')
         else:
+            answers.insert(0, f"Пары на <u>{dt_obj.strftime('%d/%m/%y')}</u>:")
             await bot.send_message(chat_id=user_id,
-                                   text=f"Пары на <u>{dt_obj.strftime('%d/%m/%y')}</u>:",
+                                   text=md.text(*answers),
                                    parse_mode=types.ParseMode.HTML)
-            for answers_md in answers:
-                await bot.send_message(chat_id=user_id,
-                                       text=md.text(*answers_md),
-                                       parse_mode=types.ParseMode.HTML)
+
     except BotBlocked:  # checking if user blocks bot
         User.deactivate(user_id)
-        for job in bot.notification_data[user_id]:
-            if user_id in bot.notification_data:
-                job.remove()
+        disable_jobs(user_id)
 
 
 async def send_schedule_messages_to_teachers(user_id, teacher, dt_obj=None, limit_changing=None):
