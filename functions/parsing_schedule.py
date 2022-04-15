@@ -1,167 +1,296 @@
-import re
-import typing as t
-
 import pandas as pd
 
 
-def n_nan(obj):
-    if repr(obj).lower() in ("nan", "nat"):
-        return
-    return obj
+def get_actual_filename():
+    from datetime import datetime as dt, timedelta as td
+    import pytz
+    import json
+
+    now = dt.now().astimezone(pytz.timezone("Asia/Vladivostok"))
+    if now.isoweekday() == 7 and now.hour >= 14:
+        now -= td(days=now.weekday() - 7)
+    else:
+        now -= td(days=now.weekday())
+    str_now = now.strftime('%d/%m/%y')
+    try:
+        with open(f"data/schedules/schedules_registry.json", encoding="utf-8-sig") as reg_file:
+            registry: dict = json.load(reg_file)
+            actual_file_timestamp = max(registry[str_now])
+            return f"{actual_file_timestamp}.xlsx"
+    except (IndexError, KeyError):
+        for _, timestamp_list in reversed(registry.items()):
+            return f"{max(timestamp_list)}.xlsx"
 
 
-def parse_to_days(loc: pd.DataFrame, days_and_pairs_block: pd.DataFrame):
-    full_loc = days_and_pairs_block.join(loc)
-
-    loc_days = {}
-    start_day_index = 0
-    for index, date, _ in days_and_pairs_block.itertuples():
-        if n_nan(date):
-            if index == 0:
-                continue
-            else:
-                end_day_index = index
-                loc_days[full_loc.iloc[start_day_index, 0]] = full_loc.iloc[start_day_index:end_day_index, 1:]
-                start_day_index = index
-    loc_days[full_loc.iloc[start_day_index, 0]] = full_loc.iloc[start_day_index:full_loc.shape[0] + 1, 1:]
-
-    return loc_days
+def to_date(dt64):
+    return pd.Timestamp(dt64).to_pydatetime().date()
 
 
-def parse_to_groups(xl) -> t.List[pd.DataFrame]:
-    groups_data = []
-    for col, loc in enumerate(xl):
-        if re.match(r"\w+-\d{2}", loc):
-            groups_data.append(xl.iloc[:, col:col + 3])
-    return groups_data
+class Schedule(dict):
+    def __init__(self, filename: str):
+        super(Schedule, self).__init__()
+        self.data = pd.read_excel(f"data/schedules/{filename}",
+                                  sheet_name=0,
+                                  header=None
+                                  )
+        self.update(self._parse_to_weeks())
+        del self.data
+
+    def _parse_to_weeks(self):
+        weeks = {}
+        start_week_rows_idx = self.data.loc[self.data[0] == "дата/пара"].index.to_list()
+        start_week_rows_idx.append(self.data.shape[0] + 1)
+
+        start_index = start_week_rows_idx[0]
+        for idx in start_week_rows_idx[1:]:
+            week: pd.DataFrame = self.data.iloc[start_index:idx]
+            week.set_index(0, inplace=True)
+            week.columns = week.iloc[0]
+            week: pd.DataFrame = week.iloc[1:]
+
+            start_date = to_date(week.index.values[0])
+            weeks[start_date] = Week(week, start_date)
+
+            start_index = idx
+        return weeks
+
+    @property
+    def weeks(self):
+        return list(self.keys())
+
+    def __str__(self):
+        return f"Schedule{self.weeks}"
+
+    def save_excel_files(self, filename):
+        pass
 
 
-def parse_to_pairs(loc: pd.DataFrame):
-    reset_loc = loc.reset_index(drop=True)
+class Week(dict):
+    def __init__(self, dataframe: pd.DataFrame, start_date=None):
+        super(Week, self).__init__()
+        self.data = dataframe
+        self.start_date = start_date or to_date(self.data.index.values[0])
 
-    loc_pairs = {}
-    start_pair_index = 0
-    for index, pair, _, _, _ in reset_loc.itertuples():
-        if n_nan(pair):
-            if index == 0:
-                continue
-            else:
-                end_pair_index = index
-                loc_pairs[reset_loc.iloc[start_pair_index, 0]] = reset_loc.iloc[start_pair_index:end_pair_index, 1:]
-                start_pair_index = index
-    loc_pairs[reset_loc.iloc[start_pair_index, 0]] = reset_loc.iloc[start_pair_index:reset_loc.shape[0] + 1, 1:]
+        self.pair_block: pd.DataFrame = self.data.iloc[:, 0]
+        self.update(self._parse_to_groups())
 
-    return loc_pairs
+        del self.data, self.pair_block
 
+    def _parse_to_groups(self):
+        groups = {}
+        group_names = self.data.filter(regex=r"\w+-\d{2}").columns
+        idx_groups = [self.data.columns.get_loc(group_name) for group_name in group_names]
 
-def parser_by_group(filename):
-    data = {}
-    xl = pd.read_excel(f"data/schedules/{filename}", sheet_name=0)
-    days_and_pairs_block: pd.DataFrame = xl.iloc[:, :2]
+        for idx in idx_groups:
+            group: pd.DataFrame = self.data.iloc[:, idx:idx + 3]
+            group.insert(loc=0,
+                         column="пара",
+                         value=self.pair_block)
+            group_name = group.iloc[:, 1].name
+            groups[group_name] = Group(group, group_name, self.start_date)
+        return groups
 
-    groups = parse_to_groups(xl)
-    for group in groups[:]:
-        group_name = group.columns[0]
-        data[group_name] = {}
+    @property
+    def groups(self):
+        return list(self.keys())
 
-        group_days = parse_to_days(group, days_and_pairs_block)
-        for day, group_day_data in group_days.items():
-            day = day.date().strftime("%d/%m/%y")
-            data[group_name][day] = {}
+    @classmethod
+    def from_filename(cls, filename):
+        df = pd.read_excel(f"data/schedules/{filename}",
+                           sheet_name=0,
+                           na_values="",
+                           header=0,
+                           index_col=0)
+        return cls(df)
 
-            group_day_pairs = parse_to_pairs(group_day_data)
-            for pair, group_day_pair_data in group_day_pairs.items():
-                pair = int(float(pair))
-                data[group_name][day][pair] = {}
-
-                f_subject = n_nan(group_day_pair_data.iloc[0, 0])  # первый предмет
-                f_teacher = n_nan(group_day_pair_data.iloc[1, 0])  # первый препод
-                f_type = n_nan(group_day_pair_data.iloc[0, 1])  # первый тип занятия
-                f_theme = n_nan(group_day_pair_data.iloc[0, 2])  # первая тема
-                f_auditory = n_nan(group_day_pair_data.iloc[1, 2]) or n_nan(
-                    group_day_pair_data.iloc[1, 1])  # первая аудитория
-
-                data[group_name][day][pair]["f_subject"] = f_subject
-                data[group_name][day][pair]["f_teacher"] = f_teacher
-                data[group_name][day][pair]["f_type"] = f_type
-                data[group_name][day][pair]["f_theme"] = f_theme
-                data[group_name][day][pair]["f_auditory"] = f_auditory. \
-                    replace("(ДВ)", "") if f_auditory is not None else f_auditory
-
-                try:
-                    s_subject = n_nan(group_day_pair_data.iloc[2, 0])  # второй предмет
-                    s_auditory = n_nan(group_day_pair_data.iloc[2, 2]) or n_nan(
-                        group_day_pair_data.iloc[2, 1])  # вторая аудитория
-
-                    data[group_name][day][pair]["s_subject"] = s_subject
-                    data[group_name][day][pair]["s_auditory"] = s_auditory
-
-                except IndexError:
-                    pass
-
-                if group_day_pair_data.shape[0] == 4:
-                    s_teacher = n_nan(group_day_pair_data.iloc[3, 0])  # второй препод
-                    s_type = n_nan(group_day_pair_data.iloc[2, 1])  # второй тип занятия
-                    s_theme = n_nan(group_day_pair_data.iloc[2, 2])  # вторая тема
-                    s_auditory = n_nan(group_day_pair_data.iloc[3, 2]) or n_nan(
-                        group_day_pair_data.iloc[3, 1])  # вторая аудитория
-
-                    data[group_name][day][pair]["s_teacher"] = s_teacher
-                    data[group_name][day][pair]["s_type"] = s_type
-                    data[group_name][day][pair]["s_theme"] = s_theme
-                    data[group_name][day][pair]["s_auditory"] = s_auditory. \
-                        replace("(ДВ)", "") if s_auditory is not None else s_auditory
-    return data
+    @classmethod
+    def from_actual_filename(cls):
+        filename = get_actual_filename()
+        return cls.from_filename(filename)
 
 
-def parser_by_teacher(data_by_group: dict):
-    data_by_teachers = dict()
-    for group, data_in_date in data_by_group.items():
-        for date, data_in_pair in data_in_date.items():
-            for pair, old_pair_data in data_in_pair.items():
-                try:
-                    teachers_block = old_pair_data["f_teacher"]
-                    if teachers_block:
-                        for teacher in teachers_block.split(","):
+class Group(dict):
+    def __init__(self, dataframe: pd.DataFrame, group_name, start_date):
+        super(Group, self).__init__()
+        self.data = dataframe
+        self.start_date = start_date
+        self.group_name = group_name
+        self.update(self._parse_to_days())
 
-                            if ~teacher.find("командир"):
-                                continue
+        del self.data
 
-                            teacher = " ".join(teacher.split()[-2:]).strip()
+    def _parse_to_days(self):
+        days = {}
+        days_dt = self.data.loc[self.data.index.notna()].index.to_list()
 
-                            teacher_data = data_by_teachers.setdefault(teacher, {})
-                            date_data = teacher_data.setdefault(date, {})
-                            pair_data = date_data.setdefault(pair, {})
+        days_idx = [self.data.index.get_loc(dt) for dt in days_dt]
+        days_idx.append(self.data.shape[0] + 1)
 
-                            pair_data["group"] = group
-                            pair_data["subject"] = old_pair_data["f_subject"]
-                            pair_data["subject_type"] = old_pair_data["f_type"] or "отсутствует"
-                            pair_data["theme"] = old_pair_data["f_theme"] or "отсутствует"
-                            pair_data["auditory"] = old_pair_data["f_auditory"]
+        start_idx = days_idx[0]
+        for idx in days_idx[1:]:
+            day_data = self.data.iloc[start_idx:idx]
+            day = to_date(day_data.index.values[0])
+            day_obj = Day(day_data, day)
+            if day_obj:
+                days[day] = day_obj
+            start_idx = idx
+        return days
 
-                except (IndexError, KeyError):
-                    pass
+    @property
+    def days(self):
+        return list(self.keys())
 
-                try:
-                    teachers_block = old_pair_data["s_teacher"]
-                    if teachers_block:
-                        for teacher in teachers_block.split(","):
-                            if ~teacher.find("командир"):
-                                continue
+    @property
+    def message_text(self):
+        blocks = list()
+        blocks.append(f"<b><u>Пары на неделю с "
+                      f"{self.days[0].strftime('%d/%m/%y')} "
+                      f"по {self.days[-1].strftime('%d/%m/%y')}"
+                      f"</u></b>")
 
-                            teacher = " ".join(teacher.split()[-2:]).strip()
+        for date, day in self.items():
+            blocks.append(f"\n\n{day.message_text}")
+        return "".join(blocks)
 
-                            teacher_data = data_by_teachers.setdefault(teacher, {})
-                            date_data = teacher_data.setdefault(date, {})
-                            pair_data = date_data.setdefault(pair, {})
 
-                            pair_data["group"] = group
-                            pair_data["subject"] = old_pair_data["s_subject"]
-                            pair_data["subject_type"] = old_pair_data["s_type"] or "отсутствует"
-                            pair_data["theme"] = old_pair_data["s_theme"] or "отсутствует"
-                            pair_data["auditory"] = old_pair_data["s_auditory"]
+class Day(dict):
+    def __init__(self, dataframe: pd.DataFrame, day):
+        super(Day, self).__init__()
+        self.data = dataframe.reset_index(drop=True)
+        self.day = day
+        self.update(self._parse_to_pairs())
 
-                except (IndexError, KeyError):
-                    pass
+        del self.data
 
-    return data_by_teachers
+    def _parse_to_pairs(self):
+        pairs = {}
+        pairs_idx = self.data.loc[self.data["пара"].notna()].index.to_list()
+        pairs_idx.append(self.data.shape[0] + 1)
+
+        start_idx = pairs_idx[0]
+        for idx in pairs_idx[1:]:
+            pair_data = self.data.iloc[start_idx:idx]
+            pair_num = int(pair_data.iloc[0, 0])
+            pair_obj = Pair(pair_data.iloc[:, 1:], pair_num)
+            if pair_obj:
+                pairs[pair_num] = pair_obj
+            start_idx = idx
+        return pairs
+
+    @property
+    def pairs(self):
+        return list(self.keys())
+
+    @property
+    def message_text(self):
+        blocks = list()
+        blocks.append(f"Пары на <u>{self.day.strftime('%d/%m/%y')}</u>:")
+        for num, pair in self.items():
+            blocks.append(f"\n\n<b><u>{num} пара: </u></b>")
+            blocks.append(pair.message_text)
+        return "".join(blocks)
+
+    def __bool__(self):
+        for val in self.values():
+            if val:
+                return True
+        return False
+
+
+class Pair:
+    def __init__(self, dataframe: pd.DataFrame, pair_num):
+        self.data = dataframe.fillna(value="")
+        self.pair_num = pair_num
+        self._parse()
+        del self.data
+
+    def _set_attr(self, name, loc):
+        first_value = loc[0]
+        try:
+            second_value = loc[1]
+        except IndexError:
+            second_value = first_value
+
+        data = self.data.iloc[first_value[0], first_value[1]] or self.data.iloc[second_value[0], second_value[1]]
+        if data:
+            setattr(self, name, data)
+
+    def _parse(self):
+        keys_3 = {
+            "first_subject": ((0, 0),),
+            "first_teacher": ((1, 0),),
+            "first_type": ((0, 1),),
+            "first_theme": ((0, 2),),
+            "first_auditory": ((1, 2), (1, 1)),
+            "second_subject": ((2, 0),),
+            "second_auditory": ((2, 2), (2, 1))
+        }
+        keys_4 = {
+            "second_teacher": ((3, 0),),
+            "second_type": ((2, 1),),
+            "second_theme": ((2, 2),),
+            "second_auditory": ((3, 2), (3, 1)),
+        }
+
+        for name, loc in keys_3.items():
+            self._set_attr(name, loc)
+
+        if len(self.data) == 4:
+            for name, loc in keys_4.items():
+                self._set_attr(name, loc)
+
+    def __bool__(self):
+        attrs = self.__dict__.copy()
+        del attrs["pair_num"]
+        return True if attrs else False
+
+    @property
+    def message_text(self):
+        blocks = []
+
+        first_subject = getattr(self, "first_subject", None)
+        if first_subject:
+            blocks.append(f"<b>{first_subject}</b>")
+
+        first_auditory = getattr(self, "first_auditory", None)
+        if first_auditory:
+            blocks.append(f" - аудитория {first_auditory}")
+
+        first_theme = getattr(self, "first_theme", None)
+        if first_theme:
+            blocks.append(f"\nтема № {first_theme}")
+
+        first_type = getattr(self, "first_type", None)
+        if first_type:
+            blocks.append(f" ({first_type})")
+
+        first_teacher = getattr(self, "first_teacher", None)
+        if first_teacher:
+            blocks.append(f"\nпреподаватель: {first_teacher}")
+
+        second_subject = getattr(self, "second_subject", None)
+        if second_subject:
+            blocks.append(f"\n<b>{second_subject}</b>")
+
+        second_auditory = getattr(self, "second_auditory", None)
+        if second_auditory:
+            blocks.append(f" - аудитория {second_auditory}")
+
+        second_theme = getattr(self, "second_theme", None)
+        if second_theme:
+            blocks.append(f"\nтема № {second_theme}")
+
+        second_type = getattr(self, "second_type", None)
+        if second_type:
+            blocks.append(f" ({second_type})")
+
+        second_teacher = getattr(self, "second_teacher", None)
+        if second_teacher:
+            blocks.append(f"\nпреподаватель: {second_teacher}")
+
+        return "".join(blocks)
+
+
+if __name__ == '__main__':
+    schedule = Schedule("a2-f15-m32953-2.xlsx")
+    print(schedule)

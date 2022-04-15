@@ -2,6 +2,7 @@ from bot import scheduler, bot
 from functions import aioimap
 from functions.schedule_functions import send_schedule_messages
 from database import Session, User
+from functions.parsing_schedule import Week
 
 
 async def on_startup(_):
@@ -24,6 +25,7 @@ async def on_startup(_):
     scheduler.add_job(func=aioimap.checking_schedule,
                       trigger="interval",
                       seconds=60 * 60 * 6)
+    bot.schedule = Week.from_actual_filename()
 
 
 async def on_shutdown(_):

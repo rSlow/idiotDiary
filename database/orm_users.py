@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy import ForeignKey
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///databases/orm_database.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///databases/users.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -26,21 +26,21 @@ class User(Base):
                                 back_populates="user",
                                 cascade="all, delete, delete-orphan")
 
-    @staticmethod
-    def get(user_id, session):
-        return session.query(User).filter(User.user_id == user_id).one()
+    @classmethod
+    def get(cls, user_id, session):
+        return session.query(cls).filter(cls.user_id == user_id).one()
 
-    @staticmethod
-    def deactivate(user_id):
+    @classmethod
+    def deactivate(cls, user_id):
         with Session() as session:
-            user = session.query(User).filter(User.user_id == user_id).one()
+            user = session.query(cls).filter(cls.user_id == user_id).one()
             user.status = False
             session.commit()
 
-    @staticmethod
-    def disable_notifications(user_id):
+    @classmethod
+    def disable_notifications(cls, user_id):
         with Session() as session:
-            user = session.query(User).filter(User.user_id == user_id).one()
+            user = session.query(cls).filter(cls.user_id == user_id).one()
             user.notify_status = False
             session.commit()
 

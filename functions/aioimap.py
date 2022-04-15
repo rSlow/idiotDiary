@@ -44,17 +44,11 @@ async def main():
             string = string.replace("\r\n ", "")
         return string
 
-    def get_start_xl_date(name) -> date:
-        xl = pandas.read_excel(f"{temp}/{name}", sheet_name=0)
-        ts = xl.iloc[0, 0]
-        dt = date.fromtimestamp(ts.value / 1e9)
-        return dt
-
-    def register(file_ts, file_dt):
+    def register(timestamp, file_dt):
         file_dt = file_dt.strftime("%d/%m/%y")
         if file_dt not in registry:
             registry[file_dt] = []
-        registry[file_dt].append(file_ts)
+        registry[file_dt].append(timestamp)
 
     def check_in_registry(msg_ts) -> bool:
         for week_date in registry:

@@ -1,4 +1,4 @@
-from bot import dispatcher
+from bot import dispatcher, bot
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup
@@ -11,6 +11,7 @@ from keyboards import get_schedule_keyboard, get_groups_keyboard, \
 from FSM import Schedule
 from functions import n_text, send_schedule_messages, send_schedule_messages_to_teachers
 import json
+from functions.parsing_schedule import get_actual_filename
 
 
 @dispatcher.message_handler(Text(contains="Расписание"))
@@ -35,27 +36,19 @@ async def schedule_menu_check(message: types.Message):
 
 @dispatcher.message_handler(Text(contains="Актуальный файл"), state=Schedule.start)
 async def release_schedule_file(message: types.Message):
-    with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
-        schedule_data = json.load(j_file)
-    first_date_data: dict = schedule_data[next(iter(schedule_data.keys()))]
-    actual_date = next(iter(first_date_data.keys()))
-
+    actual_filename = get_actual_filename()
     print(f"[FILE SCHEDULE] {message.from_user.username}:"
           f"{message.from_user.id} ")
 
-    with open("data/schedules/schedules_registry.json", "r", encoding="utf-8-sig") as j_file:
-        registry: dict = json.load(j_file)
-    actual_filename = max(registry[actual_date])
-    doc = types.InputFile(f"data/schedules/{actual_filename}.xlsx",
-                          filename=f"{actual_date.replace('/', '-')}.xlsx")
+    doc = types.InputFile(f"data/schedules/{actual_filename}",
+                          filename=actual_filename)
     await message.answer_document(doc)
 
 
 @dispatcher.message_handler(Text(contains="Для курсантов"), state=Schedule.category)
 async def schedule_group_menu(message: types.Message):
     await Schedule.group.set()
-    with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
-        groups = json.load(j_file).keys()
+    groups = bot.schedule.groups
 
     await message.answer(text="Выберите группу:",
                          reply_markup=get_groups_keyboard(groups))
@@ -68,20 +61,14 @@ async def schedule_group(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         group = proxy_data['group'] = message.text
 
-    with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
-        dates = json.load(j_file)[group]
+    days = bot.schedule[group]
 
     now = dt.datetime.now(tz=pytz.timezone("Asia/Vladivostok"))
     if now.hour >= 14:
         now += dt.timedelta(days=1)
+    now = now.date()
 
-    buttons = []
-    for date in dates:
-        if now.strftime("%d/%m/%y") == date:
-            buttons.append(f"{date} 🕘")
-        else:
-            buttons.append(date)
-
+    buttons = [f"{day.strftime('%d/%m/%y')}{' 🕘' * (now == day)}" for day in days]
     dates_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     dates_keyboard.add(*buttons)
     dates_keyboard.add("↪ На главную")
@@ -97,11 +84,10 @@ async def schedule_group(message: types.Message, state: FSMContext):
 async def schedule_date(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         group = proxy_data['group']
-        date = proxy_data['date'] = n_text(message.text)
-        dt_obj = dt.datetime.strptime(date, "%d/%m/%y")
+        date = dt.datetime.strptime(n_text(message.text), "%d/%m/%y").date()
+        dt_obj = bot.schedule[group][date]
 
     await send_schedule_messages(user_id=message.from_user.id,
-                                 group=group,
                                  dt_obj=dt_obj)
 
 
