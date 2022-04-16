@@ -1,8 +1,11 @@
 import logging
 import os
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+from models import Schedule
 
 
 class CustomBot(Bot):
@@ -11,6 +14,7 @@ class CustomBot(Bot):
         self.admins = [959148697, ]
         self.notification_data = {}
         self.users = []
+        self.schedule = Schedule()
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":
@@ -20,6 +24,15 @@ class CustomBot(Bot):
                                     text=text,
                                     parse_mode=parse_mode,
                                     *args, **kwargs)
+
+    async def update_schedule(self):
+        pass
+
+    def disable_jobs(self, user_id):
+        if user_id in self.notification_data:
+            for time, job in self.notification_data[user_id].items():
+                job.remove()
+            del self.notification_data[user_id]
 
 
 logging.basicConfig(level=logging.INFO)

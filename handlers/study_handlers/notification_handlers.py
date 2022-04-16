@@ -1,25 +1,26 @@
-import json
+import datetime as dt
+from asyncio import sleep
+from random import randrange
 
-from bot import dispatcher, scheduler, bot
 from aiogram import types
 from aiogram.dispatcher.filters import Text
-import datetime as dt
+from sqlalchemy.exc import NoResultFound
+
 from FSM import Schedule, ScheduleSettings
-from functions import *
+from bot import dispatcher, scheduler, bot
+from functions.main_functions import n_text
+from functions.schedule_functions import send_schedule_messages
 from keyboards import get_notifications_settings_keyboard, \
     get_notifications_group_keyboard, get_groups_keyboard, \
     get_main_time_keyboard
-from random import randrange
-from asyncio import sleep
-from database import Session, User, Notification
-from sqlalchemy.exc import NoResultFound
+from orm.users import UsersSession, User, Notification
 
 
 @dispatcher.message_handler(Text(contains="Оповещение"), state=Schedule.start)
 async def schedule_menu(message: types.Message):
     user_data = message.from_user
 
-    with Session() as session:
+    with UsersSession() as session:
         user = session.query(User).filter(User.user_id == user_data.id).one_or_none()
         if not user:
             session.add(User(
@@ -53,10 +54,9 @@ async def schedule_menu(message: types.Message):
 async def schedule_notifications_enable(message: types.Message):
     user_data = message.from_user
 
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = User.get(user_id=user_data.id, session=session)
         user.notify_status = 1
-        session.commit()
 
         group = user.notify_group
         notifies = user.notify_times
@@ -80,7 +80,7 @@ async def schedule_notifications_enable(message: types.Message):
 async def schedule_main_notifications_disable(message: types.Message):
     user_id = message.from_user.id
     User.disable_notifications(user_id=user_id)
-    disable_jobs(user_id)
+    bot.disable_jobs(user_id)
 
     await schedule_menu(message)
     print(f"[NOTIFICATION OFF] {message.from_user.username}:{message.from_user.id}")
@@ -90,7 +90,7 @@ async def schedule_main_notifications_disable(message: types.Message):
 async def schedule_group_settings(message: types.Message):
     await ScheduleSettings.group.set()
     user_id = message.from_user.id
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = User.get(user_id=user_id, session=session)
         info_message = f"Текущая группа: {user.notify_group}" if user.notify_group else "Группа не установлена"
         await message.answer(text=info_message,
@@ -102,13 +102,11 @@ async def schedule_group_settings(message: types.Message):
 async def schedule_set_menu_group_settings(message: types.Message):
     user_id = message.from_user.id
     User.disable_notifications(user_id=user_id)
-    disable_jobs(user_id)
+    bot.disable_jobs(user_id)
 
     await ScheduleSettings.group_settings.set()
 
-    with open("data/schedules/schedule_data_group.json", "r", encoding="utf-8-sig") as j_file:
-        groups = json.load(j_file)
-
+    groups = bot.schedule.groups
     await message.answer(text="Выберите группу:",
                          reply_markup=get_groups_keyboard(groups))
 
@@ -116,10 +114,9 @@ async def schedule_set_menu_group_settings(message: types.Message):
 @dispatcher.message_handler(regexp=r"\w+-\d{2}", state=ScheduleSettings.group_settings)
 async def schedule_choice_group_settings(message: types.Message):
     """Setting group to notification scheduler."""
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = session.query(User).filter(User.user_id == message.from_user.id).one()
         user.notify_group = message.text
-        session.commit()
     await message.answer(text="Группа установлена.")
     await schedule_menu(message)
 
@@ -127,13 +124,12 @@ async def schedule_choice_group_settings(message: types.Message):
 @dispatcher.message_handler(Text(contains="Удалить группу"), state=ScheduleSettings.group)
 async def schedule_del_group_settings(message: types.Message):
     user_id = message.from_user.id
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = session.query(User).filter(User.user_id == user_id).one()
         user.notify_group = None
         user.notify_status = False
-        session.commit()
 
-    disable_jobs(user_id)
+    bot.disable_jobs(user_id)
 
     await message.answer(text="Группа удалена.")
     await schedule_menu(message)
@@ -144,7 +140,7 @@ async def schedule_time_settings(message: types.Message):
     await ScheduleSettings.time.set()
     user_id = message.from_user.id
     times_list = []
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = User.get(user_id=user_id, session=session)
         if user.notify_times:
             times_list.extend(list(map(lambda notification: notification.time.strftime("%H:%M"),
@@ -161,13 +157,12 @@ async def schedule_time_settings(message: types.Message):
 @dispatcher.message_handler(Text(contains="Удалить все метки"), state=ScheduleSettings.time)
 async def schedule_del_all_time_settings(message: types.Message):
     user_id = message.from_user.id
-    with Session() as session:
+    with UsersSession.begin() as session:
         user = User.get(user_id=user_id, session=session)
         user.notify_times = []
         user.notify_status = False
-        session.commit()
 
-    disable_jobs(user_id)
+    bot.disable_jobs(user_id)
     await schedule_menu(message)
 
 
@@ -175,7 +170,7 @@ async def schedule_del_all_time_settings(message: types.Message):
 async def schedule_set_time_settings(message: types.Message):
     """Deleting one job notification from scheduler."""
     user_id = message.from_user.id
-    with Session() as session:
+    with UsersSession() as session:
         try:
             time_obj = dt.datetime.strptime(n_text(message.text), "%H:%M").time()
             notification = session.query(Notification).filter(Notification.user_id == user_id).filter(
@@ -222,14 +217,13 @@ async def schedule_set_time_settings(message: types.Message):
     """Adding new time to notification scheduler"""
     try:
         user_data = message.from_user
-        with Session() as session:
+        with UsersSession.begin() as session:
             user = User.get(user_id=user_data.id, session=session)
             time = dt.datetime.strptime(message.text, "%H:%M").time()
             session.add(Notification(
                 user_id=user.user_id,
                 time=time
             ))
-            session.commit()
 
             if user.notify_status == 1:
                 job = scheduler.add_job(func=send_schedule_messages,

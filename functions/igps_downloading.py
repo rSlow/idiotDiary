@@ -1,15 +1,15 @@
+import asyncio
+import glob
 import os
+import shutil
+from datetime import datetime
 
 import aiohttp
-import asyncio
-from fake_useragent import UserAgent
-from bs4 import BeautifulSoup
 import img2pdf
-import glob
-import shutil
 from aiogram import types
-from datetime import datetime
 from aiogram.utils.exceptions import NetworkError
+from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 
 
 async def download_book(msg: types.Message, link: str):

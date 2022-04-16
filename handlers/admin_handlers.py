@@ -1,16 +1,12 @@
-from bot import dispatcher, bot
 from aiogram import types
-from aiogram.types import ReplyKeyboardRemove
-from aiogram.utils.exceptions import BotBlocked
 from aiogram.dispatcher.filters import Text
-from database import User
+from aiogram.utils.exceptions import BotBlocked
 
-import os
-import json
-
-from functions import parsing_schedule, aioimap, get_file
 from FSM import FSMAdmin
+from bot import dispatcher, bot
+from functions.imap_downloading import checking_schedule
 from keyboards import get_main_admin_keyboard, get_schedule_admin_keyboard
+from orm.users import User
 
 
 @dispatcher.message_handler(Text(contains="Панель администратора"))
@@ -75,7 +71,7 @@ async def schedule_options(message: types.Message):
 async def imap_update(message: types.Message):
     start_message = await message.answer(text="Начинаю обновление...")
     try:
-        await aioimap.checking_schedule()
+        await checking_schedule()
         await message.answer(text="Расписание обновлено.")
     except Exception as ex:
         await message.answer(
@@ -84,41 +80,3 @@ async def imap_update(message: types.Message):
         raise ex
 
     await start_message.delete()
-
-
-@dispatcher.message_handler(Text(contains="Загрузить"), state=FSMAdmin.schedule)
-async def download_schedule_file(message: types.Message):
-    await FSMAdmin.download_schedule.set()
-    await message.answer(text="Выбери файл для загрузки:",
-                         reply_markup=ReplyKeyboardRemove())
-
-
-@dispatcher.message_handler(content_types=['document'], state=FSMAdmin.download_schedule)
-async def wait_document(message: types.Message):
-    await FSMAdmin.start.set()
-    if os.path.splitext(message.document.file_name)[1] != ".xlsx":
-        await message.answer('Загружен не тот файл. Необходимо выбрать excel-файл')
-    else:
-        try:
-            xl_file = await message.bot.get_file(file_id=message.document.file_id)
-            xl_data = await get_file(file_path=xl_file.file_path)
-            filename = "schedule.xlsx"
-
-            with open(f"data/schedules/{filename}", "wb") as file:
-                file.write(xl_data)
-
-            data = parsing_schedule.parser_by_group(filename)
-
-            with open("data/schedules/schedule_data_group.json", "w", encoding='utf-8-sig') as j_file:
-                json.dump(data, j_file, indent=4, ensure_ascii=False)
-
-            await message.answer('Расписание загружено и обновлено.',
-                                 reply_markup=get_main_admin_keyboard())
-
-            os.remove("data/schedules/schedule.xlsx")
-
-        except Exception as ex:
-            await message.answer(f"Произошла ошибка:\n{ex}",
-                                 reply_markup=get_main_admin_keyboard())
-
-        await FSMAdmin.start.set()

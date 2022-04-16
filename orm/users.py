@@ -1,19 +1,19 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy import ForeignKey
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///databases/users.db"
 
-engine = create_engine(
+UsersEngine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
-Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+UsersSession = sessionmaker(autocommit=False, autoflush=False, bind=UsersEngine)
 
-Base = declarative_base()
+UsersBase = declarative_base()
 
 
-class User(Base):
+class User(UsersBase):
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True)
@@ -27,25 +27,30 @@ class User(Base):
                                 cascade="all, delete, delete-orphan")
 
     @classmethod
+    def add_new_user(cls, user_data):
+        with UsersSession.begin() as session:
+            session.add(cls(user_id=user_data.id,
+                            fullname=user_data.full_name,
+                            username_mention=user_data.mention))
+
+    @classmethod
     def get(cls, user_id, session):
         return session.query(cls).filter(cls.user_id == user_id).one()
 
     @classmethod
     def deactivate(cls, user_id):
-        with Session() as session:
+        with UsersSession.begin() as session:
             user = session.query(cls).filter(cls.user_id == user_id).one()
             user.status = False
-            session.commit()
 
     @classmethod
     def disable_notifications(cls, user_id):
-        with Session() as session:
+        with UsersSession.begin() as session:
             user = session.query(cls).filter(cls.user_id == user_id).one()
             user.notify_status = False
-            session.commit()
 
 
-class Notification(Base):
+class Notification(UsersBase):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True)

@@ -1,17 +1,18 @@
-from string import punctuation
-from bot import dispatcher, bot
-from cenz import cenz
 from aiogram import types
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
+
+from bot import dispatcher, bot
 from keyboards import get_main_keyboard
+from orm.users import User
 
 
-@dispatcher.message_handler(Text(equals="↪ На главную"), state="*")
+@dispatcher.message_handler(Text(contains="На главную"), state="*")
 async def to_main_menu(message: types.Message, state: FSMContext):
     user_data = message.from_user
     users = bot.users
     if user_data.id not in users:
+        User.add_new_user(user_data)
         users.append(user_data.id)
         print(f"[NEW USER] {user_data.username}:{user_data.id}")
 
@@ -30,10 +31,5 @@ async def cancel(message: types.Message, state: FSMContext):
 
 
 @dispatcher.message_handler(state="*")
-async def censorship(message: types.Message):
-    if message.from_user.id != message.chat.id:
-        if {word.lower().translate(str.maketrans("", "", punctuation)) for word in message.text.split()} & cenz:
-            await message.reply(f"{message.from_user.mention} не матерись!")
-            await message.delete()
-    else:
-        await message.delete()
+async def delete(message: types.Message):
+    await message.delete()

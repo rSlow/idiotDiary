@@ -6,13 +6,8 @@ class Schedule(StatesGroup):
     notifications = State()
     notifications_ready = State()
     settings = State()
-    category = State()
-
     group = State()
     date_for_group = State()
-
-    teacher = State()
-    date_for_teacher = State()
 
 
 class DownloadLibrary(StatesGroup):

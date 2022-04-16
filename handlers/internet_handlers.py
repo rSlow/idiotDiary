@@ -1,10 +1,11 @@
-from bot import dispatcher
 from aiogram import types
-from aiogram.types import ReplyKeyboardMarkup
-from FSM import DownloadLibrary
-from functions import downloading_book
-from aiogram.utils.exceptions import NetworkError
 from aiogram.dispatcher.filters import Text
+from aiogram.types import ReplyKeyboardMarkup
+from aiogram.utils.exceptions import NetworkError
+
+from FSM import DownloadLibrary
+from bot import dispatcher
+from functions import igps_downloading
 
 
 @dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
@@ -25,7 +26,7 @@ async def await_link_library(message: types.Message):
     await DownloadLibrary.downloading_book.set()
     msg = await message.answer(text="Начинаю загрузку...")
     try:
-        await downloading_book.download_book(msg=msg, link=message.text)
+        await igps_downloading.download_book(msg=msg, link=message.text)
         await message.answer(text="Загрузка завершена.")
     except NetworkError:
         await msg.answer(text="Размер файла превышает 50 МБ - ограничение Telegram. "

@@ -1,11 +1,13 @@
 from aiogram import executor
-from handlers import *
-from bot import scheduler
+
+from bot import scheduler, dispatcher
+from orm.schedules import SchedulesBase, SchedulesEngine
+from orm.users import UsersBase, UsersEngine
 from startup_shutdown import on_startup, on_shutdown
-from database import Base, engine
 
 if __name__ == '__main__':
-    Base.metadata.create_all(bind=engine)
+    UsersBase.metadata.create_all(bind=UsersEngine)
+    SchedulesBase.metadata.create_all(bind=SchedulesEngine)
     scheduler.start()
     executor.start_polling(dispatcher=dispatcher,
                            skip_updates=True,

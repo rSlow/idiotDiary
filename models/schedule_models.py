@@ -1,25 +1,11 @@
+from datetime import datetime as dt, date as d, timedelta as td
+from typing import Optional
+
 import pandas as pd
+import pytz
 
-
-def get_actual_filename():
-    from datetime import datetime as dt, timedelta as td
-    import pytz
-    import json
-
-    now = dt.now().astimezone(pytz.timezone("Asia/Vladivostok"))
-    if now.isoweekday() == 7 and now.hour >= 14:
-        now -= td(days=now.weekday() - 7)
-    else:
-        now -= td(days=now.weekday())
-    str_now = now.strftime('%d/%m/%y')
-    try:
-        with open(f"data/schedules/schedules_registry.json", encoding="utf-8-sig") as reg_file:
-            registry: dict = json.load(reg_file)
-            actual_file_timestamp = max(registry[str_now])
-            return f"{actual_file_timestamp}.xlsx"
-    except (IndexError, KeyError):
-        for _, timestamp_list in reversed(registry.items()):
-            return f"{max(timestamp_list)}.xlsx"
+from functions.main_functions import get_start_week_day
+from orm.schedules import Schedule as ORMSchedule
 
 
 def to_date(dt64):
@@ -27,14 +13,15 @@ def to_date(dt64):
 
 
 class Schedule(dict):
-    def __init__(self, filename: str):
+    def __init__(self, filename: Optional[str] = None):
         super(Schedule, self).__init__()
-        self.data = pd.read_excel(f"data/schedules/{filename}",
-                                  sheet_name=0,
-                                  header=None
-                                  )
-        self.update(self._parse_to_weeks())
-        del self.data
+        if filename:
+            self.data = pd.read_excel(f"data/schedules/{filename}",
+                                      sheet_name=0,
+                                      header=None
+                                      )
+            self.update(self._parse_to_weeks())
+            del self.data
 
     def _parse_to_weeks(self):
         weeks = {}
@@ -49,6 +36,7 @@ class Schedule(dict):
             week: pd.DataFrame = week.iloc[1:]
 
             start_date = to_date(week.index.values[0])
+            start_date -= td(days=start_date.weekday())
             weeks[start_date] = Week(week, start_date)
 
             start_index = idx
@@ -61,8 +49,30 @@ class Schedule(dict):
     def __str__(self):
         return f"Schedule{self.weeks}"
 
-    def save_excel_files(self, filename):
-        pass
+    @classmethod
+    def _from_multiply_weeks(cls, weeks_dict):
+        schedule = cls()
+        schedule.update(weeks_dict)
+        if len(schedule.keys()) == 0:
+            raise ValueError
+        return schedule
+
+    @classmethod
+    def from_actual_timestamps(cls):
+        now = dt.now().astimezone(pytz.timezone("Asia/Vladivostok"))
+        start_week_day = get_start_week_day(now)
+        actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps(start_week_day)
+        weeks = {date: Week.from_filename(f"{timestamp}.xlsx") for date, timestamp in actual_dates_and_timestamps}
+        return cls._from_multiply_weeks(weeks)
+
+    def get_actual_filename(self):
+        for timestamp in sorted(self.values()):
+            return f"{timestamp}.xlsx"
+
+    def is_last(self, date: d):
+        if date >= max(self.keys()):
+            return True
+        return False
 
 
 class Week(dict):
@@ -103,11 +113,6 @@ class Week(dict):
                            index_col=0)
         return cls(df)
 
-    @classmethod
-    def from_actual_filename(cls):
-        filename = get_actual_filename()
-        return cls.from_filename(filename)
-
 
 class Group(dict):
     def __init__(self, dataframe: pd.DataFrame, group_name, start_date):
@@ -121,9 +126,9 @@ class Group(dict):
 
     def _parse_to_days(self):
         days = {}
-        days_dt = self.data.loc[self.data.index.notna()].index.to_list()
+        dates = self.data.loc[self.data.index.notna()].index.to_list()
 
-        days_idx = [self.data.index.get_loc(dt) for dt in days_dt]
+        days_idx = [self.data.index.get_loc(date) for date in dates]
         days_idx.append(self.data.shape[0] + 1)
 
         start_idx = days_idx[0]
@@ -292,5 +297,5 @@ class Pair:
 
 
 if __name__ == '__main__':
-    schedule = Schedule("a2-f15-m32953-2.xlsx")
-    print(schedule)
+    s = Schedule("a2-f15-m32953-2.xlsx")
+    print(s)

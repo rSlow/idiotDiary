@@ -1,16 +1,19 @@
-import aioimaplib
-import email
-import base64
-import quopri
-from datetime import datetime, date, timedelta
-import pytz
-import os
-import pandas
-import re
-import json
 import asyncio
+import base64
+import email
+import os
+import quopri
+import re
+from datetime import datetime
 
-from functions import parsing_schedule
+import aioimaplib
+import pandas as pd
+import pytz
+
+from bot import bot
+from models import Schedule
+from orm.schedules import Schedule as ORMSchedule
+from orm.schedules import SchedulesSession
 
 login = "kursdvf.spb@mail.ru"
 password = "Aq12sw23"
@@ -19,7 +22,7 @@ domain = "imap.mail.ru"
 temp = "data/temp"
 
 
-async def main():
+async def download_from_email():
     async def get_data_from_mail(num: str, client):
         fetch = await client.uid("fetch", num, "(RFC822)")
         return fetch
@@ -44,19 +47,7 @@ async def main():
             string = string.replace("\r\n ", "")
         return string
 
-    def register(timestamp, file_dt):
-        file_dt = file_dt.strftime("%d/%m/%y")
-        if file_dt not in registry:
-            registry[file_dt] = []
-        registry[file_dt].append(timestamp)
-
-    def check_in_registry(msg_ts) -> bool:
-        for week_date in registry:
-            if msg_ts in registry[week_date]:
-                return True
-        return False
-
-    async def async_main():
+    async def download_files_to_temp():
 
         client = aioimaplib.IMAP4_SSL(domain)
         await client.wait_hello_from_server()
@@ -83,13 +74,13 @@ async def main():
                 ).astimezone(pytz.timezone("Asia/Vladivostok"))
 
                 delta = now - datetime_obj
-                if delta.days > 0:
+                if delta.days > 0:  # limit days within today and message day
                     break
                 if ~msg_subj.find("Расписание МЧС"):
 
                     msg_ts = int(datetime_obj.timestamp())
-                    if check_in_registry(msg_ts):
-                        continue
+                    if msg_ts in loaded_timestamps:
+                        break
 
                     payload = msg.get_payload()[1]
                     filename_obj = payload["Content-Disposition"]
@@ -108,58 +99,42 @@ async def main():
                 if errors > 5:
                     raise ex
 
+    def get_start_xl_date(filename):
+        df = pd.read_excel(f"data/temp/{filename}", sheet_name=0, header=0)
+        date64 = df.iloc[0, 0]
+        start_date = pd.Timestamp(date64).to_pydatetime().date()
+        return start_date
+
+    def get_loaded_timestamps():
+        with SchedulesSession.begin() as session:
+            return [i[0] for i in session.query(ORMSchedule.timestamp).all()]
+
     def handle_temp_files():
         filenames = os.listdir(temp)
         for filename in filenames:
-            xl_dt = get_start_xl_date(filename)
+            start_date = get_start_xl_date(filename)
 
-            xl_ts = int(filename.split("-")[0])
+            msg_timestamp = int(filename.split("-")[0])
 
-            os.rename(f"{temp}/{filename}", f"{temp}/{xl_ts}.xlsx")
-            os.replace(f"{temp}/{xl_ts}.xlsx", f"data/schedules/{xl_ts}.xlsx")
+            os.rename(f"{temp}/{filename}", f"{temp}/{msg_timestamp}.xlsx")
+            os.replace(f"{temp}/{msg_timestamp}.xlsx", f"data/schedules/{msg_timestamp}.xlsx")
 
-            register(xl_ts, xl_dt)
-
-    try:
-        with open(f"data/schedules/schedules_registry.json", encoding="utf-8-sig") as reg_file:
-            registry = json.load(reg_file)
-    except FileNotFoundError:
-        registry = {}
+            with SchedulesSession.begin() as session:
+                session.add(ORMSchedule(start_date=start_date, timestamp=msg_timestamp))
 
     now = datetime.now().astimezone(pytz.timezone("Asia/Vladivostok"))
+    loaded_timestamps = get_loaded_timestamps()
 
     if not os.path.exists(temp):
         os.makedirs(temp, exist_ok=True)
-
-    await async_main()
-
+    await download_files_to_temp()
     handle_temp_files()
-
-    with open(f"data/schedules/schedules_registry.json", "w", encoding="utf-8-sig") as j_file:
-        json.dump(registry, j_file, indent=4, ensure_ascii=False)
-
-    if now.isoweekday() > 6 or (now.isoweekday() == 6 and now.hour >= 14):
-        actual_day = now - timedelta(days=now.weekday() - 7)
-    else:
-        actual_day = now - timedelta(days=now.weekday())
-    actual_filename = f"{max(registry[actual_day.strftime('%d/%m/%y')])}.xlsx"
-
-    return actual_filename
 
 
 async def checking_schedule():
-    actual_filename = await main()
-
-    data_by_group = parsing_schedule.parser_by_group(actual_filename)
-
-    with open(f"data/schedules/schedule_data_group.json", "w", encoding='utf-8-sig') as j_file:
-        json.dump(data_by_group, j_file, indent=4, ensure_ascii=False)
-
-    data_by_teachers = parsing_schedule.parser_by_teacher(data_by_group)
-
-    with open(f"data/schedules/schedule_data_teacher.json", "w", encoding='utf-8-sig') as j_file:
-        json.dump(data_by_teachers, j_file, indent=4, ensure_ascii=False)
+    await download_from_email()
+    bot.schedule = Schedule.from_actual_timestamps()
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(download_from_email())

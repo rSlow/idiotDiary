@@ -1,9 +1,10 @@
-from bot import dispatcher, bot
 from aiogram import types
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
+
+from bot import dispatcher, bot
 from keyboards import get_main_keyboard, get_internet_keyboard, get_study_keyboard
-from database import Session, User
+from orm.users import User
 
 
 @dispatcher.message_handler(commands=["start", "help"], state="*")
@@ -11,13 +12,7 @@ async def start(message: types.Message, state: FSMContext):
     user_data = message.from_user
     users = bot.users
     if user_data.id not in users:
-        with Session() as session:
-            session.add(
-                User(user_id=user_data.id,
-                     fullname=user_data.full_name,
-                     username_mention=user_data.mention)
-            )
-            session.commit()
+        User.add_new_user(user_data)
         users.append(user_data.id)
         print(f"[NEW USER] {user_data.username}:{user_data.id}")
 
@@ -30,13 +25,13 @@ async def start(message: types.Message, state: FSMContext):
                                    )
 
 
-@dispatcher.message_handler(Text(equals="Учёба 📚"))
+@dispatcher.message_handler(Text(contains="Учёба"))
 async def study_menu(message: types.Message):
     await message.answer(text="Доступны следующие функции:",
                          reply_markup=get_study_keyboard())
 
 
-@dispatcher.message_handler(Text(equals="Интернет 🌍"))
+@dispatcher.message_handler(Text(contains="Интернет"))
 async def internet_menu(message: types.Message):
     await message.answer(text="Доступны следующие функции:",
                          reply_markup=get_internet_keyboard())
