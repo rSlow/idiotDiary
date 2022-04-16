@@ -1,5 +1,6 @@
 import logging
 import os
+import pytz
 
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -15,6 +16,10 @@ class CustomBot(Bot):
         self.notification_data = {}
         self.users = []
         self.schedule = Schedule()
+
+        self.TIME_FORMAT = "%H:%M"
+        self.DATE_FORMAT = "%d/%m/%y"
+        self.TZ = pytz.timezone("Asia/Vladivostok")
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":

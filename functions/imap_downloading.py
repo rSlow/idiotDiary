@@ -32,17 +32,20 @@ async def download_from_email():
         pattern = re.compile(r"[=?]\S*[?]\w[?]\S+[?=]")
 
         match = re.search(pattern, string)
-        while match:
-            x, y = match.span()
-            match_data = string[x:y][2:-2]
-            encoding_last, encoding_first, data = match_data.split("?")
-            if encoding_first.upper() == "B":
-                decoded_data = base64.b64decode(data).decode(encoding_last)
-                string = string.replace(string[x:y], decoded_data)
-            elif encoding_first.upper() == "Q":
-                decoded_data = quopri.decodestring(data).decode(encoding_last)
-                string = string.replace(string[x:y], decoded_data)
-            match = re.search(pattern, string)
+        try:
+            while match:
+                x, y = match.span()
+                match_data = string[x:y][2:-2]
+                encoding_last, encoding_first, data = match_data.split("?")
+                if encoding_first.upper() == "B":
+                    decoded_data = base64.b64decode(data).decode(encoding_last)
+                    string = string.replace(string[x:y], decoded_data)
+                elif encoding_first.upper() == "Q":
+                    decoded_data = quopri.decodestring(data).decode(encoding_last)
+                    string = string.replace(string[x:y], decoded_data)
+                match = re.search(pattern, string)
+        except ValueError:
+            return string
 
         if replace:
             string = string.replace("\r\n ", "")
@@ -96,7 +99,7 @@ async def download_from_email():
 
             except Exception as ex:
                 errors += 1
-                logging.error(msg="[ERROR]", exc_info=ex)
+                logging.error(msg="[ERROR DECODING EMAIL]", exc_info=ex)
                 if errors > 5:
                     raise ex
 
@@ -123,7 +126,7 @@ async def download_from_email():
             with SchedulesSession.begin() as session:
                 session.add(ORMSchedule(start_date=start_date, timestamp=msg_timestamp))
 
-    now = datetime.now().astimezone(pytz.timezone("Asia/Vladivostok"))
+    now = datetime.now().astimezone(bot.TZ)
     loaded_timestamps = get_loaded_timestamps()
 
     if not os.path.exists(temp):

@@ -75,7 +75,7 @@ async def schedule_group(message: types.Message, state: FSMContext, group=None):
 
     now = get_required_date(limit_changing=14)
 
-    buttons = [f"{day.strftime('%d/%m/%y')}{' 🕘' * (now == day)}" for day in days]
+    buttons = [f"{day.strftime(bot.DATE_FORMAT)}{' 🕘' * (now == day)}" for day in days]
     dates_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     dates_keyboard.add(*buttons)
     dates_keyboard.row("На неделю 🗓")
@@ -112,7 +112,7 @@ async def schedule_date(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         group = proxy_data['group']
         start_week_day = proxy_data["current_start_week_date"]
-        date = dt.datetime.strptime(n_text(message.text), "%d/%m/%y").date()
+        date = dt.datetime.strptime(n_text(message.text), bot.DATE_FORMAT).date()
         dt_obj = bot.schedule[start_week_day][group][date]
 
     await send_schedule_messages(user_id=message.from_user.id,

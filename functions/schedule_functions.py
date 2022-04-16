@@ -27,7 +27,7 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
 
 
 def get_required_date(limit_changing=None):
-    now = dt.datetime.now(tz=pytz.timezone("Asia/Vladivostok"))
+    now = dt.datetime.now(tz=bot.TZ)
     if limit_changing:
         if now.hour >= limit_changing:
             now += dt.timedelta(days=1)
