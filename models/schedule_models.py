@@ -1,11 +1,9 @@
-from datetime import datetime as dt, date as d, timedelta as td
+from datetime import date as d, timedelta as td
 from typing import Optional
+import logging
 
 import pandas as pd
-import pytz
-
-from functions.main_functions import get_start_week_day
-from orm.schedules import Schedule as ORMSchedule
+from numpy import nan
 
 
 def to_date(dt64):
@@ -13,24 +11,36 @@ def to_date(dt64):
 
 
 class Schedule(dict):
-    def __init__(self, filename: Optional[str] = None):
+    def __init__(self, *dates_and_timestamps: Optional[str]):
         super(Schedule, self).__init__()
-        if filename:
-            self.data = pd.read_excel(f"data/schedules/{filename}",
-                                      sheet_name=0,
-                                      header=None
-                                      )
-            self.update(self._parse_to_weeks())
-            del self.data
+        self._temp_kw = {}
+        self.filenames = {}
 
-    def _parse_to_weeks(self):
+        for date, timestamp in dates_and_timestamps:
+            self._data = pd.read_excel(f"data/schedules/{timestamp}.xlsx",
+                                       sheet_name=0,
+                                       header=None
+                                       )
+            self.filenames[date.strftime("%d/%m/%y")] = timestamp
+            try:
+                self._temp_kw.update(self._parse_to_weeks(self._data))
+            except Exception as ex:
+                logging.error(msg=ex)
+                raise ex
+            finally:
+                del self._data
+
+        self.update(self._temp_kw)
+        del self._temp_kw
+
+    def _parse_to_weeks(self, df):
         weeks = {}
-        start_week_rows_idx = self.data.loc[self.data[0] == "дата/пара"].index.to_list()
-        start_week_rows_idx.append(self.data.shape[0] + 1)
+        start_week_rows_idx = df.loc[df[0] == "дата/пара"].index.to_list()
+        start_week_rows_idx.append(self._data.shape[0] + 1)
 
         start_index = start_week_rows_idx[0]
         for idx in start_week_rows_idx[1:]:
-            week: pd.DataFrame = self.data.iloc[start_index:idx]
+            week: pd.DataFrame = df.iloc[start_index:idx]
             week.set_index(0, inplace=True)
             week.columns = week.iloc[0]
             week: pd.DataFrame = week.iloc[1:]
@@ -46,25 +56,6 @@ class Schedule(dict):
     def weeks(self):
         return list(self.keys())
 
-    def __str__(self):
-        return f"Schedule{self.weeks}"
-
-    @classmethod
-    def _from_multiply_weeks(cls, weeks_dict):
-        schedule = cls()
-        schedule.update(weeks_dict)
-        if len(schedule.keys()) == 0:
-            raise ValueError
-        return schedule
-
-    @classmethod
-    def from_actual_timestamps(cls):
-        now = dt.now().astimezone(pytz.timezone("Asia/Vladivostok"))
-        start_week_day = get_start_week_day(now)
-        actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps(start_week_day)
-        weeks = {date: Week.from_filename(f"{timestamp}.xlsx") for date, timestamp in actual_dates_and_timestamps}
-        return cls._from_multiply_weeks(weeks)
-
     def get_actual_filename(self):
         for timestamp in sorted(self.values()):
             return f"{timestamp}.xlsx"
@@ -73,6 +64,9 @@ class Schedule(dict):
         if date >= max(self.keys()):
             return True
         return False
+
+    def __str__(self):
+        return f"Schedule{self.weeks}"
 
 
 class Week(dict):
@@ -170,6 +164,9 @@ class Day(dict):
     def _parse_to_pairs(self):
         pairs = {}
         pairs_idx = self.data.loc[self.data["пара"].notna()].index.to_list()
+        if not pairs_idx:
+            self.data["пара"] = pd.DataFrame([1, nan, nan, 2, nan, nan, 3])
+            pairs_idx.extend([0, 3, 6])
         pairs_idx.append(self.data.shape[0] + 1)
 
         start_idx = pairs_idx[0]
@@ -216,9 +213,12 @@ class Pair:
         except IndexError:
             second_value = first_value
 
-        data = self.data.iloc[first_value[0], first_value[1]] or self.data.iloc[second_value[0], second_value[1]]
-        if data:
-            setattr(self, name, data)
+        try:
+            data = self.data.iloc[first_value[0], first_value[1]] or self.data.iloc[second_value[0], second_value[1]]
+            if data:
+                setattr(self, name, data)
+        except IndexError:
+            pass
 
     def _parse(self):
         keys_3 = {
@@ -271,7 +271,7 @@ class Pair:
 
         first_teacher = getattr(self, "first_teacher", None)
         if first_teacher:
-            blocks.append(f"\nпреподаватель: {first_teacher}")
+            blocks.append(f" - {first_teacher}")
 
         second_subject = getattr(self, "second_subject", None)
         if second_subject:
@@ -291,7 +291,7 @@ class Pair:
 
         second_teacher = getattr(self, "second_teacher", None)
         if second_teacher:
-            blocks.append(f"\nпреподаватель: {second_teacher}")
+            blocks.append(f" - {second_teacher}")
 
         return "".join(blocks)
 

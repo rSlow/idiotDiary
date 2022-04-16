@@ -15,4 +15,5 @@ def get_start_week_day(datetime: dt):
         datetime -= td(days=datetime.weekday() - 7)
     else:
         datetime -= td(days=datetime.weekday())
-    return datetime.date()
+    date = datetime.date()
+    return date

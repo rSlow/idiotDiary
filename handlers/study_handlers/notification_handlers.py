@@ -105,8 +105,8 @@ async def schedule_set_menu_group_settings(message: types.Message):
     bot.disable_jobs(user_id)
 
     await ScheduleSettings.group_settings.set()
-
-    groups = bot.schedule.groups
+    week = next(iter(bot.schedule.values()))
+    groups = week.groups
     await message.answer(text="Выберите группу:",
                          reply_markup=get_groups_keyboard(groups))
 
@@ -182,9 +182,8 @@ async def schedule_set_time_settings(message: types.Message):
             times_map_obj = list(map(lambda notify_data: notify_data.time.strftime("%H:%M"),
                                      sorted(user.notify_times, key=lambda x: x.time)))
 
-            if user_id in bot.notification_data:
-                bot.notification_data[user_id][n_text(message.text)].remove()
-                del bot.notification_data[user_id][n_text(message.text)]
+            bot.notification_data[user_id][n_text(message.text)].remove()
+            del bot.notification_data[user_id][n_text(message.text)]
 
             await message.answer(text=f"Время {n_text(message.text)} удалено.",
                                  reply_markup=get_main_time_keyboard(times_map_obj))
@@ -235,8 +234,7 @@ async def schedule_set_time_settings(message: types.Message):
                                             "group": user.notify_group,
                                             "limit_changing": 9
                                         })
-                bot.notification_data.setdefault(user.user_id, {})[message.text] = job
-
+                bot.notification_data.setdefault(user.user_id, {})[time.strftime("%H:%M")] = job
         await schedule_menu(message)
 
     except ValueError:

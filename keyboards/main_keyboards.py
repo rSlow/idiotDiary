@@ -35,7 +35,7 @@ def get_schedule_keyboard():
         "Оповещение 🔉",
         "Узнать расписание 📝"]
     schedule_keyboard.add(*schedule_buttons)
-    schedule_keyboard.add("Актуальный файл 🧾")
+    schedule_keyboard.add("Файлы расписания 🧾")
     schedule_keyboard.add("↪ На главную")
     return schedule_keyboard
 

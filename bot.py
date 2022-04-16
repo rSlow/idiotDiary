@@ -25,9 +25,6 @@ class CustomBot(Bot):
                                     parse_mode=parse_mode,
                                     *args, **kwargs)
 
-    async def update_schedule(self):
-        pass
-
     def disable_jobs(self, user_id):
         if user_id in self.notification_data:
             for time, job in self.notification_data[user_id].items():

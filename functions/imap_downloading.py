@@ -5,6 +5,7 @@ import os
 import quopri
 import re
 from datetime import datetime
+import logging
 
 import aioimaplib
 import pandas as pd
@@ -95,7 +96,7 @@ async def download_from_email():
 
             except Exception as ex:
                 errors += 1
-                print("[ERROR]", ex)
+                logging.error(msg="[ERROR]", exc_info=ex)
                 if errors > 5:
                     raise ex
 
@@ -133,7 +134,8 @@ async def download_from_email():
 
 async def checking_schedule():
     await download_from_email()
-    bot.schedule = Schedule.from_actual_timestamps()
+    actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps()
+    bot.schedule = Schedule(*actual_dates_and_timestamps)
 
 
 if __name__ == '__main__':

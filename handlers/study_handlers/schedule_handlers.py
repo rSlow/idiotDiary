@@ -4,6 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup
+from asyncio import sleep
 
 from FSM import Schedule
 from bot import dispatcher, bot
@@ -20,15 +21,29 @@ async def schedule_menu(message: types.Message):
                          reply_markup=get_schedule_keyboard())
 
 
-@dispatcher.message_handler(Text(contains="Актуальный файл"), state=Schedule.start)
+@dispatcher.message_handler(Text(contains="Файлы расписания"), state=Schedule.start)
+async def schedule_files(message: types.Message):
+    await Schedule.files.set()
+    dates = bot.schedule.filenames.keys()
+    kb = ReplyKeyboardMarkup(row_width=3, resize_keyboard=True).add(*dates)
+    kb.add("↪ На главную")
+    await message.answer(text="Выберите дату", reply_markup=kb)
+
+
+@dispatcher.message_handler(regexp=r"\d{2}/\d{2}/\d{2}", state=Schedule.files)
 async def release_schedule_file(message: types.Message):
-    actual_filename = bot.schedule.get_actual_filename()
     print(f"[FILE SCHEDULE] {message.from_user.username}:"
           f"{message.from_user.id} ")
-
-    doc = types.InputFile(f"data/schedules/{actual_filename}",
-                          filename=actual_filename)
-    await message.answer_document(doc)
+    try:
+        filename = f"{bot.schedule.filenames[message.text]}.xlsx"
+        doc = types.InputFile(f"data/schedules/{filename}",
+                              filename=f"{message.text}.xlsx".replace("/", "-"))
+        await message.answer_document(doc)
+    except KeyError:
+        msg = await message.answer(text="Не лезь!")
+        await message.delete()
+        await sleep(5)
+        await msg.delete()
 
 
 @dispatcher.message_handler(commands=["rasp"], state="*")
@@ -37,8 +52,12 @@ async def schedule_group_menu(message: types.Message, state: FSMContext):
     await Schedule.group.set()
     async with state.proxy() as proxy_data:
         start_week_day = proxy_data["current_start_week_date"] = get_start_week_day(dt.datetime.now())
+        try:
+            groups = bot.schedule[start_week_day].groups
+        except KeyError:
+            start_week_day = proxy_data["current_start_week_date"] = next(iter(bot.schedule))
+            groups = bot.schedule[start_week_day].groups
 
-    groups = bot.schedule[start_week_day].groups
     await message.answer(text="Выберите группу:", reply_markup=get_groups_keyboard(groups))
 
 

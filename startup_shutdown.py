@@ -3,7 +3,6 @@ import logging
 from bot import scheduler, bot
 from functions.imap_downloading import checking_schedule
 from functions.schedule_functions import send_schedule_messages
-from models import Schedule
 from orm.users import UsersSession, User
 
 
@@ -29,13 +28,11 @@ async def on_startup(_):
                                             "limit_changing": 9
                                         })
                 bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
+    logging.info(msg="Updating schedule with IMAP...")
+    await checking_schedule()
     scheduler.add_job(func=checking_schedule,
                       trigger="interval",
                       seconds=60 * 60 * 6)
-    try:
-        bot.schedule = Schedule.from_actual_timestamps()
-    except ValueError:
-        await checking_schedule()
 
 
 async def on_shutdown(_):
