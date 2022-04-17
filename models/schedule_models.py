@@ -26,7 +26,6 @@ class Schedule(dict):
                 self._temp_kw.update(self._parse_to_weeks(self._data))
             except Exception as ex:
                 logging.error(msg=ex)
-                raise ex
             finally:
                 del self._data
 

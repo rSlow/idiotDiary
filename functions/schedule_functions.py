@@ -1,6 +1,5 @@
 import datetime as dt
 
-import pytz
 from aiogram import types
 from aiogram.utils.exceptions import BotBlocked
 
