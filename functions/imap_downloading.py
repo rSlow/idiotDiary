@@ -6,6 +6,7 @@ import quopri
 import re
 from datetime import datetime
 import logging
+from email.message import Message
 
 import aioimaplib
 import pandas as pd
@@ -16,11 +17,11 @@ from models import Schedule
 from orm.schedules import Schedule as ORMSchedule
 from orm.schedules import SchedulesSession
 
-login = "kursdvf.spb@mail.ru"
-password = "Aq12sw23"
-domain = "imap.mail.ru"
+LOGIN_EMAIL = "kursdvf.spb@mail.ru"
+PASSWORD_EMAIL = "Aq12sw23"
+DOMAIN_IMAP = "imap.mail.ru"
 
-temp = "data/temp"
+TEMP = "data/temp"
 
 
 async def download_from_email():
@@ -53,10 +54,10 @@ async def download_from_email():
 
     async def download_files_to_temp():
 
-        client = aioimaplib.IMAP4_SSL(domain)
+        client = aioimaplib.IMAP4_SSL(DOMAIN_IMAP)
         await client.wait_hello_from_server()
 
-        await client.login(user=login, password=password)
+        await client.login(user=LOGIN_EMAIL, password=PASSWORD_EMAIL)
 
         await client.select("INBOX")
 
@@ -94,7 +95,7 @@ async def download_from_email():
                     encoded_attachment = payload.get_payload()
                     decoded_attachment_bytes = base64.b64decode(encoded_attachment)
 
-                    with open(f"{temp}/{decoded_filename}", "wb") as file:
+                    with open(f"{TEMP}/{decoded_filename}", "wb") as file:
                         file.write(decoded_attachment_bytes)
 
             except Exception as ex:
@@ -114,14 +115,14 @@ async def download_from_email():
             return [i[0] for i in session.query(ORMSchedule.timestamp).all()]
 
     def handle_temp_files():
-        filenames = os.listdir(temp)
+        filenames = os.listdir(TEMP)
         for filename in filenames:
             start_date = get_start_xl_date(filename)
 
             msg_timestamp = int(filename.split("-")[0])
 
-            os.rename(f"{temp}/{filename}", f"{temp}/{msg_timestamp}.xlsx")
-            os.replace(f"{temp}/{msg_timestamp}.xlsx", f"data/schedules/{msg_timestamp}.xlsx")
+            os.rename(f"{TEMP}/{filename}", f"{TEMP}/{msg_timestamp}.xlsx")
+            os.replace(f"{TEMP}/{msg_timestamp}.xlsx", f"data/schedules/{msg_timestamp}.xlsx")
 
             with SchedulesSession.begin() as session:
                 session.add(ORMSchedule(start_date=start_date, timestamp=msg_timestamp))
@@ -129,8 +130,8 @@ async def download_from_email():
     now = datetime.now().astimezone(bot.TZ)
     loaded_timestamps = get_loaded_timestamps()
 
-    if not os.path.exists(temp):
-        os.makedirs(temp, exist_ok=True)
+    if not os.path.exists(TEMP):
+        os.makedirs(TEMP, exist_ok=True)
     await download_files_to_temp()
     handle_temp_files()
 
