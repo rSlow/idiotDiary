@@ -6,7 +6,6 @@ import quopri
 import re
 from datetime import datetime
 import logging
-from email.message import Message
 
 import aioimaplib
 import pandas as pd

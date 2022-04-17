@@ -10,9 +10,10 @@ from FSM import Schedule, ScheduleSettings
 from bot import dispatcher, scheduler, bot
 from functions.main_functions import n_text
 from functions.schedule_functions import send_schedule_messages
-from keyboards import get_notifications_settings_keyboard, \
-    get_notifications_group_keyboard, get_groups_keyboard, \
-    get_main_time_keyboard
+from keyboards import (get_notifications_settings_keyboard,
+                       get_notifications_group_keyboard,
+                       get_groups_keyboard,
+                       get_main_time_keyboard)
 from orm.users import UsersSession, User, Notification
 
 

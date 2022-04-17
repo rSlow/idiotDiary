@@ -28,7 +28,7 @@ async def stop_bot(message: types.Message):
 
 
 @dispatcher.message_handler(Text(equals="да"), state=FSMAdmin.stop)
-async def stop_bot(_):
+async def finally_stop_bot(_):
     dispatcher.stop_polling()
 
 
@@ -40,14 +40,14 @@ async def schedule_options(message: types.Message):
 
 
 @dispatcher.message_handler(Text(contains="Рассылка"), state=FSMAdmin.start)
-async def mailing(message: types.Message):
+async def mailing_settings(message: types.Message):
     await FSMAdmin.mailing.set()
     await message.answer(f"Предварительно рассылка возможна на {len(bot.users)} пользователей.")
     await message.answer("Введите текст для рассылки:")
 
 
 @dispatcher.message_handler(state=FSMAdmin.mailing)
-async def schedule_options(message: types.Message):
+async def mailing(message: types.Message):
     users = bot.users.copy()
     users.remove(message.from_user.id)
     count = 0
@@ -75,8 +75,7 @@ async def imap_update(message: types.Message):
         await message.answer(text="Расписание обновлено.")
     except Exception as ex:
         await message.answer(
-            text=f"*[ERROR]* {ex}",
-            parse_mode="MarkdownV2")
+            text=f"<b>[ERROR]</b> {ex}",
+            parse_mode=types.ParseMode.HTML)
         raise ex
-
     await start_message.delete()
