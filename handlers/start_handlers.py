@@ -21,8 +21,7 @@ async def start(message: types.Message, state: FSMContext):
 
     await message.bot.send_message(chat_id=user_data.id,
                                    text="Добро пожаловать. Выберите действие:",
-                                   reply_markup=get_main_keyboard(message.from_user.id)
-                                   )
+                                   reply_markup=get_main_keyboard(message.from_user.id))
 
 
 @dispatcher.message_handler(Text(contains="Учёба"))

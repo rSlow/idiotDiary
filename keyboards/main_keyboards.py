@@ -8,7 +8,8 @@ def get_main_keyboard(user_id):
     main_buttons = ["Учёба 📚", "Интернет 🌍"]
     main_keyboard.add(*main_buttons)
     if user_id in bot.admins:
-        main_keyboard.add("Панель администратора")
+        main_keyboard.add("Игры 🎮")
+        main_keyboard.insert("Панель администратора")
 
     return main_keyboard
 
