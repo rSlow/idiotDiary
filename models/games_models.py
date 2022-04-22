@@ -1,5 +1,4 @@
 from games.thousand import GameThousand
-from games import BaseGame
 
 
 class GamesContainer:

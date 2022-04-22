@@ -1,11 +1,12 @@
 from datetime import datetime as dt
-import pytz
-from functions.main_functions import get_start_week_day
 
+import pytz
 from sqlalchemy import Column, Integer, Date
 from sqlalchemy import create_engine
 from sqlalchemy import func, desc
 from sqlalchemy.orm import sessionmaker, declarative_base
+
+from functions.main_functions import get_start_week_day
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///databases/schedules.db"
 

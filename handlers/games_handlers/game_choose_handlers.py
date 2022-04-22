@@ -1,10 +1,10 @@
 from aiogram import types
-from aiogram.dispatcher.filters import Text
-from bot import bot
-from aiogram.types import ReplyKeyboardMarkup
 from aiogram.dispatcher import FSMContext
-from FSM import FSMGames
+from aiogram.dispatcher.filters import Text
+from aiogram.types import ReplyKeyboardMarkup
 
+from FSM import FSMGames
+from bot import bot
 from bot import dispatcher
 
 unique_keys = {

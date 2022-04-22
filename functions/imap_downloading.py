@@ -1,16 +1,16 @@
 import asyncio
 import base64
 import email
+import logging
 import os
 import quopri
 import re
 from datetime import datetime
-import logging
 
 import aioimaplib
 import pandas as pd
-import pytz
 
+import constants
 from bot import bot
 from models import Schedule
 from orm.schedules import Schedule as ORMSchedule
@@ -75,7 +75,7 @@ async def download_from_email():
                 datetime_obj = datetime.strptime(
                     date_msg[date_msg.find(",") + 2:],
                     "%d %b %Y %H:%M:%S %z"
-                ).astimezone(pytz.timezone("Asia/Vladivostok"))
+                ).astimezone(constants.TIMEZONE)
 
                 delta = now - datetime_obj
                 if delta.days > 0:  # limit days within today and message day
@@ -126,7 +126,7 @@ async def download_from_email():
             with SchedulesSession.begin() as session:
                 session.add(ORMSchedule(start_date=start_date, timestamp=msg_timestamp))
 
-    now = datetime.now().astimezone(bot.TZ)
+    now = datetime.now().astimezone(constants.TIMEZONE)
     loaded_timestamps = get_loaded_timestamps()
 
     if not os.path.exists(TEMP):

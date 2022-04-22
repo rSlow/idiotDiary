@@ -6,6 +6,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import Text
 from sqlalchemy.exc import NoResultFound
 
+import constants
 from FSM import Schedule, ScheduleSettings
 from bot import dispatcher, scheduler, bot
 from functions.main_functions import n_text
@@ -29,7 +30,6 @@ async def schedule_menu(message: types.Message):
                 fullname=user_data.full_name,
                 username_mention=user_data.mention))
             session.commit()
-
         await Schedule.notifications.set()
         if user.notify_group and user.notify_times:
             await Schedule.notifications_ready.set()
@@ -41,7 +41,7 @@ async def schedule_menu(message: types.Message):
                                  parse_mode="HTML")
 
             times_block_msg = "\n".join(
-                map(lambda notification: notification.time.strftime(bot.TIME_FORMAT), sorted(user.notify_times,
+                map(lambda notification: notification.time.strftime(constants.TIME_FORMAT), sorted(user.notify_times,
                                                                                              key=lambda x: x.time)))
             await message.answer(f"<b>Временные метки</b>:\n{times_block_msg}",
                                  parse_mode="HTML")
@@ -71,7 +71,7 @@ async def schedule_notifications_enable(message: types.Message):
                                         "group": group,
                                         "limit_changing": 9
                                     })
-            bot.notification_data.setdefault(user.user_id, {})[notify.time.strftime(bot.TIME_FORMAT)] = job
+            bot.notification_data.setdefault(user.user_id, {})[notify.time.strftime(constants.TIME_FORMAT)] = job
 
     await schedule_menu(message)
     print(f"[NOTIFICATION ON] {message.from_user.username}:{message.from_user.id}")
@@ -144,7 +144,7 @@ async def schedule_time_settings(message: types.Message):
     with UsersSession.begin() as session:
         user = User.get(user_id=user_id, session=session)
         if user.notify_times:
-            times_list.extend(list(map(lambda notification: notification.time.strftime(bot.TIME_FORMAT),
+            times_list.extend(list(map(lambda notification: notification.time.strftime(constants.TIME_FORMAT),
                                        sorted(user.notify_times, key=lambda x: x.time))))
             times = '\n'.join(times_list)
             info_message = f"Установлены следующие метки оповещения:\n{times}"
@@ -173,14 +173,14 @@ async def schedule_set_time_settings(message: types.Message):
     user_id = message.from_user.id
     with UsersSession() as session:
         try:
-            time_obj = dt.datetime.strptime(n_text(message.text), bot.TIME_FORMAT).time()
+            time_obj = dt.datetime.strptime(n_text(message.text), constants.TIME_FORMAT).time()
             notification = session.query(Notification).filter(Notification.user_id == user_id).filter(
                 Notification.time == time_obj).one()
             session.delete(notification)
             session.commit()
 
             user = User.get(user_id=user_id, session=session)
-            times_map_obj = list(map(lambda notify_data: notify_data.time.strftime(bot.TIME_FORMAT),
+            times_map_obj = list(map(lambda notify_data: notify_data.time.strftime(constants.TIME_FORMAT),
                                      sorted(user.notify_times, key=lambda x: x.time)))
 
             bot.notification_data[user_id][n_text(message.text)].remove()
@@ -219,7 +219,7 @@ async def schedule_set_time_settings(message: types.Message):
         user_data = message.from_user
         with UsersSession.begin() as session:
             user = User.get(user_id=user_data.id, session=session)
-            time = dt.datetime.strptime(message.text, bot.TIME_FORMAT).time()
+            time = dt.datetime.strptime(message.text, constants.TIME_FORMAT).time()
             session.add(Notification(
                 user_id=user.user_id,
                 time=time
@@ -235,7 +235,7 @@ async def schedule_set_time_settings(message: types.Message):
                                             "group": user.notify_group,
                                             "limit_changing": 9
                                         })
-                bot.notification_data.setdefault(user.user_id, {})[time.strftime(bot.TIME_FORMAT)] = job
+                bot.notification_data.setdefault(user.user_id, {})[time.strftime(constants.TIME_FORMAT)] = job
         await schedule_menu(message)
 
     except ValueError:

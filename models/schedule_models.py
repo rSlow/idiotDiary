@@ -1,9 +1,11 @@
+import logging
 from datetime import date as d, timedelta as td
 from typing import Optional
-import logging
 
 import pandas as pd
 from numpy import nan
+
+import constants
 
 
 def to_date(dt64):
@@ -74,7 +76,7 @@ class Week(dict):
         self.data = dataframe
         self.start_date = start_date or to_date(self.data.index.values[0])
 
-        self.pair_block: pd.DataFrame = self.data.iloc[:, 0]
+        self.pair_block: pd.Series = self.data.iloc[:, 0]
         self.update(self._parse_to_groups())
 
         del self.data, self.pair_block
@@ -142,8 +144,8 @@ class Group(dict):
     def message_text(self):
         blocks = list()
         blocks.append(f"<b><u>Пары на неделю с "
-                      f"{self.days[0].strftime('%d/%m/%y')} "
-                      f"по {self.days[-1].strftime('%d/%m/%y')}"
+                      f"{self.days[0].strftime(constants.DATE_FORMAT)} "
+                      f"по {self.days[-1].strftime(constants.DATE_FORMAT)}"
                       f"</u></b>")
 
         for date, day in self.items():
@@ -185,7 +187,7 @@ class Day(dict):
     @property
     def message_text(self):
         blocks = list()
-        blocks.append(f"Пары на <u>{self.day.strftime('%d/%m/%y')}</u>:")
+        blocks.append(f"Пары на <u>{self.day.strftime(constants.DATE_FORMAT)}</u>:")
         for num, pair in self.items():
             blocks.append(f"\n\n<b><u>{num} пара: </u></b>")
             blocks.append(pair.message_text)
@@ -293,8 +295,3 @@ class Pair:
             blocks.append(f" - {second_teacher}")
 
         return "".join(blocks)
-
-
-if __name__ == '__main__':
-    s = Schedule("a2-f15-m32953-2.xlsx")
-    print(s)
