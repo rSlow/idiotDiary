@@ -1,2 +1,2 @@
 from .schedule_models import Schedule
-from .games_models import RoomsContainer
+from .games_models import GamesContainer

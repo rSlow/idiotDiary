@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from models import Schedule, RoomsContainer
+from models import Schedule, GamesContainer
 
 
 class CustomBot(Bot):
@@ -16,7 +16,7 @@ class CustomBot(Bot):
         self.notification_data = {}
         self.users = []
         self.schedule = Schedule()
-        self.game_rooms = RoomsContainer
+        self.games = GamesContainer()
 
         self.TIME_FORMAT = "%H:%M"
         self.DATE_FORMAT = "%d/%m/%y"

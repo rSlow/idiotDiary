@@ -29,3 +29,8 @@ class FSMAdmin(StatesGroup):
     mailing = State()
     schedule = State()
     download_schedule = State()
+
+
+class FSMGames(StatesGroup):
+    start = State()
+    at_game = State()
