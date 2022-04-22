@@ -42,7 +42,7 @@ logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
 scheduler = AsyncIOScheduler(timezone="Asia/Vladivostok")
 
-token = os.getenv("tg_token")
+token = os.getenv("IDIOT_DIARY_BOT_TOKEN")
 
 bot = CustomBot(token=token)
 dispatcher = Dispatcher(bot=bot,
