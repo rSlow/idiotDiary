@@ -11,11 +11,13 @@ from models import Schedule, GamesContainer
 class CustomBot(Bot):
     def __init__(self, *args, **kwargs):
         super(CustomBot, self).__init__(*args, **kwargs)
-        self.admins = [959148697, ]
+        self.admins = [
+            959148697,
+        ]
         self.notification_data = {}
         self.users = []
         self.schedule = Schedule()
-        self.games = GamesContainer()
+        # self.games = GamesContainer()
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":

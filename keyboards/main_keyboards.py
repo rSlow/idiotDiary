@@ -4,11 +4,11 @@ from bot import bot
 
 
 def get_main_keyboard(user_id):
-    main_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+    main_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     main_buttons = ["Учёба 📚", "Интернет 🌍"]
     main_keyboard.add(*main_buttons)
     if user_id in bot.admins:
-        main_keyboard.add("Игры 🎮")
+        # main_keyboard.add("Игры 🎮")
         main_keyboard.insert("Панель администратора")
 
     return main_keyboard
