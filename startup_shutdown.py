@@ -3,6 +3,8 @@ import logging
 from bot import scheduler, bot
 from functions.imap_downloading import checking_schedule
 from functions.schedule_functions import send_schedule_messages
+from orm.schedules import SchedulesBase, SchedulesEngine
+from orm.users import UsersBase, UsersEngine
 from orm.users import UsersSession, User
 
 
@@ -11,6 +13,11 @@ async def on_startup(_):
         import handlers
     except ImportError as ex:
         logging.warn(msg=ex)
+
+    UsersBase.metadata.create_all(bind=UsersEngine)
+    SchedulesBase.metadata.create_all(bind=SchedulesEngine)
+
+    scheduler.start()
 
     with UsersSession() as session:
         all_users = [userdata[0] for userdata in session.query(User.user_id).all()]

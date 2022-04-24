@@ -3,6 +3,7 @@ import datetime as dt
 from aiogram import types
 from aiogram.utils.exceptions import BotBlocked
 
+import constants
 from bot import bot
 from functions.main_functions import get_start_week_day
 from orm.users import User
@@ -26,7 +27,7 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
 
 
 def get_required_date(limit_changing=None):
-    now = dt.datetime.now(tz=bot.TZ)
+    now = dt.datetime.now(tz=constants.TIMEZONE)
     if limit_changing:
         if now.hour >= limit_changing:
             now += dt.timedelta(days=1)

@@ -8,7 +8,7 @@ from numpy import nan
 import constants
 
 
-def to_date(dt64):
+def to_date(dt64) -> d:
     return pd.Timestamp(dt64).to_pydatetime().date()
 
 
@@ -23,7 +23,7 @@ class Schedule(dict):
                                        sheet_name=0,
                                        header=None
                                        )
-            self.filenames[date.strftime("%d/%m/%y")] = timestamp
+            self.filenames[date.strftime(constants.DATE_FORMAT)] = timestamp
             try:
                 self._temp_kw.update(self._parse_to_weeks(self._data))
             except Exception as ex:
@@ -34,7 +34,7 @@ class Schedule(dict):
         self.update(self._temp_kw)
         del self._temp_kw
 
-    def _parse_to_weeks(self, df):
+    def _parse_to_weeks(self, df: pd.DataFrame):
         weeks = {}
         start_week_rows_idx = df.loc[df[0] == "дата/пара"].index.to_list()
         start_week_rows_idx.append(self._data.shape[0] + 1)
@@ -65,6 +65,11 @@ class Schedule(dict):
         if date >= max(self.keys()):
             return True
         return False
+
+    @property
+    def first(self):
+        for week in self:
+            return week
 
     def __str__(self):
         return f"Schedule{self.weeks}"

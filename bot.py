@@ -5,7 +5,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from models import Schedule, GamesContainer
+from models import Schedule
+
+
+# from models import GamesContainer
 
 
 class CustomBot(Bot):
@@ -21,7 +24,7 @@ class CustomBot(Bot):
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":
-            text = "*\[ADMIN\]* " + text
+            text = "<b>ADMIN</b> " + text
         for admin in self.admins:
             await self.send_message(chat_id=admin,
                                     text=text,

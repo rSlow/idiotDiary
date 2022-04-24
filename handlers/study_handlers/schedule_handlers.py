@@ -1,5 +1,6 @@
 import datetime as dt
 from asyncio import sleep
+import logging
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
@@ -33,8 +34,8 @@ async def schedule_files(message: types.Message):
 
 @dispatcher.message_handler(regexp=r"\d{2}/\d{2}/\d{2}", state=Schedule.files)
 async def release_schedule_file(message: types.Message):
-    print(f"[FILE SCHEDULE] {message.from_user.username}:"
-          f"{message.from_user.id} ")
+    logging.info(f"[FILE SCHEDULE] {message.from_user.username}:"
+                 f"{message.from_user.id} ")
     try:
         filename = f"{bot.schedule.filenames[message.text]}.xlsx"
         doc = types.InputFile(f"data/schedules/{filename}",
@@ -50,13 +51,15 @@ async def release_schedule_file(message: types.Message):
 @dispatcher.message_handler(commands=["rasp"], state="*")
 @dispatcher.message_handler(Text(contains="Узнать расписание"), state=Schedule.start)
 async def schedule_group_menu(message: types.Message, state: FSMContext):
+    logging.info(f"[SCHEDULE] {message.from_user.username}:"
+                 f"{message.from_user.id}")
     await Schedule.group.set()
     async with state.proxy() as proxy_data:
         start_week_day = proxy_data["current_start_week_date"] = get_start_week_day(dt.datetime.now())
         try:
             groups = bot.schedule[start_week_day].groups
         except KeyError:
-            start_week_day = proxy_data["current_start_week_date"] = next(iter(bot.schedule))
+            start_week_day = proxy_data["current_start_week_date"] = bot.schedule.first
             groups = bot.schedule[start_week_day].groups
 
     await message.answer(text="Выберите группу:", reply_markup=get_groups_keyboard(groups))
@@ -85,9 +88,6 @@ async def schedule_group(message: types.Message, state: FSMContext, group=None):
     dates_keyboard.add("↪ На главную")
 
     await message.answer(text="Выберите дату:", reply_markup=dates_keyboard)
-
-    print(f"[SCHEDULE] {message.from_user.username}:"
-          f"{message.from_user.id}")
 
 
 @dispatcher.message_handler(Text(contains="На неделю"), state=Schedule.date_for_group)
