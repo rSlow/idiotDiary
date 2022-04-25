@@ -11,8 +11,7 @@ import aioimaplib
 import pandas as pd
 
 import constants
-from bot import bot
-from models import Schedule
+from models import ScheduleByGroup
 from orm.schedules import Schedule as ORMSchedule
 from orm.schedules import SchedulesSession
 
@@ -135,10 +134,10 @@ async def download_from_email():
     handle_temp_files()
 
 
-async def checking_schedule():
+async def get_actual_schedule():
     await download_from_email()
     actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps()
-    bot.schedule = Schedule(*actual_dates_and_timestamps)
+    return ScheduleByGroup(*actual_dates_and_timestamps)
 
 
 if __name__ == '__main__':

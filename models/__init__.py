@@ -1,2 +1,1 @@
-from .games_models import GamesContainer
-from .schedule_models import Schedule
+from .group_schedule_models import ScheduleByGroup

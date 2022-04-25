@@ -5,15 +5,17 @@ from aiogram.utils.exceptions import BotBlocked
 
 import constants
 from bot import bot
+from functions.imap_downloading import get_actual_schedule
 from functions.main_functions import get_start_week_day
 from orm.users import User
+from models.days_schedule_models import ScheduleByDays
 
 
 async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changing=None):
     if not dt_obj:
         try:
             date = get_required_date(limit_changing=limit_changing)
-            dt_obj = bot.schedule[get_start_week_day(dt.datetime.now())][group][date]
+            dt_obj = bot.schedule_by_groups[get_start_week_day(dt.datetime.now())][group][date]
         except KeyError:
             return
     try:
@@ -32,3 +34,9 @@ def get_required_date(limit_changing=None):
         if now.hour >= limit_changing:
             now += dt.timedelta(days=1)
     return now.date()
+
+
+async def update_schedule_obj():
+    schedule_obj = await get_actual_schedule()
+    bot.schedule_by_groups = schedule_obj
+    bot.schedule_by_days = ScheduleByDays.from_group_schedule(schedule_obj)

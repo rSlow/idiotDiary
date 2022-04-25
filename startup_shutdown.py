@@ -1,8 +1,7 @@
 import logging
 
 from bot import scheduler, bot
-from functions.imap_downloading import checking_schedule
-from functions.schedule_functions import send_schedule_messages
+from functions.schedule_functions import send_schedule_messages, update_schedule_obj
 from orm.schedules import SchedulesBase, SchedulesEngine
 from orm.users import UsersBase, UsersEngine
 from orm.users import UsersSession, User
@@ -35,12 +34,12 @@ async def on_startup(_):
                                             "limit_changing": 9
                                         })
                 bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
-    logging.info(msg="Updating schedule with IMAP...")
-    await checking_schedule()
-    scheduler.add_job(func=checking_schedule,
+    # logging.info(msg="Updating schedule with IMAP...")
+    # await checking_schedule()
+    scheduler.add_job(func=update_schedule_obj,
                       trigger="interval",
                       seconds=60 * 60 * 6)
 
 
 async def on_shutdown(_):
-    print("[BOT STOP] Bot has been closed.")
+    logging.info("[BOT STOP] Bot has been closed.")

@@ -7,8 +7,21 @@ class Schedule(StatesGroup):
     notifications_ready = State()
     files = State()
     settings = State()
+
+
+class ScheduleByGroup(StatesGroup):
     group = State()
     date_for_group = State()
+
+
+class ScheduleByDay(StatesGroup):
+    day = State()
+    group_for_day = State()
+
+
+class ScheduleByTeacher(StatesGroup):
+    teacher = State()
+    group_for_teacher = State()
 
 
 class DownloadLibrary(StatesGroup):
@@ -29,8 +42,3 @@ class FSMAdmin(StatesGroup):
     mailing = State()
     schedule = State()
     download_schedule = State()
-
-
-class FSMGames(StatesGroup):
-    start = State()
-    at_game = State()

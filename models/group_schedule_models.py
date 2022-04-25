@@ -6,15 +6,16 @@ import pandas as pd
 from numpy import nan
 
 import constants
+from orm.schedules import Schedule as ORMSchedule
 
 
 def to_date(dt64) -> d:
     return pd.Timestamp(dt64).to_pydatetime().date()
 
 
-class Schedule(dict):
+class ScheduleByGroup(dict):
     def __init__(self, *dates_and_timestamps: Optional[str]):
-        super(Schedule, self).__init__()
+        super(ScheduleByGroup, self).__init__()
         self._temp_kw = {}
         self.filenames = {}
 
@@ -32,7 +33,7 @@ class Schedule(dict):
                 del self._data
 
         self.update(self._temp_kw)
-        del self._temp_kw
+        del self._temp_kw, self.filenames
 
     def _parse_to_weeks(self, df: pd.DataFrame):
         weeks = {}
@@ -48,7 +49,7 @@ class Schedule(dict):
 
             start_date = to_date(week.index.values[0])
             start_date -= td(days=start_date.weekday())
-            weeks[start_date] = Week(week, start_date)
+            weeks[start_date] = WeekByGroup(week, start_date)
 
             start_index = idx
         return weeks
@@ -61,7 +62,7 @@ class Schedule(dict):
         for timestamp in sorted(self.values()):
             return f"{timestamp}.xlsx"
 
-    def is_last(self, date: d):
+    def is_last_week(self, date: d):
         if date >= max(self.keys()):
             return True
         return False
@@ -74,10 +75,15 @@ class Schedule(dict):
     def __str__(self):
         return f"Schedule{self.weeks}"
 
+    @classmethod
+    def from_actual(cls):
+        actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps()
+        return cls(*actual_dates_and_timestamps)
 
-class Week(dict):
+
+class WeekByGroup(dict):
     def __init__(self, dataframe: pd.DataFrame, start_date=None):
-        super(Week, self).__init__()
+        super(WeekByGroup, self).__init__()
         self.data = dataframe
         self.start_date = start_date or to_date(self.data.index.values[0])
 
@@ -97,7 +103,7 @@ class Week(dict):
                          column="пара",
                          value=self.pair_block)
             group_name = group.iloc[:, 1].name
-            groups[group_name] = Group(group, group_name, self.start_date)
+            groups[group_name] = GroupByGroup(group)
         return groups
 
     @property
@@ -114,12 +120,10 @@ class Week(dict):
         return cls(df)
 
 
-class Group(dict):
-    def __init__(self, dataframe: pd.DataFrame, group_name, start_date):
-        super(Group, self).__init__()
+class GroupByGroup(dict):
+    def __init__(self, dataframe: pd.DataFrame):
+        super(GroupByGroup, self).__init__()
         self.data = dataframe
-        self.start_date = start_date
-        self.group_name = group_name
         self.update(self._parse_to_days())
 
         del self.data
@@ -135,7 +139,7 @@ class Group(dict):
         for idx in days_idx[1:]:
             day_data = self.data.iloc[start_idx:idx]
             day = to_date(day_data.index.values[0])
-            day_obj = Day(day_data, day)
+            day_obj = DayByGroup(day_data, day)
             if day_obj:
                 days[day] = day_obj
             start_idx = idx
@@ -158,9 +162,9 @@ class Group(dict):
         return "".join(blocks)
 
 
-class Day(dict):
+class DayByGroup(dict):
     def __init__(self, dataframe: pd.DataFrame, day):
-        super(Day, self).__init__()
+        super(DayByGroup, self).__init__()
         self.data = dataframe.reset_index(drop=True)
         self.day = day
         self.update(self._parse_to_pairs())
@@ -179,22 +183,18 @@ class Day(dict):
         for idx in pairs_idx[1:]:
             pair_data = self.data.iloc[start_idx:idx]
             pair_num = int(pair_data.iloc[0, 0])
-            pair_obj = Pair(pair_data.iloc[:, 1:], pair_num)
+            pair_obj = PairByGroup(pair_data.iloc[:, 1:], pair_num)
             if pair_obj:
                 pairs[pair_num] = pair_obj
             start_idx = idx
         return pairs
 
     @property
-    def pairs(self):
-        return list(self.keys())
-
-    @property
     def message_text(self):
         blocks = list()
         blocks.append(f"Пары на <u>{self.day.strftime(constants.DATE_FORMAT)}</u>:")
         for num, pair in self.items():
-            blocks.append(f"\n\n<b><u>{num} пара: </u></b>")
+            blocks.append(f"\n\n<b><u>{num} пара:</u></b> ")
             blocks.append(pair.message_text)
         return "".join(blocks)
 
@@ -205,7 +205,7 @@ class Day(dict):
         return False
 
 
-class Pair:
+class PairByGroup:
     def __init__(self, dataframe: pd.DataFrame, pair_num):
         self.data = dataframe.fillna(value="")
         self.pair_num = pair_num

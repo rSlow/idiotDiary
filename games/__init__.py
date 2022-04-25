@@ -1,2 +1,0 @@
-class BaseGame:
-    name: str

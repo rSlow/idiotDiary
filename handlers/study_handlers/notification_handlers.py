@@ -1,4 +1,5 @@
 import datetime as dt
+import logging
 from asyncio import sleep
 from random import randrange
 
@@ -25,10 +26,8 @@ async def schedule_menu(message: types.Message):
     with UsersSession() as session:
         user = session.query(User).filter(User.user_id == user_data.id).one_or_none()
         if not user:
-            session.add(User(
-                user_id=user_data.id,
-                fullname=user_data.full_name,
-                username_mention=user_data.mention))
+            user = User(user_id=user_data.id, fullname=user_data.full_name, username_mention=user_data.mention)
+            session.add(user)
             session.commit()
         await Schedule.notifications.set()
         if user.notify_group and user.notify_times:
@@ -41,8 +40,9 @@ async def schedule_menu(message: types.Message):
                                  parse_mode="HTML")
 
             times_block_msg = "\n".join(
-                map(lambda notification: notification.time.strftime(constants.TIME_FORMAT), sorted(user.notify_times,
-                                                                                             key=lambda x: x.time)))
+                map(lambda notification: notification.time.strftime(constants.TIME_FORMAT),
+                    sorted(user.notify_times, key=lambda x: x.time))
+            )
             await message.answer(f"<b>Временные метки</b>:\n{times_block_msg}",
                                  parse_mode="HTML")
         else:
@@ -74,7 +74,7 @@ async def schedule_notifications_enable(message: types.Message):
             bot.notification_data.setdefault(user.user_id, {})[notify.time.strftime(constants.TIME_FORMAT)] = job
 
     await schedule_menu(message)
-    print(f"[NOTIFICATION ON] {message.from_user.username}:{message.from_user.id}")
+    logging.info(f"[NOTIFICATION ON] {message.from_user.username}:{message.from_user.id}")
 
 
 @dispatcher.message_handler(Text(contains="Выключить"), state=Schedule.notifications_ready)
@@ -84,7 +84,7 @@ async def schedule_main_notifications_disable(message: types.Message):
     bot.disable_jobs(user_id)
 
     await schedule_menu(message)
-    print(f"[NOTIFICATION OFF] {message.from_user.username}:{message.from_user.id}")
+    logging.info(f"[NOTIFICATION OFF] {message.from_user.username}:{message.from_user.id}")
 
 
 @dispatcher.message_handler(Text(contains="Группа"), state=[Schedule.notifications, Schedule.notifications_ready])
@@ -106,7 +106,7 @@ async def schedule_set_menu_group_settings(message: types.Message):
     bot.disable_jobs(user_id)
 
     await ScheduleSettings.group_settings.set()
-    week = next(iter(bot.schedule.values()))
+    week = next(iter(bot.schedule_by_groups.values()))
     groups = week.groups
     await message.answer(text="Выберите группу:",
                          reply_markup=get_groups_keyboard(groups))
@@ -168,7 +168,7 @@ async def schedule_del_all_time_settings(message: types.Message):
 
 
 @dispatcher.message_handler(regexp=r"\d{1,2}:\d{1,2} .", state=ScheduleSettings.time)
-async def schedule_set_time_settings(message: types.Message):
+async def notification_time_delete(message: types.Message):
     """Deleting one job notification from scheduler."""
     user_id = message.from_user.id
     with UsersSession() as session:
@@ -203,7 +203,7 @@ async def schedule_set_time_settings(message: types.Message):
 
 
 @dispatcher.message_handler(Text(contains="Добавить время оповещения"), state=ScheduleSettings.time)
-async def schedule_wait_time_settings(message: types.Message):
+async def notification_time_add_wait(message: types.Message):
     await ScheduleSettings.time_set.set()
     times_for_example = '\n'.join([f"{randrange(1, 24):02}:{randrange(0, 60):02}" for _ in range(3)])
     await message.answer(text=f"Оповещение происходит на грядущие пары. Смена дня оповещения произойдет в 09:00.\n\n"
@@ -213,7 +213,7 @@ async def schedule_wait_time_settings(message: types.Message):
 
 
 @dispatcher.message_handler(regexp=r"\d{1,2}:\d{1,2}", state=ScheduleSettings.time_set)
-async def schedule_set_time_settings(message: types.Message):
+async def notification_time_add_confirm(message: types.Message):
     """Adding new time to notification scheduler"""
     try:
         user_data = message.from_user
