@@ -1,11 +1,11 @@
 from aiogram import types
 from aiogram.dispatcher.filters import Text
+from aiogram.types import ReplyKeyboardMarkup
 from aiogram.utils.exceptions import BotBlocked
 
 from FSM import FSMAdmin
 from bot import dispatcher, bot
 from functions.imap_downloading import get_actual_schedule
-from keyboards import get_main_admin_keyboard, get_schedule_admin_keyboard
 from orm.users import User
 
 
@@ -15,9 +15,12 @@ async def main_admin(message: types.Message):
     if message.from_user.id not in bot.admins:
         await message.delete()
     else:
+        kb = ReplyKeyboardMarkup(resize_keyboard=True).add("Расписание 📝", "Рассылка 📨").add(
+            "Остановить бота ⛔").add("↪ На главную")
+
         await FSMAdmin.start.set()
         await message.answer(text="Панель ~идиота~ администратора\:",
-                             reply_markup=get_main_admin_keyboard(),
+                             reply_markup=kb,
                              parse_mode="MarkdownV2")
 
 
@@ -35,8 +38,8 @@ async def finally_stop_bot(_):
 @dispatcher.message_handler(Text(contains="Расписание"), state=FSMAdmin.start)
 async def schedule_options(message: types.Message):
     await FSMAdmin.schedule.set()
-    await message.answer(text="Опции:",
-                         reply_markup=get_schedule_admin_keyboard())
+    kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add("Обновить с почты 🔁", "↪ На главную")
+    await message.answer(text="Опции:", reply_markup=kb)
 
 
 @dispatcher.message_handler(Text(contains="Рассылка"), state=FSMAdmin.start)

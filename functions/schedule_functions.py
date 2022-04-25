@@ -22,7 +22,6 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
         await bot.send_message(chat_id=user_id,
                                text=dt_obj.message_text,
                                parse_mode=types.ParseMode.HTML)
-
     except BotBlocked:
         User.deactivate(user_id)
         bot.disable_jobs(user_id)
@@ -36,7 +35,7 @@ def get_required_date(limit_changing=None):
     return now.date()
 
 
-async def update_schedule_obj():
+async def update_bot_schedule():
     schedule_obj = await get_actual_schedule()
     bot.schedule_by_groups = schedule_obj
     bot.schedule_by_days = ScheduleByDays.from_group_schedule(schedule_obj)

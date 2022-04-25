@@ -1,7 +1,7 @@
 import logging
 
 from bot import scheduler, bot
-from functions.schedule_functions import send_schedule_messages, update_schedule_obj
+from functions.schedule_functions import send_schedule_messages, update_bot_schedule
 from orm.schedules import SchedulesBase, SchedulesEngine
 from orm.users import UsersBase, UsersEngine
 from orm.users import UsersSession, User
@@ -35,8 +35,8 @@ async def on_startup(_):
                                         })
                 bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
     # logging.info(msg="Updating schedule with IMAP...")
-    # await checking_schedule()
-    scheduler.add_job(func=update_schedule_obj,
+    # await update_bot_schedule()
+    scheduler.add_job(func=update_bot_schedule,
                       trigger="interval",
                       seconds=60 * 60 * 6)
 
