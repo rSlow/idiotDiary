@@ -33,7 +33,7 @@ class ScheduleByGroup(dict):
                 del self._data
 
         self.update(self._temp_kw)
-        del self._temp_kw, self.filenames
+        del self._temp_kw
 
     def _parse_to_weeks(self, df: pd.DataFrame):
         weeks = {}
