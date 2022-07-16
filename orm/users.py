@@ -1,15 +1,20 @@
 from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy import ForeignKey
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship, selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///databases/users.db"
+# USERNAME = "ktabelpb"
+# PASSWORD = "Qt-MOrtH0FKw15GA80G5dQBWqgxK4BAA"
+# HOST = "heffalump.db.elephantsql.com"
+# DATABASE = "ktabelpb"
+#
+# SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}/{DATABASE}"
+SQLALCHEMY_DATABASE_URL = f"sqlite+aiosqlite:///database.sqlite3"
 
-UsersEngine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-UsersSession = sessionmaker(autocommit=False, autoflush=False, bind=UsersEngine)
-
+UsersEngine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+UsersSession = sessionmaker(bind=UsersEngine, expire_on_commit=False, class_=AsyncSession)
 UsersBase = declarative_base()
 
 
@@ -27,24 +32,29 @@ class User(UsersBase):
                                 cascade="all, delete, delete-orphan")
 
     @classmethod
-    def add_new_user(cls, user_data):
-        with UsersSession.begin() as session:
-            session.add(cls(user_id=user_data.id,
-                            fullname=user_data.full_name,
-                            username_mention=user_data.mention))
+    async def add_new_user(cls, user_data):
+        async with UsersSession() as session:
+            async with session.begin():
+                session.add(cls(user_id=user_data.id,
+                                fullname=user_data.full_name,
+                                username_mention=user_data.mention))
 
     @classmethod
-    def get(cls, user_id, session):
-        return session.query(cls).filter(cls.user_id == user_id).one()
+    async def get(cls, user_id, session):
+        result = await session.execute(
+            select(cls).filter(cls.user_id == user_id)
+            # options(selectinload(cls.image_ids))
+        )
+        return result.scalars().one()
 
     @classmethod
-    def deactivate(cls, user_id):
+    async def deactivate(cls, user_id):
         with UsersSession.begin() as session:
             user = session.query(cls).filter(cls.user_id == user_id).one()
             user.status = False
 
     @classmethod
-    def disable_notifications(cls, user_id):
+    async def disable_notifications(cls, user_id):
         with UsersSession.begin() as session:
             user = session.query(cls).filter(cls.user_id == user_id).one()
             user.notify_status = False

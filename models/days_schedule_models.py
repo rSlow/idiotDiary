@@ -10,7 +10,7 @@ class ScheduleByDays(dict):
         super(ScheduleByDays, self).__init__(weeks_dict or {})
 
     @classmethod
-    def from_group_schedule(cls, group_schedule_obj: ScheduleByGroup):
+    async def from_group_schedule(cls, group_schedule_obj: ScheduleByGroup):
         weeks = {week_str: WeekByDays.from_group_week(week_obj) for week_str, week_obj in group_schedule_obj.items()}
         return cls(weeks)
 

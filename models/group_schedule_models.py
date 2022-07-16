@@ -6,7 +6,6 @@ import pandas as pd
 from numpy import nan
 
 import constants
-from orm.schedules import Schedule as ORMSchedule
 
 
 def to_date(dt64) -> d:
@@ -76,8 +75,9 @@ class ScheduleByGroup(dict):
         return f"Schedule{self.weeks}"
 
     @classmethod
-    def from_actual(cls):
-        actual_dates_and_timestamps = ORMSchedule.get_actual_dates_and_timestamps()
+    async def from_actual(cls):
+        dates = await ORMSchedule.get_actual_dates()
+        actual_dates_and_timestamps = dates
         return cls(*actual_dates_and_timestamps)
 
 
@@ -94,7 +94,7 @@ class WeekByGroup(dict):
 
     def _parse_to_groups(self):
         groups = {}
-        group_names = self.data.filter(regex=r"\w+-\d{2}").columns
+        group_names = self.data.filter(regex=r"\w+-\d+").columns
         idx_groups = [self.data.columns.get_loc(group_name) for group_name in group_names]
 
         for idx in idx_groups:
@@ -142,7 +142,6 @@ class GroupByGroup(dict):
             day_obj = DayByGroup(day_data, day)
             if day_obj:
                 days[day] = day_obj
-            start_idx = idx
         return days
 
     @property

@@ -1,6 +1,6 @@
 import logging
 import os
-
+import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -17,9 +17,12 @@ class CustomBot(Bot):
         ]
         self.notification_data = {}
         self.users = []
-        self.schedule_by_groups = ScheduleByGroup.from_actual()
+
+        loop = asyncio.get_event_loop()
+        task = loop.create_task(ScheduleByGroup.from_actual())
+        self.schedule_by_groups = loop.run_until_complete(task)
+
         self.schedule_by_days = ScheduleByDays.from_group_schedule(self.schedule_by_groups)
-        # self.schedule_by_days = ScheduleByDays.from_group_schedule(self.schedule_by_groups)
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":

@@ -23,7 +23,7 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
                                text=dt_obj.message_text,
                                parse_mode=types.ParseMode.HTML)
     except BotBlocked:
-        User.deactivate(user_id)
+        await User.deactivate(user_id)
         bot.disable_jobs(user_id)
 
 
