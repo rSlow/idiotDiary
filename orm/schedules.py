@@ -1,39 +1,17 @@
-import io
-import time
+from datetime import timedelta as td
 
 import pandas as pd
-from datetime import date as d, timedelta as td, datetime as dt
 from numpy import nan
-
 from sqlalchemy import Column, Integer, Date, String
 from sqlalchemy import ForeignKey
-from sqlalchemy import select, func
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship, selectinload
+from sqlalchemy import select, func, desc
+from sqlalchemy.orm import relationship, selectinload
 
-# USERNAME = "ltnwuaug"
-# PASSWORD = "quH3jedyqi9Gd_hggllQznSy7cMHA3L3"
-# HOST = "heffalump.db.elephantsql.com"
-# DATABASE = "ltnwuaug"
-# SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}/{DATABASE}"
-#
-SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:////home/rslow/PycharmProjects/idiot_diary/orm/db.db"
-
-SchedulesEngine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
-SchedulesSession = sessionmaker(bind=SchedulesEngine, expire_on_commit=False, class_=AsyncSession)
-SchedulesBase = declarative_base()
+from functions.main_functions import get_start_week_day, to_date, get_required_datetime
+from orm.base import Base, Session
 
 
-async def create_database():
-    async with SchedulesEngine.begin() as conn:
-        await conn.run_sync(SchedulesBase.metadata.create_all)
-
-
-def to_date(dt64) -> d:
-    return pd.Timestamp(dt64).to_pydatetime().date()
-
-
-class File(SchedulesBase):
+class File(Base):
     __tablename__ = "files"
 
     id = Column(Integer, primary_key=True)
@@ -79,17 +57,21 @@ class File(SchedulesBase):
         return file
 
     async def to_db(self):
-        async with SchedulesSession() as session:
+        async with Session() as session:
             async with session.begin():
                 session.add(self)
 
-    # async def get_last_timestamp(self):
-    #     async with SchedulesSession() as session:
-    #         async with session.begin():
-    #             q = select(self).filter_by()
+    @classmethod
+    async def get_last_timestamp(cls):
+        async with Session() as session:
+            q = select(
+                func.max(cls.timestamp)
+            )
+            res = await session.execute(q)
+            return res.scalars().one() or 0
 
 
-class Week(SchedulesBase):
+class Week(Base):
     __tablename__ = "weeks"
 
     id = Column(Integer, primary_key=True)
@@ -137,8 +119,56 @@ class Week(SchedulesBase):
 
         return groups_df_list
 
+    @classmethod
+    async def get_actual_weeks(cls):
+        async with Session() as session:
+            sub_q = select(
+                cls.monday_day, func.max(File.timestamp)
+            ).join(
+                File
+            ).filter(
+                cls.monday_day >= get_start_week_day(get_required_datetime(limit_changing=14))
+            ).group_by(
+                cls.monday_day
+            ).order_by(
+                cls.monday_day
+            )
 
-class Group(SchedulesBase):
+            result = (await session.execute(sub_q)).fetchall()
+
+            weeks_list = []
+            for monday, timestamp in result:
+                q = select(
+                    cls
+                ).join(
+                    File
+                ).filter(
+                    cls.monday_day == monday
+                ).filter(
+                    File.timestamp == timestamp
+                ).options(
+                    selectinload(cls.groups).selectinload(Group.days).selectinload(Day.pairs)
+                )
+                week = (await session.execute(q)).scalars().one_or_none()
+
+                if week is not None:
+                    weeks_list.append(week)
+
+            if len(weeks_list) == 0:
+                q = select(
+                    Week
+                ).order_by(
+                    desc(cls.monday_day)
+                ).options(
+                    selectinload(cls.groups).selectinload(Group.days).selectinload(Day.pairs)
+                )
+                res = await session.execute(q)
+                weeks_list = [res.scalars().first()]
+
+        return weeks_list
+
+
+class Group(Base):
     __tablename__ = "groups"
 
     id = Column(Integer, primary_key=True)
@@ -186,7 +216,7 @@ class Group(SchedulesBase):
         return days_df_list
 
 
-class Day(SchedulesBase):
+class Day(Base):
     __tablename__ = "days"
 
     id = Column(Integer, primary_key=True)
@@ -205,8 +235,6 @@ class Day(SchedulesBase):
     @staticmethod
     def _get_day(df):
         day = to_date(df.index.values[0])
-        # print(df)
-        # print(day)
         return day
 
     @classmethod
@@ -239,7 +267,7 @@ class Day(SchedulesBase):
         return pairs_df_list
 
 
-class Pair(SchedulesBase):
+class Pair(Base):
     __tablename__ = "pairs"
 
     id = Column(Integer, primary_key=True)
@@ -265,7 +293,6 @@ class Pair(SchedulesBase):
 
     @staticmethod
     def _get_pair_num(df):
-        # print(df)
         return int(df.iloc[0, 0])
 
     @classmethod
@@ -318,22 +345,71 @@ class Pair(SchedulesBase):
         except IndexError:
             pass
 
+    @property
+    def message_text(self):
+        blocks = []
+
+        if first_subj_name := getattr(self, "first_subj_name", None):
+            blocks.append(f"<b>{first_subj_name}</b>")
+
+        if first_subj_auditory := getattr(self, "first_subj_auditory", None):
+            blocks.append(f" - аудитория {first_subj_auditory}")
+
+        if first_subj_theme := getattr(self, "first_subj_theme", None):
+            blocks.append(f"\nтема № {first_subj_theme}")
+
+        if first_subj_type := getattr(self, "first_subj_type", None):
+            blocks.append(f" ({first_subj_type})")
+
+        if first_subj_teacher := getattr(self, "first_subj_teacher", None):
+            blocks.append(f" - {first_subj_teacher}")
+
+        if second_subj_name := getattr(self, "second_subj_name", None):
+            blocks.append(f"\n<b>{second_subj_name}</b>")
+
+        if second_subj_auditory := getattr(self, "second_subj_auditory", None):
+            blocks.append(f" - аудитория {second_subj_auditory}")
+
+        if second_subj_theme := getattr(self, "second_subj_theme", None):
+            blocks.append(f"\nтема № {second_subj_theme}")
+
+        if second_subj_type := getattr(self, "second_subj_type", None):
+            blocks.append(f" ({second_subj_type})")
+
+        if second_subj_teacher := getattr(self, "second_subj_teacher", None):
+            blocks.append(f" - {second_subj_teacher}")
+
+        return "".join(blocks)
+
+    def __bool__(self):
+        return True
+
 
 if __name__ == '__main__':
     async def main():
+        from orm.base import create_database
         await create_database()
-        await File.from_file(
-            file_io_or_name="/home/rslow/PycharmProjects/idiot_diary/data/schedules/1655442333.xlsx",
-            timestamp=dt.now().timestamp()
-        ).to_db()
+        # async with Session() as session:
+        #     async with session.begin():
+        #         res = await session.execute(select(
+        #             Week
+        #         ).filter(
+        #             Week.id == 6
+        #         ))
+        #         w = res.scalars().one()
+        #         await session.delete(w)
+        try:
+            result = await Week.get_actual_weeks()
+            return result
+        except ImportError:
+            pass
 
 
     try:
         import asyncio
 
-        start_t = dt.now()
-        asyncio.run(main())
-        print(dt.now() - start_t)
+        r = asyncio.run(main())
+    except ImportError as ex:
+        import logging
 
-    except ImportError:
-        pass
+        logging.error(msg="IMPORT ERROR", exc_info=ex)

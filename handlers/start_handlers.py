@@ -1,7 +1,8 @@
+import logging
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-import logging
 
 from bot import dispatcher, bot
 from keyboards import get_main_keyboard, get_internet_keyboard
@@ -13,7 +14,7 @@ async def start(message: types.Message, state: FSMContext):
     user_data = message.from_user
     users = bot.users
     if user_data.id not in users:
-        User.add_new_user(user_data)
+        await User.add_user(user_data)
         users.append(user_data.id)
         logging.info(f"[NEW USER] {user_data.username}:{user_data.id}")
 

@@ -1,24 +1,12 @@
 from sqlalchemy import Column, Integer, String, Boolean, Time
 from sqlalchemy import ForeignKey
 from sqlalchemy import select
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship, selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import relationship, selectinload
 
-# USERNAME = "ktabelpb"
-# PASSWORD = "Qt-MOrtH0FKw15GA80G5dQBWqgxK4BAA"
-# HOST = "heffalump.db.elephantsql.com"
-# DATABASE = "ktabelpb"
-#
-# SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}/{DATABASE}"
-SQLALCHEMY_DATABASE_URL = f"sqlite+aiosqlite:///database.sqlite3"
-
-UsersEngine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-UsersSession = sessionmaker(bind=UsersEngine, expire_on_commit=False, class_=AsyncSession)
-UsersBase = declarative_base()
+from .base import Base, Session
 
 
-class User(UsersBase):
+class User(Base):
     __tablename__ = "users"
 
     user_id = Column(Integer, primary_key=True)
@@ -32,8 +20,8 @@ class User(UsersBase):
                                 cascade="all, delete, delete-orphan")
 
     @classmethod
-    async def add_new_user(cls, user_data):
-        async with UsersSession() as session:
+    async def add_user(cls, user_data):
+        async with Session() as session:
             async with session.begin():
                 session.add(cls(user_id=user_data.id,
                                 fullname=user_data.full_name,
@@ -42,25 +30,39 @@ class User(UsersBase):
     @classmethod
     async def get(cls, user_id, session):
         result = await session.execute(
-            select(cls).filter(cls.user_id == user_id)
-            # options(selectinload(cls.image_ids))
+            select(cls).filter(cls.user_id == user_id).options(selectinload(cls.notify_times))
         )
-        return result.scalars().one()
+        return result.scalars().one_or_none()
 
     @classmethod
     async def deactivate(cls, user_id):
-        with UsersSession.begin() as session:
-            user = session.query(cls).filter(cls.user_id == user_id).one()
-            user.status = False
+        async with Session() as session:
+            async with session.begin():
+                q = select(cls).filter(cls.user_id == user_id)
+                res = await session.execute(q)
+                user = res.scalars().one()
+                user.status = False
 
     @classmethod
     async def disable_notifications(cls, user_id):
-        with UsersSession.begin() as session:
-            user = session.query(cls).filter(cls.user_id == user_id).one()
-            user.notify_status = False
+        async with Session() as session:
+            async with session.begin():
+                q = select(cls).filter(cls.user_id == user_id)
+                res = await session.execute(q)
+                user = res.scalars().one()
+                user.notify_status = False
+
+    @classmethod
+    async def enable_notifications(cls, user_id):
+        async with Session() as session:
+            async with session.begin():
+                q = select(cls).filter(cls.user_id == user_id)
+                res = await session.execute(q)
+                user = res.scalars().one()
+                user.notify_status = True
 
 
-class Notification(UsersBase):
+class Notification(Base):
     __tablename__ = "notifications"
 
     id = Column(Integer, primary_key=True)
@@ -68,3 +70,16 @@ class Notification(UsersBase):
     time = Column(Time)
     user = relationship("User",
                         back_populates="notify_times")
+
+    @classmethod
+    async def delete_notification(cls, user_id, time_obj, session):
+        q = select(
+            cls
+        ).filter(
+            Notification.user_id == user_id
+        ).filter(
+            Notification.time == time_obj
+        )
+        res = await session.execute(q)
+        notification = res.scalars().one()
+        await session.delete(notification)

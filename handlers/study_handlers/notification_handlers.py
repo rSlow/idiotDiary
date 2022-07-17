@@ -1,5 +1,4 @@
-import datetime as dt
-import logging
+from datetime import datetime as dt
 from asyncio import sleep
 from random import randrange
 
@@ -16,48 +15,51 @@ from keyboards import (get_notifications_settings_keyboard,
                        get_notifications_group_keyboard,
                        get_groups_keyboard,
                        get_main_time_keyboard)
-from orm.users import UsersSession, User, Notification
+from logger import logger
+from orm.users import Session, User, Notification
 
 
 @dispatcher.message_handler(Text(contains="Оповещение"), state=Schedule.start)
 async def schedule_menu(message: types.Message):
     user_data = message.from_user
 
-    with UsersSession() as session:
-        user = session.query(User).filter(User.user_id == user_data.id).one_or_none()
-        if not user:
-            user = User(user_id=user_data.id, fullname=user_data.full_name, username_mention=user_data.mention)
-            session.add(user)
-            session.commit()
-        await Schedule.notifications.set()
-        if user.notify_group and user.notify_times:
-            await Schedule.notifications_ready.set()
-            header_text = "Оповещения включены:" if user.notify_status else "Оповещения выключены."
-            await message.answer(text=header_text,
-                                 reply_markup=get_notifications_settings_keyboard(user=user))
+    async with Session() as session:
+        async with session.begin():
+            user = await User.get(user_id=user_data.id, session=session)
+            if user is None:
+                user = User(user_id=user_data.id, fullname=user_data.full_name, username_mention=user_data.mention)
+                await session.add(user)
 
-            await message.answer(f"<b>Группа</b>: {user.notify_group}",
-                                 parse_mode="HTML")
+    await Schedule.notifications.set()
+    if user.notify_group and user.notify_times:
+        await Schedule.notifications_ready.set()
+        header_text = "Оповещения включены:" if user.notify_status else "Оповещения выключены."
+        await message.answer(text=header_text,
+                             reply_markup=get_notifications_settings_keyboard(user=user))
 
-            times_block_msg = "\n".join(
-                map(lambda notification: notification.time.strftime(constants.TIME_FORMAT),
-                    sorted(user.notify_times, key=lambda x: x.time))
-            )
-            await message.answer(f"<b>Временные метки</b>:\n{times_block_msg}",
-                                 parse_mode="HTML")
-        else:
-            await message.answer(
-                text=f"Оповещения не настроены. Кнопка для включения появится после настройки.",
-                reply_markup=get_notifications_settings_keyboard(user=user))
+        await message.answer(f"<b>Группа</b>: {user.notify_group}",
+                             parse_mode="HTML")
+
+        times_block_msg = "\n".join(
+            map(lambda notification: notification.time.strftime(constants.TIME_FORMAT),
+                sorted(user.notify_times, key=lambda x: x.time))
+        )
+        await message.answer(f"<b>Временные метки</b>:\n{times_block_msg}",
+                             parse_mode="HTML")
+    else:
+        await message.answer(
+            text=f"Оповещения не настроены. Кнопка для включения появится после настройки.",
+            reply_markup=get_notifications_settings_keyboard(user=user))
 
 
 @dispatcher.message_handler(Text(contains="Включить"), state=Schedule.notifications_ready)
 async def schedule_notifications_enable(message: types.Message):
-    user_data = message.from_user
+    user_id = message.from_user.id
 
-    with UsersSession.begin() as session:
-        user = User.get(user_id=user_data.id, session=session)
-        user.notify_status = 1
+    async with Session() as session:
+        async with session.begin():
+            user = await User.get(user_id=user_id, session=session)
+            await User.enable_notifications(user_id=user_id)
 
         group = user.notify_group
         notifies = user.notify_times
@@ -67,32 +69,33 @@ async def schedule_notifications_enable(message: types.Message):
                                     hour=notify.time.hour,
                                     minute=notify.time.minute,
                                     kwargs={
-                                        "user_id": user_data.id,
+                                        "user_id": user_id,
                                         "group": group,
                                         "limit_changing": 9
                                     })
             bot.notification_data.setdefault(user.user_id, {})[notify.time.strftime(constants.TIME_FORMAT)] = job
 
     await schedule_menu(message)
-    logging.info(f"[NOTIFICATION ON] {message.from_user.username}:{message.from_user.id}")
+
+    logger.notification_on(username=message.from_user.username, user_id=message.from_user.id)
 
 
 @dispatcher.message_handler(Text(contains="Выключить"), state=Schedule.notifications_ready)
 async def schedule_main_notifications_disable(message: types.Message):
     user_id = message.from_user.id
-    User.disable_notifications(user_id=user_id)
+    await User.disable_notifications(user_id=user_id)
     bot.disable_jobs(user_id)
 
     await schedule_menu(message)
-    logging.info(f"[NOTIFICATION OFF] {message.from_user.username}:{message.from_user.id}")
+    logger.notification_off(username=message.from_user.username, user_id=message.from_user.id)
 
 
 @dispatcher.message_handler(Text(contains="Группа"), state=[Schedule.notifications, Schedule.notifications_ready])
 async def schedule_group_settings(message: types.Message):
     await ScheduleSettings.group.set()
     user_id = message.from_user.id
-    with UsersSession.begin() as session:
-        user = User.get(user_id=user_id, session=session)
+    async with Session() as session:
+        user = await User.get(user_id=user_id, session=session)
         info_message = f"Текущая группа: {user.notify_group}" if user.notify_group else "Группа не установлена"
         await message.answer(text=info_message,
                              reply_markup=get_notifications_group_keyboard(user.notify_group))
@@ -102,12 +105,12 @@ async def schedule_group_settings(message: types.Message):
                             state=ScheduleSettings.group)
 async def schedule_set_menu_group_settings(message: types.Message):
     user_id = message.from_user.id
-    User.disable_notifications(user_id=user_id)
+    await User.disable_notifications(user_id=user_id)
     bot.disable_jobs(user_id)
 
     await ScheduleSettings.group_settings.set()
-    week = next(iter(bot.schedule_by_groups.values()))
-    groups = week.groups
+    week = bot.schedule_by_groups.weeks[0]
+    groups = week.groups_list
     await message.answer(text="Выберите группу:",
                          reply_markup=get_groups_keyboard(groups))
 
@@ -115,9 +118,11 @@ async def schedule_set_menu_group_settings(message: types.Message):
 @dispatcher.message_handler(regexp=r"\w+-\d{2}", state=ScheduleSettings.group_settings)
 async def schedule_choice_group_settings(message: types.Message):
     """Setting group to notification scheduler."""
-    with UsersSession.begin() as session:
-        user = session.query(User).filter(User.user_id == message.from_user.id).one()
-        user.notify_group = message.text
+    user_id = message.from_user.id
+    async with Session() as session:
+        async with session.begin():
+            user = await User.get(user_id=user_id, session=session)
+            user.notify_group = message.text
     await message.answer(text="Группа установлена.")
     await schedule_menu(message)
 
@@ -125,10 +130,11 @@ async def schedule_choice_group_settings(message: types.Message):
 @dispatcher.message_handler(Text(contains="Удалить группу"), state=ScheduleSettings.group)
 async def schedule_del_group_settings(message: types.Message):
     user_id = message.from_user.id
-    with UsersSession.begin() as session:
-        user = session.query(User).filter(User.user_id == user_id).one()
-        user.notify_group = None
-        user.notify_status = False
+    async with Session() as session:
+        async with session.begin():
+            user = await User.get(user_id=user_id, session=session)
+            user.notify_group = None
+            user.notify_status = False
 
     bot.disable_jobs(user_id)
 
@@ -141,8 +147,8 @@ async def schedule_time_settings(message: types.Message):
     await ScheduleSettings.time.set()
     user_id = message.from_user.id
     times_list = []
-    with UsersSession.begin() as session:
-        user = User.get(user_id=user_id, session=session)
+    async with Session() as session:
+        user = await User.get(user_id=user_id, session=session)
         if user.notify_times:
             times_list.extend(list(map(lambda notification: notification.time.strftime(constants.TIME_FORMAT),
                                        sorted(user.notify_times, key=lambda x: x.time))))
@@ -158,12 +164,15 @@ async def schedule_time_settings(message: types.Message):
 @dispatcher.message_handler(Text(contains="Удалить все метки"), state=ScheduleSettings.time)
 async def schedule_del_all_time_settings(message: types.Message):
     user_id = message.from_user.id
-    with UsersSession.begin() as session:
-        user = User.get(user_id=user_id, session=session)
-        user.notify_times = []
-        user.notify_status = False
+    async with Session() as session:
+        async with session.begin():
+            user = await User.get(user_id=user_id, session=session)
+            user.notify_times = []
+            user.notify_status = False
 
     bot.disable_jobs(user_id)
+    logger.notification_off(username=message.from_user.username, user_id=user_id)
+
     await schedule_menu(message)
 
 
@@ -171,35 +180,32 @@ async def schedule_del_all_time_settings(message: types.Message):
 async def notification_time_delete(message: types.Message):
     """Deleting one job notification from scheduler."""
     user_id = message.from_user.id
-    with UsersSession() as session:
-        try:
-            time_obj = dt.datetime.strptime(n_text(message.text), constants.TIME_FORMAT).time()
-            notification = session.query(Notification).filter(Notification.user_id == user_id).filter(
-                Notification.time == time_obj).one()
-            session.delete(notification)
-            session.commit()
+    try:
+        async with Session() as session:
+            async with session.begin():
+                time_obj = dt.strptime(n_text(message.text), constants.TIME_FORMAT).time()
+                await Notification.delete_notification(user_id=user_id, time_obj=time_obj, session=session)
 
-            user = User.get(user_id=user_id, session=session)
-            times_map_obj = list(map(lambda notify_data: notify_data.time.strftime(constants.TIME_FORMAT),
-                                     sorted(user.notify_times, key=lambda x: x.time)))
+                user = await User.get(user_id=user_id, session=session)
+                times_map_obj = list(map(lambda notify_data: notify_data.time.strftime(constants.TIME_FORMAT),
+                                         sorted(user.notify_times, key=lambda x: x.time)))
 
-            bot.notification_data[user_id][n_text(message.text)].remove()
-            del bot.notification_data[user_id][n_text(message.text)]
+                bot.notification_data[user_id][n_text(message.text)].remove()
+                del bot.notification_data[user_id][n_text(message.text)]
 
-            await message.answer(text=f"Время {n_text(message.text)} удалено.",
-                                 reply_markup=get_main_time_keyboard(times_map_obj))
+                await message.answer(text=f"Время {n_text(message.text)} удалено.",
+                                     reply_markup=get_main_time_keyboard(times_map_obj))
 
-            if len(times_map_obj) == 0:
-                user = User.get(user_id=notification.user_id, session=session)
-                user.notify_status = False
-                session.commit()
-                await schedule_menu(message)
+                if len(times_map_obj) == 0:
+                    user.notify_status = False
 
-        except (ValueError, NoResultFound):
-            msg = await message.answer("Не лезь!")
-            await message.delete()
-            await sleep(5)
-            await msg.delete()
+                    await schedule_menu(message)
+
+    except (ValueError, NoResultFound):
+        msg = await message.answer("Не лезь!")
+        await message.delete()
+        await sleep(5)
+        await msg.delete()
 
 
 @dispatcher.message_handler(Text(contains="Добавить время оповещения"), state=ScheduleSettings.time)
@@ -215,28 +221,29 @@ async def notification_time_add_wait(message: types.Message):
 @dispatcher.message_handler(regexp=r"\d{1,2}:\d{1,2}", state=ScheduleSettings.time_set)
 async def notification_time_add_confirm(message: types.Message):
     """Adding new time to notification scheduler"""
+    user_data = message.from_user
     try:
-        user_data = message.from_user
-        with UsersSession.begin() as session:
-            user = User.get(user_id=user_data.id, session=session)
-            time = dt.datetime.strptime(message.text, constants.TIME_FORMAT).time()
-            session.add(Notification(
-                user_id=user.user_id,
-                time=time
-            ))
+        async with Session() as session:
+            async with session.begin():
+                user = await User.get(user_id=user_data.id, session=session)
+                time = dt.strptime(message.text, constants.TIME_FORMAT).time()
+                session.add(Notification(
+                    user_id=user.user_id,
+                    time=time
+                ))
 
-            if user.notify_status == 1:
-                job = scheduler.add_job(func=send_schedule_messages,
-                                        trigger="cron",
-                                        hour=time.hour,
-                                        minute=time.minute,
-                                        kwargs={
-                                            "user_id": user.user_id,
-                                            "group": user.notify_group,
-                                            "limit_changing": 9
-                                        })
-                bot.notification_data.setdefault(user.user_id, {})[time.strftime(constants.TIME_FORMAT)] = job
-        await schedule_menu(message)
+                if user.notify_status == 1:
+                    job = scheduler.add_job(func=send_schedule_messages,
+                                            trigger="cron",
+                                            hour=time.hour,
+                                            minute=time.minute,
+                                            kwargs={
+                                                "user_id": user.user_id,
+                                                "group": user.notify_group,
+                                                "limit_changing": 9
+                                            })
+                    bot.notification_data.setdefault(user.user_id, {})[time.strftime(constants.TIME_FORMAT)] = job
+            await schedule_menu(message)
 
     except ValueError:
         await message.delete()

@@ -1,8 +1,8 @@
 import datetime
-
-from .group_schedule_models import ScheduleByGroup, WeekByGroup, DayByGroup, PairByGroup
 from typing import Optional
+
 import constants
+from .group_schedule_models import ScheduleByGroup, WeekByGroup, DayByGroup
 
 
 class ScheduleByDays(dict):
@@ -67,31 +67,3 @@ class GroupDayByDays(dict):
             blocks.append(f"\n\n<b><u>{num} пара:</u></b> ")
             blocks.append(pair.message_text)
         return "".join(blocks)
-
-
-class PairByDays:
-    @classmethod
-    def from_pair_by_group_obj(cls, pair_by_group_obj: PairByGroup):
-        pair_by_days_obj = cls()
-        keys = [
-            "first_subject",
-            "first_teacher",
-            "first_type",
-            "first_theme",
-            "first_auditory",
-            "second_subject",
-            "second_auditory",
-            "second_teacher",
-            "second_type",
-            "second_theme",
-            "second_auditory"
-        ]
-        for attr in keys:
-            by_group_attr = getattr(pair_by_group_obj, attr, None)
-            if by_group_attr:
-                setattr(pair_by_days_obj, attr, by_group_attr)
-        return pair_by_days_obj
-
-    @property
-    def message_text(self):
-        return lambda: PairByGroup.message_text

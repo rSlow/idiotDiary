@@ -1,4 +1,3 @@
-import asyncio
 import base64
 import email
 import logging
@@ -9,31 +8,19 @@ from datetime import datetime
 from io import BytesIO
 
 import aioimaplib
-from orm.schedules import File
 
 import constants
+from orm.schedules import File
+
+HOST = os.getenv("IMAP_HOST")
+LOGIN = os.getenv("IMAP_LOGIN")
+PASSWORD = os.getenv("IMAP_PASSWORD")
 
 
 class IMAPDownloader:
-    LOGIN = "kursdvf.spb@mail.ru"
-    PASSWORD = "Aq12sw23"
-    DOMAIN = "imap.mail.ru"
-
-    def __init__(self, host=None):
-        self.host = host or os.getenv("IMAP_HOST")
+    def __init__(self, host):
+        self.host = host
         self.client = aioimaplib.IMAP4_SSL(host=self.host)
-
-    async def authorize(self, login=None, password=None):
-        await self.client.wait_hello_from_server()
-        await self.client.login(
-            user=login or os.getenv("IMAP_LOGIN"),
-            password=password or os.getenv("IMAP_PASSWORD")
-        )
-
-    def delete_attrs(self, *attrs):
-        for attr in attrs:
-            if getattr(self, attr):
-                delattr(self, attr)
 
     @staticmethod
     def get_payload_bytes_io(message):
@@ -46,9 +33,8 @@ class IMAPDownloader:
     def decode_message_field(string: str, replace=True):
         pattern = re.compile(r"[=?]\S*[?]\w[?]\S+[?=]")
 
-        match = re.search(pattern, string)
         try:
-            while match:
+            while match := re.search(pattern, string):
                 x, y = match.span()
                 match_data = string[x:y][2:-2]
                 encoding_last, encoding_first, data = match_data.split("?")
@@ -58,13 +44,19 @@ class IMAPDownloader:
                 elif encoding_first.upper() == "Q":
                     decoded_data = quopri.decodestring(data).decode(encoding_last)
                     string = string.replace(string[x:y], decoded_data)
-                match = re.search(pattern, string)
         except ValueError:
             return string
 
         if replace:
-            string = string.replace("\r\n ", "")
+            string = string.replace("\r", "").replace("\n", "").replace("\t", "")
         return string
+
+    async def authorize(self, login=None, password=None):
+        await self.client.wait_hello_from_server()
+        await self.client.login(
+            user=login or os.getenv("IMAP_LOGIN"),
+            password=password or os.getenv("IMAP_PASSWORD")
+        )
 
     async def get_messages_list(self):
         await self.client.select("INBOX")
@@ -86,18 +78,16 @@ class IMAPDownloader:
         return datetime_obj
 
     def get_normal_message(self, lines):
-        raw_email: bytearray = lines[1]
-        message = email.message_from_bytes(raw_email)
-        message["Subject"] = self.decode_message_field(message["Subject"] or "").strip()
+        raw_email = lines[1].decode("utf-8")
+        message = email.message_from_string(raw_email)
+        decoded_subject = self.decode_message_field(message["Subject"] or "[NO THEME]").strip()
+        message.replace_header("Subject", decoded_subject)
         return message
-
-    async def get_timestamp_and_file_io(self, message):
-        pass
 
     async def download_cycle(self):
         now = datetime.now().astimezone(constants.TIMEZONE)
         err = 0
-        max_timestamp = await File.get_max_timestamp()
+        max_timestamp = await File.get_last_timestamp()
 
         list_mails = await self.get_messages_list()
 
@@ -107,12 +97,18 @@ class IMAPDownloader:
                 message = self.get_normal_message(lines)
                 datetime_obj = self.get_datetime_from_message(message)
 
-                if (now - datetime_obj).days > 7:  # limit days within today and message day
+                if (now - datetime_obj).days > 0:  # limit days within today and message day
                     break
 
+                print(message["Subject"])
+
                 if ~message["Subject"].find("Расписание МЧС"):
-                    if int(datetime_obj.timestamp()) > max_timestamp:
+                    if (msg_timestamp := int(datetime_obj.timestamp())) > max_timestamp:
                         file_io = self.get_payload_bytes_io(message=message)
+                        await File.from_file(
+                            file_io_or_name=file_io,
+                            timestamp=msg_timestamp
+                        ).to_db()
 
                     else:
                         break
@@ -123,6 +119,20 @@ class IMAPDownloader:
                 if err > 5:
                     raise ex
 
+    @classmethod
+    async def update(cls):
+        downloader = cls(host=HOST)
+        await downloader.authorize(
+            login=LOGIN,
+            password=PASSWORD,
+        )
+        await downloader.download_cycle()
+
 
 if __name__ == '__main__':
-    asyncio.run()
+    try:
+        import asyncio
+
+        asyncio.run(IMAPDownloader.update())
+    except ImportError as iex:
+        raise iex

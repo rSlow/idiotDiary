@@ -13,14 +13,15 @@ from fake_useragent import UserAgent
 
 
 async def download_book(msg: types.Message, link: str):
-    login = "79146996046"
-    password = "rS1owmax"
+    login = os.getenv("IGPS_LOGIN")
+    password = os.getenv("IGPS_PASSWORD")
+
     ts = int(datetime.now().timestamp())
 
     temp = os.path.join("data", "temp", f"{msg.from_user.id}-{ts}")
     domain = "http://elib.igps.ru/"
     archive_server = domain + "ArchiveServer"
-    headers = {"User-Agent": UserAgent().random,
+    headers = {"User-Agent": UserAgent(use_cache_server=True).random,
                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                "DNT": "1",
                "Upgrade-Insecure-Requests": "1",
@@ -100,7 +101,13 @@ async def download_book(msg: types.Message, link: str):
         temp_filename = os.path.join(temp, "book.pdf")
         with open(temp_filename, "wb") as file:
             file.write(
-                img2pdf.convert(sorted(glob.glob(way), key=lambda x: int(os.path.split(x)[-1].split(".")[0]))))
+                img2pdf.convert(
+                    sorted(
+                        glob.glob(way),
+                        key=lambda x: int(os.path.split(x)[-1].split(".")[0])
+                    )
+                )
+            )
         return temp_filename
 
     async def main():

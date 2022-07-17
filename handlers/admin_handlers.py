@@ -5,7 +5,7 @@ from aiogram.utils.exceptions import BotBlocked
 
 from FSM import FSMAdmin
 from bot import dispatcher, bot
-from functions.imap_downloading import get_actual_schedule
+from functions.schedule_functions import update_bot_schedule
 from orm.users import User
 
 
@@ -61,7 +61,7 @@ async def mailing(message: types.Message):
                                    parse_mode="HTML")
             count += 1
         except BotBlocked:
-            User.deactivate(user_id)
+            await User.deactivate(user_id)
 
     await message.answer(text=f"Рассылка осуществлена на {count} пользователей.")
     if len(users) - count:
@@ -74,7 +74,7 @@ async def mailing(message: types.Message):
 async def imap_update(message: types.Message):
     start_message = await message.answer(text="Начинаю обновление...")
     try:
-        await get_actual_schedule()
+        await update_bot_schedule()
         await message.answer(text="Расписание обновлено.")
     except Exception as ex:
         await message.answer(

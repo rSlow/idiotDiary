@@ -1,28 +1,30 @@
 import logging
 import os
-import asyncio
+
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+import constants
 from models.group_schedule_models import ScheduleByGroup
-from models.days_schedule_models import ScheduleByDays
 
 
 class CustomBot(Bot):
     def __init__(self, *args, **kwargs):
         super(CustomBot, self).__init__(*args, **kwargs)
+
+        self.schedule_by_groups = None
+        self.schedule_by_days = None
+
         self.admins = [
             959148697,
         ]
         self.notification_data = {}
         self.users = []
 
-        loop = asyncio.get_event_loop()
-        task = loop.create_task(ScheduleByGroup.from_actual())
-        self.schedule_by_groups = loop.run_until_complete(task)
-
-        self.schedule_by_days = ScheduleByDays.from_group_schedule(self.schedule_by_groups)
+    async def get_schedules(self):
+        self.schedule_by_groups = await ScheduleByGroup.from_db()
+        # self.schedule_by_days = ScheduleByDays.from_group_schedule(self.schedule_by_groups)
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":
@@ -42,7 +44,7 @@ class CustomBot(Bot):
 
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
-scheduler = AsyncIOScheduler(timezone="Asia/Vladivostok")
+scheduler = AsyncIOScheduler(timezone=constants.TIMEZONE)
 
 token = os.getenv("IDIOT_DIARY_BOT_TOKEN")
 

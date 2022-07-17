@@ -1,11 +1,13 @@
 import logging
+
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from bot import scheduler, bot
+from functions.imap_downloading import IMAPDownloader
 from functions.schedule_functions import send_schedule_messages, update_bot_schedule
-from orm.schedules import SchedulesBase, SchedulesEngine
-from orm.users import UsersBase, UsersEngine, UsersSession, User
+from orm.base import Base, Engine, Session
+from orm.users import User
 
 
 async def on_startup(_):
@@ -14,22 +16,21 @@ async def on_startup(_):
     except ImportError as ex:
         logging.warn(msg=ex)
 
-    async with UsersEngine.begin() as conn:
-        await conn.run_sync(UsersBase.metadata.create_all)
+    async with Engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
-    SchedulesBase.metadata.create_all(bind=SchedulesEngine)
-    # async with SchedulesEngine.begin() as conn:
-    #     await conn.run_sync(SchedulesBase.metadata.create_all)
+    async with Engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
     scheduler.start()
 
-    async with UsersSession() as session:
+    logging.info(msg="Updating schedule with IMAP...")
+    await IMAPDownloader.update()
+    await bot.get_schedules()
+
+    async with Session() as session:
         async with session.begin():
-            result = await session.execute(
-                select(
-                    User.user_id
-                )
-            )
+            result = await session.execute(select(User.user_id))
             bot.users.extend(result.scalars().all())
 
             all_notifications_data: list[User] = (await session.execute(
@@ -53,9 +54,6 @@ async def on_startup(_):
                                                 "limit_changing": 9
                                             })
                     bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
-
-        # logging.info(msg="Updating schedule with IMAP...")
-        # await update_bot_schedule()
 
         scheduler.add_job(func=update_bot_schedule,
                           trigger="interval",

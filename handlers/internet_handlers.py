@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import types
 from aiogram.dispatcher.filters import Text
 from aiogram.types import ReplyKeyboardMarkup
@@ -32,4 +34,4 @@ async def await_link_library(message: types.Message):
         await msg.answer(text="Размер файла превышает 50 МБ - ограничение Telegram. "
                               "Способы загрузки пока в разработке.")
     except Exception as ex:
-        print(ex)
+        logging.info(ex)

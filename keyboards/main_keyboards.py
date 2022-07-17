@@ -25,8 +25,7 @@ def get_schedule_keyboard():
     schedule_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     schedule_keyboard.add("По группам 👨‍👧‍👦", "По дням 📆")
     # schedule_keyboard.add("По преподавателям 🧑‍🏫")
-    schedule_keyboard.add("Оповещение 🔉", "Файлы расписания 🧾")
-    schedule_keyboard.add("↪ На главную")
+    schedule_keyboard.add("Оповещение 🔉", "↪ На главную")
     return schedule_keyboard
 
 

@@ -3,12 +3,10 @@ import datetime as dt
 from aiogram import types
 from aiogram.utils.exceptions import BotBlocked
 
-import constants
 from bot import bot
-from functions.imap_downloading import get_actual_schedule
-from functions.main_functions import get_start_week_day
+from functions.main_functions import get_start_week_day, get_required_date
+from models.group_schedule_models import ScheduleByGroup
 from orm.users import User
-from models.days_schedule_models import ScheduleByDays
 
 
 async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changing=None):
@@ -27,15 +25,7 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
         bot.disable_jobs(user_id)
 
 
-def get_required_date(limit_changing=None):
-    now = dt.datetime.now(tz=constants.TIMEZONE)
-    if limit_changing:
-        if now.hour >= limit_changing:
-            now += dt.timedelta(days=1)
-    return now.date()
-
-
 async def update_bot_schedule():
-    schedule_obj = await get_actual_schedule()
+    schedule_obj = await ScheduleByGroup.from_db()
     bot.schedule_by_groups = schedule_obj
-    bot.schedule_by_days = ScheduleByDays.from_group_schedule(schedule_obj)
+    # bot.schedule_by_days = ScheduleByDays.from_group_schedule(schedule_obj)
