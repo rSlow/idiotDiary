@@ -5,7 +5,6 @@ from aiogram.utils.exceptions import BotBlocked
 
 from FSM import FSMAdmin
 from bot import dispatcher, bot
-from functions.schedule_functions import update_bot_schedule
 from orm.users import User
 
 
@@ -74,7 +73,7 @@ async def mailing(message: types.Message):
 async def imap_update(message: types.Message):
     start_message = await message.answer(text="Начинаю обновление...")
     try:
-        await update_bot_schedule()
+        await bot.update_schedules()
         await message.answer(text="Расписание обновлено.")
     except Exception as ex:
         await message.answer(

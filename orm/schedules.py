@@ -163,7 +163,7 @@ class Week(Base):
                     selectinload(cls.groups).selectinload(Group.days).selectinload(Day.pairs)
                 )
                 res = await session.execute(q)
-                weeks_list = [res.scalars().first()]
+                weeks_list = [res.scalars().first_week()]
 
         return weeks_list
 

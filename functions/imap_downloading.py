@@ -100,8 +100,6 @@ class IMAPDownloader:
                 if (now - datetime_obj).days > 0:  # limit days within today and message day
                     break
 
-                print(message["Subject"])
-
                 if ~message["Subject"].find("Расписание МЧС"):
                     if (msg_timestamp := int(datetime_obj.timestamp())) > max_timestamp:
                         file_io = self.get_payload_bytes_io(message=message)
@@ -112,6 +110,10 @@ class IMAPDownloader:
 
                     else:
                         break
+
+            except aioimaplib.aioimaplib.CommandTimeout:
+                logging.warning(msg=f"[ERROR FETCH] Update is not available.")
+                break
 
             except Exception as ex:
                 err += 1

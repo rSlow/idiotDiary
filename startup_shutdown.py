@@ -4,8 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from bot import scheduler, bot
-from functions.imap_downloading import IMAPDownloader
-from functions.schedule_functions import send_schedule_messages, update_bot_schedule
+from functions.schedule_functions import send_schedule_messages
 from orm.base import Base, Engine, Session
 from orm.users import User
 
@@ -24,9 +23,8 @@ async def on_startup(_):
 
     scheduler.start()
 
-    logging.info(msg="Updating schedule with IMAP...")
-    await IMAPDownloader.update()
-    await bot.get_schedules()
+    logging.info(msg="[UPDATE SCHEDULE] Start to updating schedule...")
+    await bot.update_schedules()
 
     async with Session() as session:
         async with session.begin():
@@ -55,7 +53,7 @@ async def on_startup(_):
                                             })
                     bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
 
-        scheduler.add_job(func=update_bot_schedule,
+        scheduler.add_job(func=bot.update_schedules,
                           trigger="interval",
                           seconds=60 * 60 * 6)
 

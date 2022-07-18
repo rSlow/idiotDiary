@@ -14,7 +14,7 @@ class ScheduleByGroup:
         return cls(weeks_list)
 
     @property
-    def first(self):
+    def first_week(self):
         return self.weeks[0]
 
     @property
@@ -49,6 +49,15 @@ class WeekByGroup:
                 return group
         else:
             raise KeyError
+
+    @property
+    def all_days_list(self):
+        days = []
+        for group in self.groups:
+            for day in group.days:
+                if day.day not in days:
+                    days.append(day.day)
+        return days
 
     @property
     def groups_list(self):

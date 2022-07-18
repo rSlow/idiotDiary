@@ -1,69 +1,85 @@
-import datetime
-from typing import Optional
+from datetime import date as d, timedelta as td
 
 import constants
-from .group_schedule_models import ScheduleByGroup, WeekByGroup, DayByGroup
 
 
-class ScheduleByDays(dict):
-    def __init__(self, weeks_dict: Optional[dict[str, WeekByGroup]] = None):
-        super(ScheduleByDays, self).__init__(weeks_dict or {})
-
-    @classmethod
-    async def from_group_schedule(cls, group_schedule_obj: ScheduleByGroup):
-        weeks = {week_str: WeekByDays.from_group_week(week_obj) for week_str, week_obj in group_schedule_obj.items()}
-        return cls(weeks)
+class ScheduleByDays:
+    def __init__(self, schedule):
+        self.weeks = [WeekByDays(week) for week in schedule.weeks]
 
     @property
-    def weeks(self):
-        return list(self.keys())
+    def weeks_list(self):
+        return [week.monday_day for week in self.weeks]
 
-    def is_last_week(self, date: datetime.date):
-        if date >= max(self.keys()):
+    @property
+    def first_week(self):
+        return self.weeks[0]
+
+    def __getitem__(self, key):
+        for week in self.weeks:
+            if week.monday_day == key:
+                return week
+        else:
+            raise KeyError
+
+    def next_week_is_last(self, date: d):
+        try:
+            return self[date + td(days=7)] is None
+        except KeyError:
             return True
-        return False
 
 
-class WeekByDays(dict):
-    @classmethod
-    def from_group_week(cls, week_obj: WeekByGroup):
-        days = {}
-        for group_name, group_obj in week_obj.items():
-            for day, day_obj in group_obj.items():
-                days.setdefault(day, DayByDays())[group_name] = GroupDayByDays.from_day_by_groups_obj(day_obj, day)
-        return cls(days)
+class WeekByDays:
+    def __init__(self, week):
+        self.monday_day = week.monday_day
+        self.days = []
+
+        for day in week.all_days_list:
+            day_obj = DayByDays(day)
+            for group in week.groups:
+                day_obj.groups.append(GroupDayByDays(group, day))
+            self.days.append(day_obj)
 
     @property
-    def days(self):
-        return list(self.keys())
+    def days_list(self):
+        return [day.day for day in self.days]
+
+    def __getitem__(self, key):
+        for day in self.days:
+            if day.day == key:
+                return day
+        else:
+            raise KeyError
 
 
-class DayByDays(dict):
-    @property
-    def groups(self):
-        return list(self.keys())
-
-
-class GroupDayByDays(dict):
-    def __init__(self, day: datetime.date):
-        super(GroupDayByDays, self).__init__()
+class DayByDays:
+    def __init__(self, day: d):
         self.day = day
+        self.groups = []
 
     @property
-    def pairs(self):
-        return list(self.keys())
+    def groups_list(self):
+        return [group.name for group in self.groups]
 
-    @classmethod
-    def from_day_by_groups_obj(cls, day_by_groups_obj: DayByGroup, day):
-        day_by_days_obj = cls(day)
-        day_by_days_obj.update(day_by_groups_obj.items())
-        return day_by_days_obj
+    def __getitem__(self, key):
+        for group in self.groups:
+            if group.name == key:
+                return group
+        else:
+            raise KeyError
+
+
+class GroupDayByDays:
+    def __init__(self, group, day: d):
+        self.day = day
+        self.name = group.name
+        self.pairs = group[day].pairs
 
     @property
     def message_text(self):
         blocks = list()
-        blocks.append(f"Пары на <u>{self.day.strftime(constants.DATE_FORMAT)}</u>:")
-        for num, pair in self.items():
-            blocks.append(f"\n\n<b><u>{num} пара:</u></b> ")
+        blocks.append(f"Пары на <u>{self.day:{constants.DATE_FORMAT}}</u>:")
+        for pair in self.pairs:
+            blocks.append(f"\n\n<b><u>{pair.pair_num} пара:</u></b> ")
             blocks.append(pair.message_text)
         return "".join(blocks)

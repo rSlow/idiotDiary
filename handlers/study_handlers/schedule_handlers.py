@@ -14,7 +14,6 @@ from functions.main_functions import get_start_week_day
 from functions.main_functions import n_text
 from functions.schedule_functions import send_schedule_messages, get_required_date
 from keyboards import get_schedule_keyboard, get_groups_keyboard
-from models.days_schedule_models import GroupDayByDays
 
 
 @dispatcher.message_handler(Text(contains="Расписание"))
@@ -58,7 +57,7 @@ async def schedule_by_groups(message: types.Message, state: FSMContext):
         try:
             groups = bot.schedule_by_groups[start_week_day].groups_list
         except KeyError:
-            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first
+            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first_week
             groups = bot.schedule_by_groups[start_week_day].groups_list
     await message.answer(text="Выберите группу:", reply_markup=get_groups_keyboard(groups))
 
@@ -75,7 +74,7 @@ async def schedule_group_by_group(message: types.Message, state: FSMContext, gro
     days = bot.schedule_by_groups[start_week_day][group].days
 
     now = get_required_date(limit_changing=14)
-    buttons = [f"{day.day.strftime(constants.DATE_FORMAT)}{' 🕘' * (now == day.day)}" for day in days]
+    buttons = [f"{day.day:{constants.DATE_FORMAT}}{' 🕘' * (now == day.day)}" for day in days]
     dates_keyboard = ReplyKeyboardMarkup(resize_keyboard=True).add(*buttons).row("На неделю 🗓")
 
     if not bot.schedule_by_groups.next_week_is_last(start_week_day, group):
@@ -122,18 +121,20 @@ async def schedule_by_days_menu(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         try:
             start_week_day = proxy_data["current_start_week_date"]
-            if not start_week_day:
-                start_week_day = proxy_data["current_start_week_date"] = get_start_week_day()
-                days = bot.schedule_by_days[start_week_day].days
         except KeyError:
-            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first
-            days = bot.schedule_by_days[start_week_day].days
+            start_week_day = proxy_data["current_start_week_date"] = get_start_week_day()
+
+        try:
+            days = bot.schedule_by_days[start_week_day].days_list
+        except KeyError:
+            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first_week.monday_day
+            days = bot.schedule_by_days[start_week_day].days_list
 
     now = get_required_date(limit_changing=14)
-    buttons = [f"{day.strftime(constants.DATE_FORMAT)}{' 🕘' * (now == day)}" for day in days]
+    buttons = [f"{day:{constants.DATE_FORMAT}}{' 🕘' * (now == day)}" for day in days]
     kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=3).add(*buttons)
 
-    if not bot.schedule_by_days.have_group_next_week(start_week_day):
+    if not bot.schedule_by_days.next_week_is_last(start_week_day):
         kb.insert("Следующая неделя")
     kb.add("↪ На главную")
 
@@ -155,7 +156,7 @@ async def schedule_by_days_date(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         start_week_day = proxy_data["current_start_week_date"]
         date = proxy_data["day"] = dt.strptime(day_str, constants.DATE_FORMAT).date()
-    groups = bot.schedule_by_days[start_week_day][date]
+    groups = bot.schedule_by_days[start_week_day][date].groups_list
     kb = ReplyKeyboardMarkup(resize_keyboard=True, row_width=4).add(*groups).add("↪ На главную")
     await message.answer(text="Выберите группу:", reply_markup=kb)
 
@@ -166,5 +167,5 @@ async def schedule_group_by_day(message: types.Message, state: FSMContext):
         start_week_day = proxy_data["current_start_week_date"]
         day = proxy_data["day"]
 
-    group_day_obj: GroupDayByDays = bot.schedule_by_days[start_week_day][day][message.text]
+    group_day_obj = bot.schedule_by_days[start_week_day][day][message.text]
     await message.answer(text=group_day_obj.message_text, parse_mode=types.ParseMode.HTML)

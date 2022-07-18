@@ -7,6 +7,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import constants
 from models.group_schedule_models import ScheduleByGroup
+from models.days_schedule_models import ScheduleByDays
+from functions.imap_downloading import IMAPDownloader
 
 
 class CustomBot(Bot):
@@ -22,9 +24,10 @@ class CustomBot(Bot):
         self.notification_data = {}
         self.users = []
 
-    async def get_schedules(self):
+    async def update_schedules(self):
+        await IMAPDownloader.update()
         self.schedule_by_groups = await ScheduleByGroup.from_db()
-        # self.schedule_by_days = ScheduleByDays.from_group_schedule(self.schedule_by_groups)
+        self.schedule_by_days = ScheduleByDays(self.schedule_by_groups)
 
     async def send_message_to_admins(self, text, parse_mode="MarkdownV2", *args, **kwargs):
         if parse_mode == "MarkdownV2":

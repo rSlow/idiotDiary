@@ -5,7 +5,6 @@ from aiogram.utils.exceptions import BotBlocked
 
 from bot import bot
 from functions.main_functions import get_start_week_day, get_required_date
-from models.group_schedule_models import ScheduleByGroup
 from orm.users import User
 
 
@@ -23,9 +22,3 @@ async def send_schedule_messages(user_id, dt_obj=None, group=None, limit_changin
     except BotBlocked:
         await User.deactivate(user_id)
         bot.disable_jobs(user_id)
-
-
-async def update_bot_schedule():
-    schedule_obj = await ScheduleByGroup.from_db()
-    bot.schedule_by_groups = schedule_obj
-    # bot.schedule_by_days = ScheduleByDays.from_group_schedule(schedule_obj)
