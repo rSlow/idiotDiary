@@ -5,8 +5,9 @@ from sqlalchemy.orm import selectinload
 
 from bot import scheduler, bot
 from functions.schedule_functions import send_schedule_messages
-from orm.base import Base, Engine, Session
+from orm.base import Session, create_database
 from orm.users import User
+import constants
 
 
 async def on_startup(_):
@@ -15,11 +16,7 @@ async def on_startup(_):
     except ImportError as ex:
         logging.warn(msg=ex)
 
-    async with Engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    async with Engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    await create_database()
 
     scheduler.start()
 
@@ -38,7 +35,8 @@ async def on_startup(_):
                     User.notify_status is True
                 ).options(
                     selectinload(User.notify_times)
-                ))).scalars().all()
+                )
+            )).scalars().all()
 
             for user in all_notifications_data:
                 for notification in user.notify_times:
@@ -51,7 +49,9 @@ async def on_startup(_):
                                                 "group": user.notify_group,
                                                 "limit_changing": 9
                                             })
-                    bot.notification_data.setdefault(user.user_id, {})[notification.time.strftime("%H:%M")] = job
+                    bot.notification_data.setdefault(user.user_id, {})[
+                        notification.time.strftime(constants.TIME_FORMAT)
+                    ] = job
 
         scheduler.add_job(func=bot.update_schedules,
                           trigger="interval",

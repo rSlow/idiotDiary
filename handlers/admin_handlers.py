@@ -18,7 +18,7 @@ async def main_admin(message: types.Message):
             "Остановить бота ⛔").add("↪ На главную")
 
         await FSMAdmin.start.set()
-        await message.answer(text="Панель ~идиота~ администратора\:",
+        await message.answer(text="Панель ~идиота~ администратора:",
                              reply_markup=kb,
                              parse_mode="MarkdownV2")
 

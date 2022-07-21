@@ -4,10 +4,10 @@ import logging
 import os
 import quopri
 import re
-from datetime import datetime
+from datetime import datetime as dt
 from io import BytesIO
 
-import aioimaplib
+from aioimaplib import aioimaplib
 
 import constants
 from orm.schedules import File
@@ -20,7 +20,7 @@ PASSWORD = os.getenv("IMAP_PASSWORD")
 class IMAPDownloader:
     def __init__(self, host):
         self.host = host
-        self.client = aioimaplib.IMAP4_SSL(host=self.host)
+        self.client = aioimaplib.IMAP4_SSL(host=self.host, timeout=30)
 
     @staticmethod
     def get_payload_bytes_io(message):
@@ -59,8 +59,9 @@ class IMAPDownloader:
         )
 
     async def get_messages_list(self):
+        since_date = f"{dt.now().astimezone(constants.TIMEZONE):%d-%b-%Y}"
         await self.client.select("INBOX")
-        list_mails_bytes = await self.client.uid_search("ALL", charset=None)
+        list_mails_bytes = await self.client.uid_search("SINCE", since_date, charset=None)
         list_mails = list_mails_bytes.lines[0].decode().split()
         return list_mails
 
@@ -71,7 +72,7 @@ class IMAPDownloader:
     @staticmethod
     def get_datetime_from_message(message):
         message_date = message["Date"]
-        datetime_obj = datetime.strptime(
+        datetime_obj = dt.strptime(
             message_date[message_date.find(",") + 2:],
             "%d %b %Y %H:%M:%S %z"
         ).astimezone(constants.TIMEZONE)
@@ -85,7 +86,6 @@ class IMAPDownloader:
         return message
 
     async def download_cycle(self):
-        now = datetime.now().astimezone(constants.TIMEZONE)
         err = 0
         max_timestamp = await File.get_last_timestamp()
 
@@ -96,9 +96,6 @@ class IMAPDownloader:
                 _, lines = await self.get_data_from_mail(mail)
                 message = self.get_normal_message(lines)
                 datetime_obj = self.get_datetime_from_message(message)
-
-                if (now - datetime_obj).days > 0:  # limit days within today and message day
-                    break
 
                 if ~message["Subject"].find("Расписание МЧС"):
                     if (msg_timestamp := int(datetime_obj.timestamp())) > max_timestamp:
@@ -111,7 +108,7 @@ class IMAPDownloader:
                     else:
                         break
 
-            except aioimaplib.aioimaplib.CommandTimeout:
+            except aioimaplib.CommandTimeout:
                 logging.warning(msg=f"[ERROR FETCH] Update is not available.")
                 break
 

@@ -15,9 +15,9 @@ class User(Base):
     status = Column(Boolean, default=True)
     notify_status = Column(Boolean, default=False)
     notify_group = Column(String, default="")
-    notify_times = relationship("Notification",
-                                back_populates="user",
-                                cascade="all, delete, delete-orphan")
+    notify_times: list["Notification"] = relationship("Notification",
+                                                      back_populates="user",
+                                                      cascade="all, delete, delete-orphan")
 
     @classmethod
     async def add_user(cls, user_data):
