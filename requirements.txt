@@ -13,5 +13,5 @@ pandas
 Pillow
 psycopg2-binary
 pytz
-requests
 SQLAlchemy
+numpy

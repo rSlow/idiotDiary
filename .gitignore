@@ -7,4 +7,4 @@ venv/
 *.xlsx
 /databases/
 /data/
-shell.rc
+/environment.env
