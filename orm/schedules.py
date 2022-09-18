@@ -25,7 +25,7 @@ class File(Base):
     @staticmethod
     def _to_weeks_df_list(file_df: pd.DataFrame):
         weeks_df_list = []
-        weeks_idx = file_df.loc[file_df[0] == "дата/пара"].index.to_list()
+        weeks_idx = file_df.loc[file_df[0] == "Дата/пара"].index.to_list()
         weeks_idx.append(file_df.shape[0] + 1)
 
         start_week_idx = weeks_idx[0]

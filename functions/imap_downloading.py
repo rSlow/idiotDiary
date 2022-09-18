@@ -2,9 +2,8 @@ import base64
 import email
 import logging
 import os
-import quopri
-import re
-from datetime import datetime as dt
+from datetime import datetime as dt, timedelta as td
+from email.header import decode_header
 from io import BytesIO
 
 from aioimaplib import aioimaplib
@@ -23,33 +22,16 @@ class IMAPDownloader:
         self.client = aioimaplib.IMAP4_SSL(host=self.host, timeout=30)
 
     @staticmethod
+    def decode_message_field(header):
+        decoded_tuple = decode_header(header)[0]
+        return decoded_tuple[0].decode(decoded_tuple[1]).strip()
+
+    @staticmethod
     def get_payload_bytes_io(message):
         payload = message.get_payload()[1]
         encoded_attachment = payload.get_payload()
         decoded_attachment_bytes = base64.b64decode(encoded_attachment)
         return BytesIO(decoded_attachment_bytes)
-
-    @staticmethod
-    def decode_message_field(string: str, replace=True):
-        pattern = re.compile(r"[=?]\S*[?]\w[?]\S+[?=]")
-
-        try:
-            while match := re.search(pattern, string):
-                x, y = match.span()
-                match_data = string[x:y][2:-2]
-                encoding_last, encoding_first, data = match_data.split("?")
-                if encoding_first.upper() == "B":
-                    decoded_data = base64.b64decode(data).decode(encoding_last)
-                    string = string.replace(string[x:y], decoded_data)
-                elif encoding_first.upper() == "Q":
-                    decoded_data = quopri.decodestring(data).decode(encoding_last)
-                    string = string.replace(string[x:y], decoded_data)
-        except ValueError:
-            return string
-
-        if replace:
-            string = string.replace("\r", "").replace("\n", "").replace("\t", "")
-        return string
 
     async def authorize(self, login=None, password=None):
         await self.client.wait_hello_from_server()
@@ -59,9 +41,10 @@ class IMAPDownloader:
         )
 
     async def get_messages_list(self):
-        since_date = f"{dt.now().astimezone(constants.TIMEZONE):%d-%b-%Y}"
+        since_date = dt.now() - td(days=1)
+        format_since_date = f"{since_date.astimezone(constants.TIMEZONE):%d-%b-%Y}"
         await self.client.select("INBOX")
-        list_mails_bytes = await self.client.uid_search("SINCE", since_date, charset=None)
+        list_mails_bytes = await self.client.uid_search("SINCE", format_since_date, charset=None)
         list_mails = list_mails_bytes.lines[0].decode().split()
         return list_mails
 
@@ -81,7 +64,7 @@ class IMAPDownloader:
     def get_normal_message(self, lines):
         raw_email = lines[1].decode("utf-8")
         message = email.message_from_string(raw_email)
-        decoded_subject = self.decode_message_field(message["Subject"] or "[NO THEME]").strip()
+        decoded_subject = self.decode_message_field(message["Subject"]).strip() or "[NO THEME]"
         message.replace_header("Subject", decoded_subject)
         return message
 

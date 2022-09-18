@@ -30,8 +30,9 @@ def get_start_week_day(dt_obj: dt = None):
     return d_obj
 
 
-def to_date(dt64) -> d:
-    return Timestamp(dt64).to_pydatetime().date()
+def to_date(date_str: str) -> d:
+    date = date_str.split("\n")[0]
+    return dt.strptime(date, "%d.%m.%Y")
 
 
 def get_required_date(limit_changing=None):

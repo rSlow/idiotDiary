@@ -11,6 +11,12 @@ from functions import igps_downloading
 
 
 @dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
+async def download_library_interim(message: types.Message):
+    await message.answer(text="Временно не работает, возможно скоро исправлю.")
+
+
+# @dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
+# Download at now is not working. Will be fixed in futured updates.
 async def download_library(message: types.Message):
     await DownloadLibrary.library.set()
     await message.answer(text="Для скачивания необходимо вставить ссылку с страницы книги.\n"
