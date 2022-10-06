@@ -83,9 +83,9 @@ class Week(Base):
     file = relationship("File",
                         back_populates="weeks")
     # down
-    groups = relationship("Group",
-                          back_populates="week",
-                          cascade="all, delete, delete-orphan")
+    groups: list["Group"] = relationship("Group",
+                                         back_populates="week",
+                                         cascade="all, delete, delete-orphan")
 
     @staticmethod
     def _get_monday_date(df):
@@ -180,9 +180,9 @@ class Group(Base):
     week = relationship("Week",
                         back_populates="groups")
     # down
-    days = relationship("Day",
-                        back_populates="group",
-                        cascade="all, delete, delete-orphan")
+    days: list["Day"] = relationship("Day",
+                                     back_populates="group",
+                                     cascade="all, delete, delete-orphan")
 
     @staticmethod
     def _get_group_name(df):
@@ -228,9 +228,9 @@ class Day(Base):
     group = relationship("Group",
                          back_populates="days")
     # down
-    pairs = relationship("Pair",
-                         back_populates="day",
-                         cascade="all, delete, delete-orphan")
+    pairs: list["Pair"] = relationship("Pair",
+                                       back_populates="day",
+                                       cascade="all, delete, delete-orphan")
 
     @staticmethod
     def _get_day(df):
@@ -382,7 +382,9 @@ class Pair(Base):
         return "".join(blocks)
 
     def __bool__(self):
-        return True
+        if self.first_subj_name:
+            return True
+        return False
 
 
 if __name__ == '__main__':

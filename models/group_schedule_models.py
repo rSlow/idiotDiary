@@ -106,8 +106,9 @@ class DayByGroup:
         blocks = list()
         blocks.append(f"Пары на <u>{self.day.strftime(constants.DATE_FORMAT)}</u>:")
         for pair in self.pairs:
-            blocks.append(f"\n\n<b><u>{pair.pair_num} пара:</u></b> ")
-            blocks.append(pair.message_text)
+            if pair:
+                blocks.append(f"\n\n<b><u>{pair.pair_num} пара:</u></b> ")
+                blocks.append(pair.message_text)
         return "".join(blocks)
 
     def __bool__(self):

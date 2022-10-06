@@ -18,9 +18,7 @@ class CustomBot(Bot):
         self.schedule_by_groups = None
         self.schedule_by_days = None
 
-        self.admins = [
-            959148697,
-        ]
+        self.admins = list(map(int, os.getenv("ADMINS").split(",")))
         self.notification_data = {}
         self.users = []
 
