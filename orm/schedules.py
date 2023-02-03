@@ -68,7 +68,8 @@ class File(Base):
                 func.max(cls.timestamp)
             )
             res = await session.execute(q)
-            return res.scalars().one() or 0
+            timestamp = res.scalars().one()
+        return timestamp or 0
 
 
 class Week(Base):

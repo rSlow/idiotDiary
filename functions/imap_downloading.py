@@ -81,7 +81,8 @@ class IMAPDownloader:
                 datetime_obj = self.get_datetime_from_message(message)
 
                 if ~message["Subject"].find("Расписание МЧС"):
-                    if (msg_timestamp := int(datetime_obj.timestamp())) > max_timestamp:
+                    msg_timestamp = int(datetime_obj.timestamp())
+                    if msg_timestamp > max_timestamp:
                         file_io = self.get_payload_bytes_io(message=message)
                         await File.from_file(
                             file_io_or_name=file_io,

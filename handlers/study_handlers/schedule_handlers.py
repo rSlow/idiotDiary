@@ -57,7 +57,7 @@ async def schedule_by_groups(message: types.Message, state: FSMContext):
         try:
             groups = bot.schedule_by_groups[start_week_day].groups_list
         except KeyError:
-            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first_week
+            start_week_day = proxy_data["current_start_week_date"] = bot.schedule_by_groups.first_week.monday_day
             groups = bot.schedule_by_groups[start_week_day].groups_list
     await message.answer(text="Выберите группу:", reply_markup=get_groups_keyboard(groups))
 
