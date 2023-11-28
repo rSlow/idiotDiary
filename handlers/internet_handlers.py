@@ -11,18 +11,11 @@ from functions import igps_downloading
 
 
 @dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
-async def download_library_interim(message: types.Message):
-    await message.answer(text="Временно не работает, возможно скоро исправлю.")
-
-
-# @dispatcher.message_handler(Text(contains="Скачать с библиотеки"))
-# Download at now is not working. Will be fixed in futured updates.
 async def download_library(message: types.Message):
     await DownloadLibrary.library.set()
     await message.answer(text="Для скачивания необходимо вставить ссылку с страницы книги.\n"
                               "Например:\n"
-                              "http://elib.igps.ru/?14&type=card&"
-                              "cid=ALSFR-cc6b6829-29df-4697-870c-c1520879daf9&remote=false")
+                              "http://elib.igps.ru/?type=card&cid=ALSFR-e0e02395-1133-4e4e-b383-bf9999f9cf5d")
     kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, input_field_placeholder="Ссылка:")
     kb.add("↪ На главную")
     await message.answer(text="Введите ссылку:",

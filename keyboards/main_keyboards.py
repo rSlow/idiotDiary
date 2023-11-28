@@ -4,21 +4,13 @@ from bot import bot
 
 
 def get_main_keyboard(user_id):
-    main_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    main_buttons = ["Расписание 📚", "Интернет 🌍"]
+    main_keyboard = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+    main_buttons = ["Расписание 📚", "Скачать с библиотеки 🌎"]
     main_keyboard.add(*main_buttons)
     if user_id in bot.admins:
         main_keyboard.insert("Панель администратора")
 
     return main_keyboard
-
-
-def get_internet_keyboard():
-    internet_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-    internet_buttons = ["Скачать с библиотеки 📚", ]
-    internet_keyboard.add(*internet_buttons)
-    internet_keyboard.add("↪ На главную")
-    return internet_keyboard
 
 
 def get_schedule_keyboard():

@@ -3,9 +3,11 @@ import logging
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+from aiogram.types import ReplyKeyboardMarkup
 
+from FSM import DownloadLibrary
 from bot import dispatcher, bot
-from keyboards import get_main_keyboard, get_internet_keyboard
+from keyboards import get_main_keyboard
 from orm.users import User
 
 
@@ -24,9 +26,3 @@ async def start(message: types.Message, state: FSMContext):
     await message.bot.send_message(chat_id=user_data.id,
                                    text="Добро пожаловать. Выберите действие:",
                                    reply_markup=get_main_keyboard(message.from_user.id))
-
-
-@dispatcher.message_handler(Text(contains="Интернет"))
-async def internet_menu(message: types.Message):
-    await message.answer(text="Доступны следующие функции:",
-                         reply_markup=get_internet_keyboard())

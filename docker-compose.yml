@@ -4,5 +4,22 @@ services:
   app:
     build: .
     env_file:
-      - ./environment.env
+      - ./.env
     restart: always
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pg_idairy:/var/lib/postgresql/data/pgdata/idiotDiary
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata/idiotDiary
+
+volumes:
+  pg_idairy:

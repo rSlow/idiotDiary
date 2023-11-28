@@ -21,7 +21,7 @@ async def download_book(msg: types.Message, link: str):
     temp = os.path.join("data", "temp", f"{msg.from_user.id}-{ts}")
     domain = "http://elib.igps.ru/"
     archive_server = domain + "ArchiveServer"
-    headers = {"User-Agent": UserAgent(use_cache_server=True).random,
+    headers = {"User-Agent": UserAgent().random,
                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
                "DNT": "1",
                "Upgrade-Insecure-Requests": "1",

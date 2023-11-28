@@ -28,7 +28,7 @@ async def schedule_menu(message: types.Message):
             user = await User.get(user_id=user_data.id, session=session)
             if user is None:
                 user = User(user_id=user_data.id, fullname=user_data.full_name, username_mention=user_data.mention)
-                await session.add(user)
+                session.add(user)
 
     await Schedule.notifications.set()
     if user.notify_group and user.notify_times:
@@ -115,7 +115,7 @@ async def schedule_set_menu_group_settings(message: types.Message):
                          reply_markup=get_groups_keyboard(groups))
 
 
-@dispatcher.message_handler(regexp=r"\w+-\d{2}", state=ScheduleSettings.group_settings)
+@dispatcher.message_handler(regexp=constants.RE_GROUP, state=ScheduleSettings.group_settings)
 async def schedule_choice_group_settings(message: types.Message):
     """Setting group to notification scheduler."""
     user_id = message.from_user.id

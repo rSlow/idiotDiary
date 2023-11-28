@@ -16,7 +16,7 @@ ___
 
 `python3 start.py`
 ___
-Bot based on Python 3.9 (because aioimaplib correctly works only in Python 3.9 version)
+Bot based on Python 3.11
 ___
 Expected Environment Variables:
 
@@ -27,7 +27,7 @@ Optional Environment Variables:
 1. For use auto-update timetable from IMAP server:
 
     * **_IMAP_HOST_** - IMAP-server (f.e. [imap.google.com]())
-    * **_IMAP_HOST_** - Login for IMAP-server
+    * **_IMAP_LOGIN_** - Login for IMAP-server
     * **_IMAP_PASSWORD_** - Password for IMAP-server
 
 

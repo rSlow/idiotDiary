@@ -7,6 +7,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import select, func, desc
 from sqlalchemy.orm import relationship, selectinload
 
+import constants
 from functions.main_functions import get_start_week_day, to_date, get_required_datetime
 from orm.base import Base, Session
 
@@ -108,7 +109,7 @@ class Week(Base):
     def _to_groups_df_list(week_df: pd.DataFrame):
         groups_df_list = []
         pair_block: pd.Series = week_df.iloc[:, 0]
-        group_names = week_df.filter(regex=r"\w+-\d+").columns
+        group_names = week_df.filter(regex=constants.RE_GROUP).columns
         idx_groups = [week_df.columns.get_loc(group_name) for group_name in group_names]
 
         for group_idx in idx_groups:
@@ -187,8 +188,9 @@ class Group(Base):
 
     @staticmethod
     def _get_group_name(df):
-        name = df.iloc[:, 1].name
-        return name
+        full_name: str = df.iloc[:, 1].name
+        clear_name = full_name[:full_name.find(".")]
+        return clear_name
 
     @classmethod
     def from_df(cls, df):

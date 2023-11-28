@@ -62,7 +62,7 @@ async def schedule_by_groups(message: types.Message, state: FSMContext):
     await message.answer(text="Выберите группу:", reply_markup=get_groups_keyboard(groups))
 
 
-@dispatcher.message_handler(regexp=r"\w+-\d{2}", state=ScheduleByGroup.group)
+@dispatcher.message_handler(regexp=constants.RE_GROUP, state=ScheduleByGroup.group)
 async def schedule_group_by_group(message: types.Message, state: FSMContext, group=None):
     await ScheduleByGroup.date_for_group.set()
 
@@ -161,7 +161,7 @@ async def schedule_by_days_date(message: types.Message, state: FSMContext):
     await message.answer(text="Выберите группу:", reply_markup=kb)
 
 
-@dispatcher.message_handler(regexp=r"\w+-\d{2}", state=ScheduleByDay.group_for_day)
+@dispatcher.message_handler(regexp=constants.RE_GROUP, state=ScheduleByDay.group_for_day)
 async def schedule_group_by_day(message: types.Message, state: FSMContext):
     async with state.proxy() as proxy_data:
         start_week_day = proxy_data["current_start_week_date"]

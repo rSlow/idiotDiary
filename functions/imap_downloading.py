@@ -24,7 +24,9 @@ class IMAPDownloader:
     @staticmethod
     def decode_message_field(header):
         decoded_tuple = decode_header(header)[0]
-        return decoded_tuple[0].decode(decoded_tuple[1]).strip()
+        if decoded_tuple[0]:
+            return decoded_tuple[0].decode(decoded_tuple[1]).strip()
+        return ""
 
     @staticmethod
     def get_payload_bytes_io(message):
@@ -80,7 +82,7 @@ class IMAPDownloader:
                 message = self.get_normal_message(lines)
                 datetime_obj = self.get_datetime_from_message(message)
 
-                if ~message["Subject"].find("Расписание МЧС"):
+                if ~message["Return-path"].find("umo@igps.ru") and ~message["Subject"].find("Расписание МЧС"):
                     msg_timestamp = int(datetime_obj.timestamp())
                     if msg_timestamp > max_timestamp:
                         file_io = self.get_payload_bytes_io(message=message)
