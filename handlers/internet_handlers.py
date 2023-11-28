@@ -22,7 +22,7 @@ async def download_library(message: types.Message):
                          reply_markup=kb)
 
 
-@dispatcher.message_handler(regexp=r"\bhttp://elib.igps.ru/[\S]+", state=DownloadLibrary.library)
+@dispatcher.message_handler(regexp=r"\bhttp[s]*://elib.igps.ru/[\S]+", state=DownloadLibrary.library)
 async def await_link_library(message: types.Message):
     await DownloadLibrary.downloading_book.set()
     msg = await message.answer(text="Начинаю загрузку...")
